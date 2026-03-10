@@ -328,15 +328,21 @@ const getKey=()=>S.settings.apiKey||'';
 async function gemini(parts,temperature=0.2){
   const key=getKey();
   if(!key)throw new Error('NO_KEY');
-  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts}],generationConfig:{temperature}})
-  });
+  const model='gemini-1.5-flash';
+  let r;
+  try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature,maxOutputTokens:1500}})});}
+  catch(netErr){throw new Error('Error de red: '+netErr.message);}
   const j=await r.json();
-  if(j.error)throw new Error(j.error.message);
-  return (j.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
+  if(j.error)throw new Error(j.error.message||JSON.stringify(j.error));
+  const text=(j.candidates?.[0]?.content?.parts?.[0]?.text||'');
+  if(!text)throw new Error('La IA no respondió. Inténtalo de nuevo.');
+  return text.replace(/```json|```/g,'').trim();
 }
-async function geminiJSON(parts){return JSON.parse(await gemini(parts,0.1));}
+async function geminiJSON(parts){
+  const txt=await gemini(parts,0.1);
+  try{return JSON.parse(txt);}
+  catch{const m=txt.match(/\{[\s\S]*\}/);if(m)return JSON.parse(m[0]);throw new Error('Respuesta no válida de la IA');}
+}
 
 // ═══════════════════════════════════
 // WEATHER
@@ -403,20 +409,39 @@ function closeSheet(){activeSheet=null;render();}
 // ═══════════════════════════════════
 // AI — IDENTIFY PLANT
 // ═══════════════════════════════════
+async function compressImage(file,maxW=800){
+  return new Promise(res=>{
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const scale=Math.min(1,maxW/Math.max(img.width,img.height));
+      const c=document.createElement('canvas');
+      c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg',0.7).split(',')[1]);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);fileToB64(file).then(res);};
+    img.src=url;
+  });
+}
+
 async function identifyPlant(file){
   if(!file)return;
   if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
   aiState='loading';aiIdent=null;render();
   try{
-    const b64=await fileToB64(file);
-    const mt=file.type||'image/jpeg';
+    const b64=await compressImage(file);
     const result=await geminiJSON([
-      {inline_data:{mime_type:mt,data:b64}},
-      {text:`Identifica esta planta. Responde SOLO JSON válido sin markdown:\n{"commonName":"nombre en español","scientificName":"nombre científico","family":"familia","confidence":"alta|media|baja","icon":"emoji","care":{"watering":"frecuencia riego","sunlight":"tipo luz","fertilizer":"frecuencia abono","difficulty":"fácil|moderado|difícil"},"description":"descripción breve 2 frases","tips":["tip1","tip2","tip3"],"toxic":false}`}
+      {inline_data:{mime_type:'image/jpeg',data:b64}},
+      {text:'Identifica esta planta. Responde SOLO JSON sin markdown ni texto extra. Formato exacto: {"commonName":"nombre en español","scientificName":"nombre científico","family":"familia","confidence":"alta","icon":"🌿","care":{"watering":"1× semana","sunlight":"Indirecta","fertilizer":"Mensual","difficulty":"fácil"},"description":"descripción 2 frases","tips":["tip1","tip2","tip3"],"toxic":false}'}
     ]);
     aiIdent=result;aiState='done';
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
-  }catch(e){aiState='error';toast(e.message==='NO_KEY'?'⚠️ Configura tu API key en Ajustes':'Error identificando la planta','w');}
+  }catch(e){
+    aiState='error';
+    toast('No se pudo identificar la planta. Inténtalo de nuevo.','w');
+  }
   render();
 }
 
@@ -489,17 +514,21 @@ Genera una guía de cuidados personalizada y adaptada a su situación. Responde 
 // ═══════════════════════════════════
 // AI — HEALTH CHECK
 // ═══════════════════════════════════
-async function runCheck(plantId){
+let checkPhotoB64=null;
+
+async function runCheck(plantId,photoB64){
   const p=S.plants.find(x=>x.id===plantId);
   if(!p)return;
   if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
-  selId=plantId;checkState='loading';checkResult=null;activeSheet='check';render();
+  selId=plantId;checkState='loading';checkResult=null;activeSheet='check';checkPhotoB64=photoB64||null;render();
   const last=p.entries?.[p.entries.length-1];
   const dw=daysAgo(p.lastWatered);
   const dn=daysUntil(p.nextWatering);
   try{
     const wxInfo=weather?`Clima ahora: ${weather.temp}°C, ${WTXT[weather.code]}, humedad ${weather.humidity}%, lluvia hoy ${weather.rain}mm.`:'';
-    const result=await geminiJSON([{text:`Eres botánico experto. Analiza el estado de esta planta y da recomendaciones muy concretas y útiles.
+    const checkParts=[];
+    if(checkPhotoB64)checkParts.push({inline_data:{mime_type:'image/jpeg',data:checkPhotoB64}});
+    checkParts.push({text:`Eres botánico experto. Analiza el estado de esta planta y da recomendaciones muy concretas y útiles.
 
 Planta: ${p.name} (${p.species||'?'})
 Ubicación: ${p.location} (${p.outdoor?'exterior':'interior'})
@@ -513,7 +542,8 @@ Notas: ${p.notes||'ninguna'}
 Guía IA previa: ${p.aiCareGuide?p.aiCareGuide.summary:'ninguna'}
 
 Responde SOLO JSON sin markdown:
-{"vitality":"óptimo|bueno|atención|crítico","score":85,"headline":"frase muy corta del estado","diagnosis":"2-3 frases diagnóstico concreto","actions":[{"priority":"alta|media|baja","action":"acción muy concreta y práctica"}],"nextCheckDays":7,"positives":["punto positivo 1","punto positivo 2"],"transplantNeeded":false,"transplantReason":"razón si necesita trasplante"}`}]);
+{"vitality":"óptimo|bueno|atención|crítico","score":85,"headline":"frase muy corta del estado","diagnosis":"2-3 frases diagnóstico concreto","actions":[{"priority":"alta|media|baja","action":"acción muy concreta y práctica"}],"nextCheckDays":7,"positives":["punto positivo 1","punto positivo 2"],"transplantNeeded":false,"transplantReason":"razón si necesita trasplante"}`});
+    const result=await geminiJSON(checkParts);
     checkResult=result;checkState='done';
     const nc=new Date();nc.setDate(nc.getDate()+(result.nextCheckDays||7));
     S.plants=S.plants.map(pp=>{
@@ -521,7 +551,11 @@ Responde SOLO JSON sin markdown:
       return{...pp,vitality:result.vitality,lastCheck:td(),nextCheck:nc.toISOString().split('T')[0],checkIntervalDays:result.nextCheckDays||pp.checkIntervalDays||7,checkHistory:[...(pp.checkHistory||[]),{date:td(),vitality:result.vitality,score:result.score,headline:result.headline}].slice(-10)};
     });
     saveS();
-  }catch(e){checkState='error';toast(e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'Error en el análisis','w');}
+  }catch(e){
+    checkState='error';
+    const msg=e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'❌ '+e.message;
+    toast(msg,'w');
+  }
   render();
 }
 
@@ -689,7 +723,7 @@ function buildHome(){
   if(rainedOut){const op=plants.filter(p=>p.outdoor);if(op.length>0)frag.appendChild(el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🌧️ Ha llovido '+weather.rain+'mm hoy'),el('div',{cls:'fs12 ci2 mb8'},'Plantas exteriores regadas automáticamente.'),el('div',{},...op.map(p=>el('span',{cls:'pill'},p.icon+' '+p.name)))));}
   const toW=needsW.filter(p=>!(rainedOut&&p.outdoor));
   if(toW.length>0){const box=el('div',{cls:'alert alert-y'},el('div',{cls:'sl sl-am mb8'},'💧 Necesitan agua hoy'));toW.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Regar','btn-p btn-sm',e=>{e.stopPropagation();waterPlant(p.id);}))));frag.appendChild(box);}
-  if(needsC.length>0&&getKey()){const box=el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🔬 Check de salud pendiente'));needsC.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Analizar','btn-bl btn-sm',e=>{e.stopPropagation();runCheck(p.id);}))));frag.appendChild(box);}
+  if(needsC.length>0&&getKey()){const box=el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🔬 Check de salud pendiente'));needsC.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Analizar','btn-bl btn-sm',e=>{e.stopPropagation();selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();}))));frag.appendChild(box);}
   if(!getKey())frag.appendChild(el('div',{cls:'card alert-pu',style:{cursor:'pointer'},$click:()=>{page='settings';render();}},el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'28px'}},'🤖'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs13'},'Activa la IA — es gratis'),el('div',{cls:'fs12 ci3'},'API key de Google Gemini → Ajustes')),el('span',{cls:'ci3',style:{fontSize:'18px'}},'›'))));
   frag.appendChild(el('div',{cls:'flex jb ac mb8',style:{marginTop:'4px'}},el('span',{cls:'sl',style:{marginBottom:0}},'Mis plantas'),btn('Ver todas →','btn-g fs13 cgr',()=>{page='list';render();},{style:{padding:'4px 0'}})));
   if(plants.length===0){frag.appendChild(el('div',{cls:'card empty'},el('div',{cls:'empty-em'},'🌱'),el('div',{cls:'empty-t'},'Sin plantas aún'),el('div',{cls:'empty-s'},'Empieza añadiendo tu primera planta'),btn('+ Añadir planta','btn-p',()=>{_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;activeSheet='plant';render();})));}
@@ -797,7 +831,7 @@ function buildDetail(){
   const actions=el('div',{cls:'flex gap8 mt14'});
   const wbtn=btn('💧 Regar'+(p.lastWatered===td()?' (hoy ✓)':''),'btn-p f1 fs13',()=>{if(p.lastWatered===td()){toast('Ya fue regada hoy','w');return;}waterPlant(p.id);});
   actions.appendChild(wbtn);
-  const cbtn=btn('🔬 '+(checkDue?'¡Revisar ya!':'Analizar'),'btn-s f1 fs13',()=>runCheck(p.id));
+  const cbtn=btn('🔬 '+(checkDue?'¡Revisar ya!':'Analizar'),'btn-s f1 fs13',()=>{selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();});
   if(checkDue){cbtn.style.background='#eff6ff';cbtn.style.color='var(--bl)';cbtn.style.borderColor='#bfdbfe';}
   if(!getKey()){cbtn.style.opacity='0.5';}
   actions.appendChild(cbtn);
@@ -1184,8 +1218,28 @@ function buildSheetCheck(){
   const p=S.plants.find(x=>x.id===selId);
   const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov&&checkState!=='loading')closeSheet();}});
   const sb=el('div',{cls:'sb'});
-  sb.appendChild(el('div',{cls:'shdr'},el('span',{cls:'sh'}),el('div',{cls:'st'},'Análisis IA'),p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null));
-  if(checkState==='loading'){sb.appendChild(el('div',{cls:'wiz-loading'},el('div',{cls:'wiz-loading-em'},'🔬'),el('div',{cls:'empty-t'},'Analizando el estado…'),el('div',{cls:'empty-s'},'La IA evalúa todos los datos de tu planta')));}
+  sb.appendChild(el('div',{cls:'shdr'},el('span',{cls:'sh'}),el('div',{cls:'flex jb ac'},el('div',{cls:'st'},'Análisis IA'),checkState!=='loading'?el('button',{cls:'btn btn-g',style:{fontSize:'20px',padding:'4px 8px',color:'var(--i3)'},$click:closeSheet},'×'):null),p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null));
+  if(checkState==='idle'){
+    // Show photo option first
+    sb.appendChild(el('div',{cls:'tc',style:{padding:'10px 0 20px'}},
+      el('div',{style:{fontSize:'48px',marginBottom:'12px'}},'📸'),
+      el('div',{cls:'fw7 fs16 mb8'},'¿Quieres hacer una foto?'),
+      el('div',{cls:'fs13 ci3 mb20',style:{lineHeight:'1.6'}},'La IA puede ver el estado visual de la planta para un análisis más preciso.'),
+      el('label',{cls:'btn btn-p btn-full mb10',style:{cursor:'pointer',justifyContent:'center'}},
+        '📷 Hacer foto y analizar',
+        el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'},
+          $change:async e=>{
+            const f=e.target.files?.[0];
+            if(!f)return;
+            checkState='loading';render();
+            const b64=await compressImage(f);
+            runCheck(selId,b64);
+          }
+        })
+      ),
+      btn('Analizar sin foto','btn-s btn-full',()=>runCheck(selId,null))
+    ));
+  } else if(checkState==='loading'){sb.appendChild(el('div',{cls:'wiz-loading'},el('div',{cls:'wiz-loading-em'},'🔬'),el('div',{cls:'empty-t'},'Analizando el estado…'),el('div',{cls:'empty-s'},'La IA evalúa todos los datos de tu planta')));}
   else if(checkState==='done'&&checkResult){
     const vi=VIT[checkResult.vitality]||VIT['bueno'];
     sb.appendChild(el('div',{style:{background:vi.bg,border:'1.5px solid '+vi.dot+'40',borderRadius:'18px',padding:'20px',marginBottom:'14px',textAlign:'center'}},
@@ -1203,7 +1257,7 @@ function buildSheetCheck(){
     }
     sb.appendChild(el('div',{cls:'fs12 ci3 tc mb12'},'Próximo análisis en '+checkResult.nextCheckDays+' días · cada '+checkResult.nextCheckDays+' días'));
     sb.appendChild(btn('Entendido','btn-p btn-full',closeSheet));
-  } else if(checkState==='error'){sb.appendChild(el('div',{cls:'empty'},el('div',{cls:'empty-em'},'❌'),el('div',{cls:'empty-t'},'Error en el análisis'),btn('Reintentar','btn-p',()=>p&&runCheck(p.id))));}
+  } else if(checkState==='error'){sb.appendChild(el('div',{cls:'empty'},el('div',{cls:'empty-em'},'❌'),el('div',{cls:'empty-t'},'Error en el análisis'),btn('Reintentar','btn-p',()=>{checkState='idle';render();})));}
   ov.appendChild(sb);return ov;
 }
 
