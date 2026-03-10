@@ -347,8 +347,8 @@ async function gemini(parts,temperature=0.2){
       const msg=j.error.message||'';
       const code=j.error.code||0;
       // API key bad / quota / billing - throw immediately, no point trying other models
-      if(code===400||code===403||msg.includes('API_KEY')||msg.includes('invalid')||msg.includes('quota')||msg.includes('billing')||msg.includes('PERMISSION')){
-        throw new Error('API key inválida o sin cuota. Ve a Ajustes y comprueba la key.');
+      if(code===400||code===403||code===401||msg.toLowerCase().includes('api_key')||msg.toLowerCase().includes('invalid')||msg.toLowerCase().includes('quota')||msg.toLowerCase().includes('billing')||msg.toLowerCase().includes('permission')||msg.toLowerCase().includes('api key')||msg.toLowerCase().includes('key')){
+        throw new Error('API_KEY_ERROR:'+msg);
       }
       // Model not available - try next
       if(msg.includes('not found')||msg.includes('not support')||msg.includes('ListModels')||msg.includes('404')||code===404){
@@ -1060,7 +1060,7 @@ function buildSettings(){
   frag.appendChild(el('div',{cls:'card alert-pu'},
     el('div',{cls:'sl sl-pu'},'🤖 API Key de Google Gemini'),
     el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'100% gratuita. Hasta 1.500 usos al mes sin coste.'),
-    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'AIza...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.trim();saveS();}})),
+    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'AIza...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.replace(/\s/g,'');saveS();},$paste:e=>{setTimeout(()=>{const v=e.target.value.replace(/\s/g,'');e.target.value=v;S.settings.apiKey=v;saveS();},10);}})),
     !S.settings.apiKey
       ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'aistudio.google.com'),el('br'),'2. Inicia sesión con tu cuenta Google',el('br'),'3. Clic en "Get API key" → "Create API key"',el('br'),'4. Copia y pega aquí arriba ↑'))
       :el('div',{},
@@ -1069,10 +1069,20 @@ function buildSettings(){
             const btn=document.getElementById('test-api-btn');
             btn.textContent='Probando…';btn.disabled=true;
             try{
-              const txt=await gemini([{text:'Responde solo: OK'}],0);
-              if(txt){btn.textContent='✅ Funciona perfectamente';btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';}
+              // Direct test call bypassing error handling
+              const key=getKey().replace(/\s/g,'');
+              const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say OK'}]}]})});
+              const j=await r.json();
+              if(j.error){
+                btn.textContent='❌ Google dice: '+j.error.message;
+                btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
+              } else {
+                btn.textContent='✅ Funciona — modelo: gemini-1.5-flash';
+                btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
+                S.settings._workingModel='gemini-1.5-flash';saveS();
+              }
             }catch(e){
-              btn.textContent='❌ '+e.message;
+              btn.textContent='❌ Error de red: '+e.message;
               btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';
               btn.disabled=false;
             }
