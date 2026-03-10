@@ -6,9 +6,24 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="plant.ai">
-<meta name="theme-color" content="#faf8f5">
+<meta name="theme-color" content="#2d6a4f">
 <title>plant.ai</title>
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABmJLR0QA/wD/AP+gvaeTAAAC7ElEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAMBuAABHgAAAABJRU5ErkJggg==">
+
+<!-- PWA Manifest inline -->
+<script>
+(function(){
+  const m={name:"plant.ai",short_name:"plant.ai",description:"Smart Garden Tracker",start_url:"./",display:"standalone",background_color:"#faf8f5",theme_color:"#2d6a4f",orientation:"portrait-primary",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='200' r='90' fill='%2352b788'/%3E%3Cellipse cx='190' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(-30 190 240)'/%3E%3Cellipse cx='320' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(30 320 240)'/%3E%3Crect x='246' y='260' width='20' height='120' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='200' rx='55' ry='65' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='175' rx='30' ry='40' fill='%2395d5b2'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
+  const b=new Blob([JSON.stringify(m)],{type:'application/json'});
+  const u=URL.createObjectURL(b);
+  const l=document.createElement('link');
+  l.rel='manifest';l.href=u;
+  document.currentScript.parentNode.insertBefore(l,document.currentScript);
+})();
+</script>
+
+<!-- Apple touch icon — icono verde con planta para pantalla de inicio -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='200' r='90' fill='%2352b788'/%3E%3Cellipse cx='190' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(-30 190 240)'/%3E%3Cellipse cx='320' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(30 320 240)'/%3E%3Crect x='246' y='260' width='20' height='120' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='200' rx='55' ry='65' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='175' rx='30' ry='40' fill='%2395d5b2'/%3E%3C/svg%3E">
+<link rel="apple-touch-startup-image" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23faf8f5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,800;1,400&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -1361,8 +1376,12 @@ function buildSheetCheck(){
 // ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   render();
-  // Auto-fetch weather on load
   setTimeout(fetchWeather,500);
+  if('serviceWorker' in navigator){
+    const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(fetch(e.request).catch(()=>new Response('',{status:200})));}});`;
+    const blob=new Blob([sw],{type:'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'}).catch(()=>{});
+  }
 });
 </script>
 </body>
