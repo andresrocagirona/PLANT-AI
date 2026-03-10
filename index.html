@@ -8,27 +8,20 @@
 <meta name="apple-mobile-web-app-title" content="plant.ai">
 <meta name="theme-color" content="#2d6a4f">
 <title>plant.ai</title>
-
-<!-- PWA Manifest inline -->
 <script>
 (function(){
-  const m={name:"plant.ai",short_name:"plant.ai",description:"Smart Garden Tracker",start_url:"./",display:"standalone",background_color:"#faf8f5",theme_color:"#2d6a4f",orientation:"portrait-primary",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='200' r='90' fill='%2352b788'/%3E%3Cellipse cx='190' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(-30 190 240)'/%3E%3Cellipse cx='320' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(30 320 240)'/%3E%3Crect x='246' y='260' width='20' height='120' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='200' rx='55' ry='65' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='175' rx='30' ry='40' fill='%2395d5b2'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
+  const icon="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='195' r='95' fill='%2352b788'/%3E%3Cellipse cx='185' cy='235' rx='72' ry='42' fill='%2340916c' transform='rotate(-30 185 235)'/%3E%3Cellipse cx='325' cy='235' rx='72' ry='42' fill='%2340916c' transform='rotate(30 325 235)'/%3E%3Crect x='246' y='265' width='20' height='115' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='195' rx='58' ry='68' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='168' rx='32' ry='42' fill='%2395d5b2'/%3E%3C/svg%3E";
+  const m={name:"plant.ai",short_name:"plant.ai",description:"Smart Garden Tracker",start_url:"./",display:"standalone",background_color:"#faf8f5",theme_color:"#2d6a4f",orientation:"portrait-primary",icons:[{src:icon,sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
   const b=new Blob([JSON.stringify(m)],{type:'application/json'});
-  const u=URL.createObjectURL(b);
-  const l=document.createElement('link');
-  l.rel='manifest';l.href=u;
-  document.currentScript.parentNode.insertBefore(l,document.currentScript);
+  const link=document.createElement('link');link.rel='manifest';link.href=URL.createObjectURL(b);
+  document.currentScript.parentNode.insertBefore(link,document.currentScript);
 })();
 </script>
-
-<!-- Apple touch icon — icono verde con planta para pantalla de inicio -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='200' r='90' fill='%2352b788'/%3E%3Cellipse cx='190' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(-30 190 240)'/%3E%3Cellipse cx='320' cy='240' rx='70' ry='40' fill='%2340916c' transform='rotate(30 320 240)'/%3E%3Crect x='246' y='260' width='20' height='120' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='200' rx='55' ry='65' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='175' rx='30' ry='40' fill='%2395d5b2'/%3E%3C/svg%3E">
-<link rel="apple-touch-startup-image" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23faf8f5'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='195' r='95' fill='%2352b788'/%3E%3Cellipse cx='185' cy='235' rx='72' ry='42' fill='%2340916c' transform='rotate(-30 185 235)'/%3E%3Cellipse cx='325' cy='235' rx='72' ry='42' fill='%2340916c' transform='rotate(30 325 235)'/%3E%3Crect x='246' y='265' width='20' height='115' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='195' rx='58' ry='68' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='168' rx='32' ry='42' fill='%2395d5b2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,800;1,400&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -36,54 +29,46 @@
   --i1:#1a1a18;--i2:#4a4a45;--i3:#9a9990;
   --gr:#2d6a4f;--gl:#52b788;--gx:#d8f3dc;
   --am:#d97706;--rd:#dc2626;--bl:#1d4ed8;
+  --pu:#7c3aed;--pux:#f5f3ff;
   --bd:#e8e4dc;--sh:rgba(26,26,24,.07);
   --fd:'Fraunces',Georgia,serif;
   --fb:'DM Sans','Helvetica Neue',sans-serif;
   --fm:'DM Mono','Courier New',monospace;
-  --sat:env(safe-area-inset-top);
-  --sab:env(safe-area-inset-bottom);
+  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);
 }
 html,body{height:100%;background:var(--cr);font-family:var(--fb);color:var(--i1);overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 #app{max-width:430px;margin:0 auto;min-height:100vh;position:relative}
-
-/* Typography */
-.fd{font-family:var(--fd)}
-.fm{font-family:var(--fm)}
+.fd{font-family:var(--fd)}.fm{font-family:var(--fm)}
 .fw7{font-weight:700}.fw8{font-weight:800}
-.fs10{font-size:10px}.fs11{font-size:11px}.fs12{font-size:12px}.fs13{font-size:13px}.fs14{font-size:14px}
+.fs10{font-size:10px}.fs11{font-size:11px}.fs12{font-size:12px}.fs13{font-size:13px}.fs14{font-size:14px}.fs16{font-size:16px}
 .ci1{color:var(--i1)}.ci2{color:var(--i2)}.ci3{color:var(--i3)}
-.cgr{color:var(--gr)}.cam{color:var(--am)}.crd{color:var(--rd)}.cbl{color:var(--bl)}
-.upper{text-transform:uppercase;letter-spacing:.08em}
-.italic{font-style:italic}
-
-/* Layout */
-.page{padding:14px 16px calc(100px + var(--sab));animation:fadeIn .2s ease}
+.cgr{color:var(--gr)}.cam{color:var(--am)}.crd{color:var(--rd)}.cbl{color:var(--bl)}.cpu{color:var(--pu)}
+.upper{text-transform:uppercase;letter-spacing:.08em}.italic{font-style:italic}
+.page{padding:14px 16px calc(110px + var(--sab));animation:fadeIn .2s ease}
 .hdr{background:rgba(250,248,245,.96);border-bottom:1px solid var(--bd);padding:calc(14px + var(--sat)) 18px 12px;position:sticky;top:0;z-index:30;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.logo{font-family:var(--fd);font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--i1)}
+.logo{font-family:var(--fd);font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1}
 .logo-sub{font-family:var(--fm);font-size:10px;color:var(--i3);letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
 .nav{display:flex;background:var(--cr);border-radius:14px;padding:3px;gap:2px}
-.nb{flex:1;padding:9px 4px;border:none;border-radius:11px;cursor:pointer;font-size:13px;font-weight:500;background:transparent;color:var(--i3);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--fb)}
+.nb{flex:1;padding:9px 2px;border:none;border-radius:11px;cursor:pointer;font-size:12px;font-weight:500;background:transparent;color:var(--i3);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--fb)}
 .nb.on{font-weight:700;background:var(--wh);color:var(--i1);box-shadow:0 1px 6px var(--sh)}
-
-/* Cards */
 .card{background:var(--wh);border-radius:20px;border:1px solid var(--bd);padding:18px;margin-bottom:10px;box-shadow:0 2px 14px var(--sh)}
-.card-cr{background:var(--cr)}
 .sl{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--i3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
-.sl-gr{color:var(--gr)}.sl-bl{color:var(--bl)}.sl-am{color:var(--am)}
+.sl-gr{color:var(--gr)}.sl-bl{color:var(--bl)}.sl-am{color:var(--am)}.sl-pu{color:var(--pu)}
 
 /* Plant card */
-.pc{background:var(--wh);border-radius:20px;border:1px solid var(--bd);padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 14px var(--sh);display:flex;align-items:center;gap:14px;cursor:pointer;position:relative;overflow:hidden;transition:transform .1s,box-shadow .1s}
-.pc:active{transform:scale(.98);box-shadow:0 1px 6px var(--sh)}
+.pc{background:var(--wh);border-radius:20px;border:1px solid var(--bd);padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 14px var(--sh);display:flex;align-items:center;gap:14px;cursor:pointer;position:relative;overflow:hidden;transition:transform .1s}
+.pc:active{transform:scale(.98)}
 .pc-line{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
-.pc-ico{font-size:34px;width:52px;height:52px;background:var(--cr);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-photo{width:56px;height:56px;border-radius:14px;object-fit:cover;flex-shrink:0;background:var(--cr)}
+.pc-photo-em{width:56px;height:56px;border-radius:14px;background:var(--cr);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
 .pc-info{flex:1;min-width:0}
 .pc-name{font-family:var(--fd);font-weight:700;font-size:16px;letter-spacing:-.01em;margin-bottom:3px}
 .pc-sp{font-size:12px;color:var(--i3);font-style:italic;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-/* Badges */
-.vb{display:inline-flex;align-items:center;gap:5px;border-radius:100px;padding:3px 9px;font-size:12px;font-weight:700;font-family:var(--fb)}
+/* Vitality badge */
+.vb{display:inline-flex;align-items:center;gap:5px;border-radius:100px;padding:3px 9px;font-size:12px;font-weight:700}
 .vb.lg{font-size:13px;padding:5px 13px}
 .vb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .vb.lg .vb-dot{width:8px;height:8px}
@@ -94,13 +79,11 @@ html,body{height:100%;background:var(--cr);font-family:var(--fb);color:var(--i1)
 .btn-p{background:var(--gr);color:#fff;box-shadow:0 4px 14px rgba(45,106,79,.3)}
 .btn-s{background:var(--wh);color:var(--i1);border:1.5px solid var(--bd)}
 .btn-w{background:#fef2f2;color:var(--rd);border:1.5px solid #fecaca}
-.btn-g{background:transparent;color:var(--i3);border:none;box-shadow:none;padding:6px 10px}
+.btn-g{background:transparent;color:var(--i3);border:none;padding:6px 10px}
 .btn-bl{background:#dbeafe;color:var(--bl);border:none}
+.btn-pu{background:var(--pux);color:var(--pu);border:none}
 .btn-sm{padding:7px 14px;font-size:13px}
 .btn-full{width:100%}
-.btn-icon{padding:10px;border-radius:50%}
-
-/* FAB */
 .fab{position:fixed;bottom:calc(76px + var(--sab));right:20px;width:56px;height:56px;border-radius:50%;background:var(--gr);border:none;cursor:pointer;font-size:24px;color:#fff;box-shadow:0 6px 24px rgba(45,106,79,.4);z-index:25;display:flex;align-items:center;justify-content:center;transition:transform .1s}
 .fab:active{transform:scale(.9)}
 .safe-bottom{position:fixed;bottom:0;left:0;right:0;height:calc(66px + var(--sab));background:var(--pa);border-top:1px solid var(--bd);max-width:430px;margin:0 auto;z-index:28}
@@ -127,15 +110,15 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 .st{font-family:var(--fd);font-size:22px;font-weight:800}
 
 /* Toast */
-.toast{position:fixed;top:max(20px,var(--sat));left:50%;transform:translateX(-50%);background:var(--gr);color:#fff;padding:10px 22px;border-radius:100px;font-weight:700;font-size:13px;z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.2);animation:slideUp .2s ease;pointer-events:none;font-family:var(--fb)}
-.toast-w{background:var(--rd)}
-.toast-i{background:var(--bl)}
+.toast{position:fixed;top:max(20px,var(--sat));left:50%;transform:translateX(-50%);background:var(--gr);color:#fff;padding:10px 22px;border-radius:100px;font-weight:700;font-size:13px;z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.2);animation:slideUp .2s ease;pointer-events:none}
+.toast-w{background:var(--rd)}.toast-i{background:var(--bl)}
 
 /* Alerts */
 .alert{border-radius:18px;padding:14px 16px;margin-bottom:10px}
 .alert-y{background:#fffbeb;border:1.5px solid #fde68a}
 .alert-b{background:#eff6ff;border:1.5px solid #bfdbfe}
 .alert-g{background:#f0faf4;border:1.5px solid var(--gx)}
+.alert-pu{background:var(--pux);border:1.5px solid #e9d5ff}
 .ar{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .ar:last-child{margin-bottom:0}
 
@@ -154,49 +137,70 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 /* Hero */
 .hero{position:relative;overflow:hidden}
 .hero-bg{position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;opacity:.5}
-.hero-ico{font-size:50px;width:70px;height:70px;background:var(--cr);border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-photo{width:80px;height:80px;border-radius:18px;object-fit:cover;flex-shrink:0;border:2px solid var(--bd)}
+.hero-photo-em{width:80px;height:80px;border-radius:18px;background:var(--cr);display:flex;align-items:center;justify-content:center;font-size:44px;flex-shrink:0}
 
 /* Tabs */
 .tabs{display:flex;background:var(--cr);border-radius:14px;padding:4px;gap:2px;margin-bottom:14px}
 .tab{flex:1;padding:9px 4px;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:500;background:transparent;color:var(--i3);transition:all .15s;font-family:var(--fb)}
 .tab.on{font-weight:700;background:var(--wh);color:var(--i1);box-shadow:0 1px 4px var(--sh)}
-
-/* Row items */
 .ri{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
 .ri:last-child{border-bottom:none}
-
-/* Progress */
 .pr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .pt{flex:1;height:6px;background:var(--cr);border-radius:6px;overflow:hidden}
 .pf{height:100%;border-radius:6px}
-
-/* Pills */
 .pill{display:inline-block;background:var(--gx);color:var(--gr);border-radius:100px;padding:3px 10px;font-size:12px;font-weight:600;margin:0 4px 4px 0}
-
-/* Quote */
 .quote{font-size:13px;color:var(--i3);font-style:italic;border-left:3px solid var(--gl);padding-left:12px;margin-top:10px}
-
-/* Score bar */
 .sbt{height:6px;background:var(--cr);border-radius:10px;overflow:hidden;margin-top:4px}
 .sbf{height:100%;border-radius:10px;transition:width .6s}
 
 /* Map */
-#map{width:100%;height:260px;border-radius:14px;overflow:hidden;z-index:1}
+#leaflet-map{width:100%;height:260px;border-radius:14px;overflow:hidden;z-index:1}
 .map-card{position:relative}
-.map-overlay-btn{position:absolute;top:10px;right:10px;z-index:400;background:var(--wh);border:1px solid var(--bd);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px var(--sh);font-family:var(--fb);color:var(--i1)}
-.wx-chip{position:absolute;bottom:10px;left:10px;right:10px;z-index:400;background:rgba(250,248,245,.95);border-radius:12px;padding:10px 14px;backdrop-filter:blur(10px);box-shadow:0 2px 12px var(--sh);display:flex;align-items:center;gap:10px}
-
-/* Weather card */
 .wx-card{background:linear-gradient(135deg,#e8f5e9,#f0faf4);border-radius:20px;border:1px solid #c8e6c9;padding:16px 18px;margin-bottom:12px;box-shadow:0 2px 14px var(--sh)}
+
+/* AI wizard */
+.wiz-step{animation:fadeIn .2s ease}
+.wiz-q{font-family:var(--fd);font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.wiz-sub{font-size:14px;color:var(--i3);margin-bottom:20px;line-height:1.5}
+.wiz-opts{display:flex;flex-direction:column;gap:8px}
+.wiz-opt{background:var(--wh);border:1.5px solid var(--bd);border-radius:14px;padding:14px 16px;cursor:pointer;font-size:14px;font-weight:500;transition:all .15s;text-align:left;font-family:var(--fb);display:flex;align-items:center;gap:10px}
+.wiz-opt:active,.wiz-opt.on{border-color:var(--gr);background:var(--gx);color:var(--gr);font-weight:700}
+.wiz-opt-em{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.wiz-progress{display:flex;gap:4px;margin-bottom:24px}
+.wiz-dot{flex:1;height:4px;border-radius:2px;background:var(--bd);transition:background .3s}
+.wiz-dot.on{background:var(--gr)}
+.wiz-loading{text-align:center;padding:40px 20px}
+.wiz-loading-em{font-size:52px;animation:spin 2s linear infinite;display:inline-block;margin-bottom:16px}
+.wiz-result{background:var(--gx);border-radius:16px;padding:16px;margin-bottom:14px}
+
+/* Chat */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px - var(--sat) - var(--sab));min-height:300px}
+.chat-msgs{flex:1;overflow-y:auto;padding:4px 0 12px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+.chat-bubble{max-width:85%;padding:12px 15px;border-radius:18px;font-size:14px;line-height:1.55;animation:slideUp .2s ease}
+.chat-bubble.ai{background:var(--wh);border:1px solid var(--bd);border-radius:4px 18px 18px 18px;align-self:flex-start;color:var(--i1)}
+.chat-bubble.user{background:var(--gr);color:#fff;border-radius:18px 18px 4px 18px;align-self:flex-end}
+.chat-bubble.thinking{background:var(--cr);color:var(--i3);font-style:italic;align-self:flex-start}
+.chat-input-row{display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--bd)}
+.chat-input{flex:1;background:var(--wh);border:1.5px solid var(--bd);border-radius:20px;padding:11px 16px;font-family:var(--fb);font-size:15px;color:var(--i1);outline:none;resize:none;max-height:100px;overflow-y:auto;line-height:1.4}
+.chat-input:focus{border-color:var(--gr)}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--gr);border:none;cursor:pointer;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .1s}
+.chat-send:active{transform:scale(.9)}
+.chat-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 2px}
+.chat-sug{background:var(--cr);border:1px solid var(--bd);border-radius:100px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);color:var(--i2);transition:all .15s;white-space:nowrap}
+.chat-sug:active{background:var(--gx);color:var(--gr)}
+
+/* Photo upload */
+.photo-preview{width:100%;height:160px;object-fit:cover;border-radius:14px;display:block;margin-bottom:10px}
+.photo-placeholder{width:100%;height:120px;background:var(--cr);border-radius:14px;border:2px dashed var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:10px;transition:all .15s}
+.photo-placeholder:active{background:var(--gx);border-color:var(--gl)}
 
 /* AI box */
 .ai-box{background:linear-gradient(135deg,#f5f3ff,#faf8ff);border:1.5px solid #e9d5ff;border-radius:16px;padding:16px;margin-bottom:20px}
 .ai-r{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px}
-
-/* Sparkline */
 .spark{width:100%;height:44px;overflow:visible}
 
-/* Misc flex */
+/* Misc */
 .flex{display:flex}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}
 .ac{align-items:center}.jb{justify-content:space-between}.f1{flex:1}
 .tc{text-align:center}.tr{text-align:right}
@@ -209,7 +213,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 select option{background:var(--pa);color:var(--i1)}
 input[type=date]::-webkit-calendar-picker-indicator{opacity:.4}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
-
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -218,13 +221,12 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.4}
 </head>
 <body>
 <div id="app"></div>
-
 <script>
 'use strict';
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // CONSTANTS
-// ═══════════════════════════════════════════
-const SK='plantai_v4';
+// ═══════════════════════════════════
+const SK='plantai_v5';
 const WDAYS={'Cada día':1,'Cada 2 días':2,'2× semana':3,'1× semana':7,'Cada 2 semanas':14,'Mensual':30};
 const VIT={
   'óptimo':  {label:'Óptimo',  color:'#2d6a4f',bg:'#d8f3dc',dot:'#52b788'},
@@ -238,49 +240,50 @@ const WATERS=Object.keys(WDAYS);
 const FERTS=['Semanal','Quincenal','Mensual','Cada 2 meses','Estacional','Nunca'];
 const WEMOJI={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'⛈',71:'🌨',80:'🌦',81:'🌧',82:'⛈',95:'⛈'};
 const WTXT={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',51:'Llovizna',53:'Llovizna moderada',55:'Llovizna intensa',61:'Lluvia ligera',63:'Lluvia',65:'Lluvia intensa',71:'Nieve ligera',80:'Chubascos',81:'Chubascos moderados',82:'Chubascos fuertes',95:'Tormenta'};
-const CHKINT={'Cada día':3,'Cada 2 días':3,'2× semana':5,'1× semana':7,'Cada 2 semanas':10,'Mensual':14};
 const SEASONS=['Invierno','Invierno','Primavera','Primavera','Primavera','Verano','Verano','Verano','Otoño','Otoño','Otoño','Invierno'];
 const DEMO=[
-  {id:'p1',name:'Monstera',icon:'🌿',species:'Monstera deliciosa',location:'Salón',outdoor:false,pot:'25cm terracota',soil:'Universal + perlita',acquired:'2023-03-15',watering:'1× semana',sunlight:'Indirecta brillante',fertilizer:'Mensual',vitality:'óptimo',notes:'Fenestración espectacular.',lastWatered:'2024-03-08',nextWatering:'2024-03-15',lastCheck:null,nextCheck:td(),checkHistory:[],entries:[{id:'e1',date:'2024-01-10',height:45,leaves:12,note:'Nueva hoja brotando',vitality:'óptimo'},{id:'e2',date:'2024-02-14',height:52,leaves:14,note:'Hoja fenestrada nueva',vitality:'óptimo'},{id:'e3',date:'2024-03-08',height:58,leaves:16,note:'Crecimiento explosivo',vitality:'óptimo'}],tags:['interior','tropical']},
-  {id:'p2',name:'San Pedro',icon:'🌵',species:'Echinopsis pachanoi',location:'Balcón',outdoor:true,pot:'15cm cerámica',soil:'Suculentas',acquired:'2023-07-20',watering:'Cada 2 semanas',sunlight:'Pleno sol',fertilizer:'Estacional',vitality:'bueno',notes:'Muy resistente.',lastWatered:'2024-03-01',nextWatering:'2024-03-15',lastCheck:null,nextCheck:td(),checkHistory:[],entries:[{id:'e4',date:'2024-01-05',height:28,leaves:0,note:'Verde intenso',vitality:'bueno'}],tags:['exterior','cactus']},
+  {id:'p1',name:'Monstera',icon:'🌿',photo:null,species:'Monstera deliciosa',location:'Salón',outdoor:false,pot:'25cm terracota',soil:'Universal + perlita',acquired:'2023-03-15',watering:'1× semana',sunlight:'Indirecta brillante',fertilizer:'Mensual',vitality:'óptimo',notes:'Fenestración espectacular.',aiCareGuide:null,checkIntervalDays:7,lastWatered:'2024-03-08',nextWatering:'2024-03-15',lastCheck:null,nextCheck:new Date().toISOString().split('T')[0],checkHistory:[],entries:[{id:'e1',date:'2024-01-10',height:45,leaves:12,note:'Nueva hoja brotando',vitality:'óptimo'},{id:'e2',date:'2024-02-14',height:52,leaves:14,note:'Hoja fenestrada nueva',vitality:'óptimo'},{id:'e3',date:'2024-03-08',height:58,leaves:16,note:'Crecimiento explosivo',vitality:'óptimo'}],tags:['interior','tropical']},
+  {id:'p2',name:'San Pedro',icon:'🌵',photo:null,species:'Echinopsis pachanoi',location:'Balcón',outdoor:true,pot:'15cm cerámica',soil:'Suculentas',acquired:'2023-07-20',watering:'Cada 2 semanas',sunlight:'Pleno sol',fertilizer:'Estacional',vitality:'bueno',notes:'Muy resistente.',aiCareGuide:null,checkIntervalDays:14,lastWatered:'2024-03-01',nextWatering:'2024-03-15',lastCheck:null,nextCheck:new Date().toISOString().split('T')[0],checkHistory:[],entries:[{id:'e4',date:'2024-01-05',height:28,leaves:0,note:'Verde intenso',vitality:'bueno'}],tags:['exterior','cactus']},
 ];
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════
-function td(){return new Date().toISOString().split('T')[0];}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-function daysAgo(d){return d?Math.floor((Date.now()-new Date(d))/864e5):999;}
-function daysUntil(d){return d?Math.ceil((new Date(d)-Date.now())/864e5):null;}
-function fmt(s){return s?new Date(s).toLocaleDateString('es-ES',{day:'numeric',month:'short'}):'—';}
-function fmtL(s){return s?new Date(s).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}):'—';}
-function season(){return SEASONS[new Date().getMonth()];}
-function qs(s){return document.querySelector(s);}
+// ═══════════════════════════════════
+const td=()=>new Date().toISOString().split('T')[0];
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const daysAgo=d=>d?Math.floor((Date.now()-new Date(d))/864e5):999;
+const daysUntil=d=>d?Math.ceil((new Date(d)-Date.now())/864e5):null;
+const fmt=s=>s?new Date(s).toLocaleDateString('es-ES',{day:'numeric',month:'short'}):'—';
+const fmtL=s=>s?new Date(s).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}):'—';
+const season=()=>SEASONS[new Date().getMonth()];
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 let S;
-function loadS(){
-  try{const r=localStorage.getItem(SK);return r?JSON.parse(r):{plants:DEMO,settings:{rainMm:8,apiKey:'',homeLocation:null}};}
-  catch{return{plants:DEMO,settings:{rainMm:8,apiKey:'',homeLocation:null}};}
-}
+function loadS(){try{const r=localStorage.getItem(SK);return r?JSON.parse(r):{plants:DEMO,settings:{rainMm:8,apiKey:'',homeLocation:null},chatHistory:[]};}catch{return{plants:DEMO,settings:{rainMm:8,apiKey:'',homeLocation:null},chatHistory:[]};}}
 function saveS(){try{localStorage.setItem(SK,JSON.stringify(S));}catch{}}
 S=loadS();
+if(!S.chatHistory)S.chatHistory=[];
 
 let page='home',selId=null,activeTab='ficha',activeSheet=null;
 let weather=null,wxState='idle';
 let aiState='idle',aiIdent=null;
 let checkState='idle',checkResult=null;
 let search='',leafMap=null,homeMarker=null,wxMarker=null;
+let chatInput='',chatLoading=false;
+
+// Wizard state
+let wizStep=0,wizAnswers={},wizLoading=false,wizResult=null,wizPhoto=null,wizPhotoB64=null;
+
 let _fp={},_fe={};
-const BP=()=>({name:'',icon:'🌿',species:'',location:'',outdoor:false,pot:'',soil:'',acquired:td(),watering:'1× semana',sunlight:'Indirecta brillante',fertilizer:'Mensual',vitality:'bueno',notes:'',tags:''});
+const BP=()=>({name:'',icon:'🌿',photo:null,species:'',location:'',outdoor:false,pot:'',soil:'',acquired:td(),watering:'1× semana',sunlight:'Indirecta brillante',fertilizer:'Mensual',vitality:'bueno',notes:'',tags:'',aiCareGuide:null,checkIntervalDays:7});
 const BE=()=>({date:td(),height:'',leaves:'',note:'',vitality:'bueno'});
 _fp=BP();_fe=BE();
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // DOM HELPERS
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function el(tag,attrs,...ch){
   const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){
@@ -289,7 +292,7 @@ function el(tag,attrs,...ch){
     else if(k==='style'&&typeof v==='object')Object.assign(e.style,v);
     else if(k==='for')e.htmlFor=v;
     else if(k[0]==='$')e.addEventListener(k.slice(1),v);
-    else if(k==='val'){e.value=v;}
+    else if(k==='val')e.value=v;
     else e.setAttribute(k,v);
   }
   for(const c of ch.flat()){
@@ -298,41 +301,46 @@ function el(tag,attrs,...ch){
   }
   return e;
 }
-function svgEl(tag,attrs,...ch){
-  const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
-  for(const[k,v]of Object.entries(attrs||{}))e.setAttribute(k,v);
-  for(const c of ch.flat()){if(c)e.appendChild(c);}
-  return e;
-}
+function svgEl(tag,attrs,...ch){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs||{}))e.setAttribute(k,v);for(const c of ch.flat())if(c)e.appendChild(c);return e;}
 function div(cls,...ch){return el('div',{cls},...ch);}
-function span(cls,...ch){return el('span',{cls},...ch);}
 function btn(label,cls,cb,extra={}){return el('button',{cls:'btn '+cls,$click:cb,...extra},label);}
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 let _tst=null,_tTimer=null;
 function toast(msg,type='ok'){
   if(_tst)_tst.remove();
   _tst=el('div',{cls:'toast'+(type==='w'?' toast-w':type==='i'?' toast-i':'')},msg);
   document.getElementById('app').appendChild(_tst);
-  clearTimeout(_tTimer);
-  _tTimer=setTimeout(()=>{if(_tst){_tst.remove();_tst=null;}},3000);
+  clearTimeout(_tTimer);_tTimer=setTimeout(()=>{if(_tst){_tst.remove();_tst=null;}},3000);
 }
 
-// ═══════════════════════════════════════════
-// VITALITY BADGE
-// ═══════════════════════════════════════════
 function vbadge(v,lg=false){
   const vi=VIT[v]||VIT['bueno'];
-  return el('span',{cls:'vb'+(lg?' lg':''),style:{background:vi.bg,color:vi.color}},
-    el('span',{cls:'vb-dot',style:{background:vi.dot}}),vi.label
-  );
+  return el('span',{cls:'vb'+(lg?' lg':''),style:{background:vi.bg,color:vi.color}},el('span',{cls:'vb-dot',style:{background:vi.dot}}),vi.label);
 }
 
-// ═══════════════════════════════════════════
-// WEATHER — open-meteo (free, no key needed)
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// GEMINI API
+// ═══════════════════════════════════
+const getKey=()=>S.settings.apiKey||'';
+async function gemini(parts,temperature=0.2){
+  const key=getKey();
+  if(!key)throw new Error('NO_KEY');
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts}],generationConfig:{temperature}})
+  });
+  const j=await r.json();
+  if(j.error)throw new Error(j.error.message);
+  return (j.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
+}
+async function geminiJSON(parts){return JSON.parse(await gemini(parts,0.1));}
+
+// ═══════════════════════════════════
+// WEATHER
+// ═══════════════════════════════════
 function fetchWeather(){
   wxState='loading';render();
   if(!navigator.geolocation){wxState='error';render();return;}
@@ -342,38 +350,24 @@ function fetchWeather(){
       const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weathercode,windspeed_10m,precipitation&daily=precipitation_sum&timezone=auto&forecast_days=1`);
       const j=await r.json();
       let city='Tu ubicación';
-      try{
-        const g=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=es`);
-        const gj=await g.json();
-        city=gj.address?.city||gj.address?.town||gj.address?.village||gj.address?.municipality||city;
-      }catch{}
+      try{const g=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=es`);const gj=await g.json();city=gj.address?.city||gj.address?.town||gj.address?.village||gj.address?.municipality||city;}catch{}
       const rain=j.daily?.precipitation_sum?.[0]??j.current?.precipitation??0;
       weather={temp:Math.round(j.current.temperature_2m),code:j.current.weathercode,humidity:j.current.relative_humidity_2m,wind:Math.round(j.current.windspeed_10m),rain,city,lat,lon};
-      // Save home location if not set
-      if(!S.settings.homeLocation){
-        S.settings.homeLocation={lat,lon,city};saveS();
-      }
-      // Auto-water outdoor plants if enough rain
+      if(!S.settings.homeLocation){S.settings.homeLocation={lat,lon,city};saveS();}
       const thresh=S.settings.rainMm||8;
       if(rain>=thresh){
-        S.plants=S.plants.map(p=>{
-          if(!p.outdoor)return p;
-          const days=WDAYS[p.watering]||7;
-          const nxt=new Date();nxt.setDate(nxt.getDate()+days);
-          return{...p,lastWatered:td(),nextWatering:nxt.toISOString().split('T')[0]};
-        });
-        saveS();
-        toast(`🌧️ ${rain}mm de lluvia — plantas exteriores regadas`,'i');
+        S.plants=S.plants.map(p=>{if(!p.outdoor)return p;const days=WDAYS[p.watering]||7;const nxt=new Date();nxt.setDate(nxt.getDate()+days);return{...p,lastWatered:td(),nextWatering:nxt.toISOString().split('T')[0]};});
+        saveS();toast(`🌧️ ${rain}mm — plantas exteriores regadas`,'i');
       }
       wxState='ok';
-    }catch(e){wxState='error';}
+    }catch{wxState='error';}
     render();
   },()=>{wxState='error';render();});
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // PLANT ACTIONS
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function waterPlant(id){
   S.plants=S.plants.map(p=>{
     if(p.id!==id)return p;
@@ -384,169 +378,244 @@ function waterPlant(id){
   });
   saveS();toast('💧 Riego registrado');render();
 }
-
-function deletePlant(id){
-  S.plants=S.plants.filter(p=>p.id!==id);
-  saveS();selId=null;page='list';
-  toast('Planta eliminada','w');render();
-}
+function deletePlant(id){S.plants=S.plants.filter(p=>p.id!==id);saveS();selId=null;page='list';toast('Planta eliminada','w');render();}
 
 function addPlant(){
   if(!_fp.name.trim()){toast('El nombre es obligatorio','w');return;}
-  const ci=CHKINT[_fp.watering]||7;
+  const ci=_fp.checkIntervalDays||7;
   const nc=new Date();nc.setDate(nc.getDate()+ci);
-  const p={..._fp,id:uid(),tags:_fp.tags.split(',').map(t=>t.trim()).filter(Boolean),entries:[],checkHistory:[],lastCheck:null,nextCheck:nc.toISOString().split('T')[0],lastWatered:null,nextWatering:null};
+  const watering=_fp.watering||'1× semana';
+  const wdays=WDAYS[watering]||7;
+  const nw=new Date();nw.setDate(nw.getDate()+wdays);
+  const p={..._fp,id:uid(),tags:(_fp.tags||'').split(',').map(t=>t.trim()).filter(Boolean),entries:[],checkHistory:[],lastCheck:null,nextCheck:nc.toISOString().split('T')[0],lastWatered:null,nextWatering:nw.toISOString().split('T')[0]};
   S.plants.push(p);saveS();
-  activeSheet=null;_fp=BP();aiState='idle';aiIdent=null;
+  activeSheet=null;_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;wizPhoto=null;wizPhotoB64=null;
   toast('🌱 Planta añadida');render();
 }
-
 function addEntry(){
   if(!_fe.date||!selId)return;
   const entry={..._fe,id:uid(),height:Number(_fe.height)||0,leaves:Number(_fe.leaves)||0};
-  S.plants=S.plants.map(p=>{
-    if(p.id!==selId)return p;
-    const entries=[...(p.entries||[]),entry].sort((a,b)=>new Date(a.date)-new Date(b.date));
-    return{...p,entries};
-  });
+  S.plants=S.plants.map(p=>{if(p.id!==selId)return p;const entries=[...(p.entries||[]),entry].sort((a,b)=>new Date(a.date)-new Date(b.date));return{...p,entries};});
   saveS();activeSheet=null;_fe=BE();toast('📊 Registro guardado');render();
 }
+function closeSheet(){activeSheet=null;render();}
 
-// ═══════════════════════════════════════════
-// AI — Anthropic API (needs key)
-// ═══════════════════════════════════════════
-function getApiKey(){return S.settings.apiKey||'';}
-
+// ═══════════════════════════════════
+// AI — IDENTIFY PLANT
+// ═══════════════════════════════════
 async function identifyPlant(file){
   if(!file)return;
-  const key=getApiKey();
-  if(!key){toast('⚠️ Configura tu API key en Ajustes','w');return;}
+  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
   aiState='loading';aiIdent=null;render();
   try{
-    const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+    const b64=await fileToB64(file);
     const mt=file.type||'image/jpeg';
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:900,messages:[{role:'user',content:[
-        {type:'image',source:{type:'base64',media_type:mt,data:b64}},
-        {type:'text',text:`Identifica esta planta. Responde SOLO JSON válido sin markdown:\n{"commonName":"nombre en español","scientificName":"nombre científico","family":"familia","confidence":"alta|media|baja","icon":"emoji representativo","care":{"watering":"frecuencia riego","sunlight":"tipo luz","fertilizer":"frecuencia abono","difficulty":"fácil|moderado|difícil"},"description":"descripción breve 2 frases","tips":["tip1","tip2","tip3"],"toxic":false}`}
-      ]}]})
-    });
-    const j=await resp.json();
-    if(j.error){toast('Error API: '+j.error.message,'w');aiState='error';render();return;}
-    const txt=j.content?.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    const result=JSON.parse(txt);
+    const result=await geminiJSON([
+      {inline_data:{mime_type:mt,data:b64}},
+      {text:`Identifica esta planta. Responde SOLO JSON válido sin markdown:\n{"commonName":"nombre en español","scientificName":"nombre científico","family":"familia","confidence":"alta|media|baja","icon":"emoji","care":{"watering":"frecuencia riego","sunlight":"tipo luz","fertilizer":"frecuencia abono","difficulty":"fácil|moderado|difícil"},"description":"descripción breve 2 frases","tips":["tip1","tip2","tip3"],"toxic":false}`}
+    ]);
     aiIdent=result;aiState='done';
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
-  }catch(e){aiState='error';toast('Error identificando la planta','w');}
+  }catch(e){aiState='error';toast(e.message==='NO_KEY'?'⚠️ Configura tu API key en Ajustes':'Error identificando la planta','w');}
   render();
 }
 
+// ═══════════════════════════════════
+// AI — WIZARD CARE GUIDE
+// ═══════════════════════════════════
+const WIZ_QUESTIONS=[
+  {key:'experience',q:'¿Cuánta experiencia tienes con plantas?',sub:'Sé honesto, ¡no pasa nada!',opts:[{em:'🌱',label:'Soy principiante',val:'principiante'},{em:'🌿',label:'Tengo algo de experiencia',val:'intermedio'},{em:'🌳',label:'Soy bastante experto',val:'experto'}]},
+  {key:'location',q:'¿Dónde va a estar la planta?',sub:'Esto afecta mucho al riego y la luz',opts:[{em:'🏠',label:'Interior (salón, habitación...)',val:'interior'},{em:'🪟',label:'Junto a una ventana',val:'ventana'},{em:'🌿',label:'Balcón o terraza',val:'balcon'},{em:'🌳',label:'Jardín exterior',val:'jardin'}]},
+  {key:'light',q:'¿Cuánta luz natural recibe?',sub:'Mira a qué hora da el sol donde la pondrás',opts:[{em:'☀️',label:'Sol directo muchas horas',val:'pleno sol'},{em:'🌤',label:'Sol algunas horas al día',val:'sol parcial'},{em:'💡',label:'Luz indirecta, sin sol directo',val:'indirecta'},{em:'🌑',label:'Poca luz, zona oscura',val:'poca luz'}]},
+  {key:'climate',q:'¿Cómo es el clima donde vives?',sub:'Piensa en el clima general de tu zona',opts:[{em:'🌞',label:'Cálido y seco (mediterráneo)',val:'calido seco'},{em:'🌧',label:'Templado con lluvias',val:'templado'},{em:'❄️',label:'Frío con inviernos duros',val:'frio'},{em:'💦',label:'Húmedo y tropical',val:'humedo'}]},
+  {key:'time',q:'¿Cuánto tiempo puedes dedicarle?',sub:'Hay plantas muy exigentes y otras muy fáciles',opts:[{em:'⏱',label:'Poco — quiero algo fácil',val:'minimo'},{em:'📅',label:'Riego semanal está bien',val:'semanal'},{em:'🌱',label:'Me gusta cuidarlas a diario',val:'diario'}]},
+];
+
+async function runWizard(){
+  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
+  wizLoading=true;wizResult=null;render();
+  try{
+    const wxInfo=weather?`Clima actual: ${weather.temp}°C, ${WTXT[weather.code]||''}, humedad ${weather.humidity}%, lluvia hoy ${weather.rain}mm. Ciudad: ${weather.city}.`:'Sin datos de clima disponibles.';
+    const photoB64=wizPhotoB64;
+    const parts=[];
+    if(photoB64)parts.push({inline_data:{mime_type:'image/jpeg',data:photoB64}});
+    parts.push({text:`Eres un experto botánico y quieres ayudar a alguien a cuidar una planta.
+${photoB64?'Se adjunta foto de la planta.':''}
+Planta: ${_fp.name}${_fp.species?' ('+_fp.species+')':''}
+Respuestas del usuario:
+- Experiencia: ${wizAnswers.experience||'desconocida'}
+- Ubicación planta: ${wizAnswers.location||'desconocida'}  
+- Luz disponible: ${wizAnswers.light||'desconocida'}
+- Clima zona: ${wizAnswers.climate||'desconocido'}
+- Tiempo disponible: ${wizAnswers.time||'desconocido'}
+${wxInfo}
+Temporada actual: ${season()}
+
+Genera una guía de cuidados personalizada y adaptada a su situación. Responde SOLO JSON válido sin markdown:
+{
+  "wateringFrequency": "Cada X días",
+  "wateringDays": 7,
+  "wateringTip": "consejo concreto de riego adaptado a su clima y situación",
+  "sunlight": "tipo de luz recomendada",
+  "substrate": "sustrato ideal para esta planta con marcas o mezclas concretas",
+  "potSize": "tamaño de maceta recomendado",
+  "fertilizer": "frecuencia y tipo de fertilizante",
+  "transplantTip": "cuándo y cómo trasplantar a maceta más grande",
+  "checkIntervalDays": 7,
+  "difficulty": "fácil|moderado|difícil",
+  "seasonalTips": {"primavera":"tip","verano":"tip","otoño":"tip","invierno":"tip"},
+  "commonProblems": [{"problem":"problema común","solution":"solución"}],
+  "beginnerTips": ["consejo1 para principiante","consejo2","consejo3"],
+  "summary": "resumen de 2 frases del cuidado principal"
+}`});
+    const result=await geminiJSON(parts);
+    wizResult=result;
+    // Apply to plant form
+    if(result.wateringDays){
+      // Find closest watering option
+      const closest=WATERS.reduce((a,w)=>Math.abs(WDAYS[w]-result.wateringDays)<Math.abs(WDAYS[a]-result.wateringDays)?w:a,WATERS[0]);
+      _fp.watering=closest;
+    }
+    if(result.sunlight){const sl=LIGHTS.find(l=>l.toLowerCase().includes(result.sunlight.toLowerCase().split(' ')[0]))||_fp.sunlight;_fp.sunlight=sl;}
+    if(result.fertilizer){const fr=FERTS.find(f=>f.toLowerCase().includes(result.fertilizer.toLowerCase().split(' ')[0]))||_fp.fertilizer;_fp.fertilizer=fr;}
+    if(result.substrate)_fp.soil=result.substrate.split(',')[0].trim();
+    if(result.potSize)_fp.pot=result.potSize;
+    if(result.checkIntervalDays)_fp.checkIntervalDays=result.checkIntervalDays;
+    _fp.aiCareGuide=result;
+  }catch(e){toast(e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'Error generando guía','w');}
+  wizLoading=false;render();
+}
+
+// ═══════════════════════════════════
+// AI — HEALTH CHECK
+// ═══════════════════════════════════
 async function runCheck(plantId){
   const p=S.plants.find(x=>x.id===plantId);
   if(!p)return;
-  const key=getApiKey();
-  if(!key){toast('⚠️ Configura tu API key en Ajustes','w');return;}
+  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
   selId=plantId;checkState='loading';checkResult=null;activeSheet='check';render();
   const last=p.entries?.[p.entries.length-1];
   const dw=daysAgo(p.lastWatered);
   const dn=daysUntil(p.nextWatering);
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:700,messages:[{role:'user',content:`Eres botánico experto. Analiza el estado de esta planta.\n\nPlanta: ${p.name} (${p.species||'?'})\nUbicación: ${p.location} (${p.outdoor?'exterior':'interior'})\nRiego: ${p.watering} | Último hace ${dw}d | ${dn!==null?(dn<=0?`RETRASO ${Math.abs(dn)}d`:`próximo en ${dn}d`):''}\nLuz: ${p.sunlight} | Fertilizante: ${p.fertilizer}\nTemporada: ${season()}\nÚltimo estado: ${last?`${last.height}cm, ${last.leaves} hojas, ${last.vitality}, "${last.note}"`:'sin registros'}\nNotas: ${p.notes||'ninguna'}\n\nResponde SOLO JSON:\n{"vitality":"óptimo|bueno|atención|crítico","score":85,"headline":"frase muy corta","diagnosis":"2-3 frases","actions":[{"priority":"alta|media|baja","action":"acción concreta"}],"nextCheckDays":7,"positives":["positivo1","positivo2"]}`}]})
-    });
-    const j=await resp.json();
-    if(j.error){toast('Error API: '+j.error.message,'w');checkState='error';render();return;}
-    const txt=j.content?.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    const result=JSON.parse(txt);
+    const wxInfo=weather?`Clima ahora: ${weather.temp}°C, ${WTXT[weather.code]}, humedad ${weather.humidity}%, lluvia hoy ${weather.rain}mm.`:'';
+    const result=await geminiJSON([{text:`Eres botánico experto. Analiza el estado de esta planta y da recomendaciones muy concretas y útiles.
+
+Planta: ${p.name} (${p.species||'?'})
+Ubicación: ${p.location} (${p.outdoor?'exterior':'interior'})
+Riego programado: ${p.watering} | Último hace ${dw} días | ${dn!==null?(dn<=0?`RETRASO DE ${Math.abs(dn)} DÍAS`:`próximo en ${dn} días`):''}
+Luz: ${p.sunlight} | Fertilizante: ${p.fertilizer}
+Sustrato: ${p.soil||'desconocido'} | Maceta: ${p.pot||'desconocida'}
+Temporada: ${season()} | ${wxInfo}
+Último registro: ${last?`${last.height}cm, ${last.leaves} hojas, estado: ${last.vitality}, nota: "${last.note}"`:'sin registros'}
+Tiempo con el usuario: ${Math.floor((Date.now()-new Date(p.acquired))/864e5/30)} meses
+Notas: ${p.notes||'ninguna'}
+Guía IA previa: ${p.aiCareGuide?p.aiCareGuide.summary:'ninguna'}
+
+Responde SOLO JSON sin markdown:
+{"vitality":"óptimo|bueno|atención|crítico","score":85,"headline":"frase muy corta del estado","diagnosis":"2-3 frases diagnóstico concreto","actions":[{"priority":"alta|media|baja","action":"acción muy concreta y práctica"}],"nextCheckDays":7,"positives":["punto positivo 1","punto positivo 2"],"transplantNeeded":false,"transplantReason":"razón si necesita trasplante"}`}]);
     checkResult=result;checkState='done';
     const nc=new Date();nc.setDate(nc.getDate()+(result.nextCheckDays||7));
     S.plants=S.plants.map(pp=>{
       if(pp.id!==plantId)return pp;
-      return{...pp,vitality:result.vitality,lastCheck:td(),nextCheck:nc.toISOString().split('T')[0],checkHistory:[...(pp.checkHistory||[]),{date:td(),vitality:result.vitality,score:result.score,headline:result.headline}].slice(-10)};
+      return{...pp,vitality:result.vitality,lastCheck:td(),nextCheck:nc.toISOString().split('T')[0],checkIntervalDays:result.nextCheckDays||pp.checkIntervalDays||7,checkHistory:[...(pp.checkHistory||[]),{date:td(),vitality:result.vitality,score:result.score,headline:result.headline}].slice(-10)};
     });
     saveS();
-  }catch(e){checkState='error';toast('Error en el análisis','w');}
+  }catch(e){checkState='error';toast(e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'Error en el análisis','w');}
   render();
 }
 
-function closeSheet(){activeSheet=null;render();}
+// ═══════════════════════════════════
+// AI — CHAT
+// ═══════════════════════════════════
+async function sendChat(msg){
+  if(!msg.trim()||chatLoading)return;
+  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
+  const plantsCtx=S.plants.map(p=>`${p.name} (${p.species||'?'}, ${p.location}, ${p.vitality})`).join(', ');
+  const wxCtx=weather?`Clima actual: ${weather.temp}°C, ${WTXT[weather.code]}, ${weather.city}.`:'';
+  S.chatHistory.push({role:'user',text:msg});
+  chatInput='';chatLoading=true;saveS();render();
+  try{
+    // Build conversation history for Gemini
+    const systemCtx=`Eres un experto botánico y asistente de jardinería llamado "plant.ai". Respondes en español, de forma amigable, práctica y concisa. 
+Plantas del usuario: ${plantsCtx||'ninguna aún'}.
+${wxCtx}
+Temporada actual: ${season()}.
+Responde siempre en español. Sé concreto y útil. Máximo 3 párrafos cortos.`;
+    const history=S.chatHistory.slice(-10);
+    const parts=[{text:systemCtx+'\n\n---\n\n'}];
+    history.forEach(m=>parts.push({text:(m.role==='user'?'Usuario: ':'Asistente: ')+m.text+'\n'}));
+    const reply=await gemini(parts,0.7);
+    S.chatHistory.push({role:'ai',text:reply});
+  }catch(e){S.chatHistory.push({role:'ai',text:e.message==='NO_KEY'?'⚠️ Necesitas configurar tu API key de Gemini en Ajustes para usar el chat.':'Lo siento, hubo un error. Inténtalo de nuevo.'});}
+  chatLoading=false;saveS();render();
+  setTimeout(()=>{const msgs=document.querySelector('.chat-msgs');if(msgs)msgs.scrollTop=msgs.scrollHeight;},50);
+}
 
-// ═══════════════════════════════════════════
-// MAP — Leaflet + OpenStreetMap (free, no key)
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// MAP
+// ═══════════════════════════════════
 function initMap(container){
   if(leafMap){leafMap.remove();leafMap=null;}
   const loc=S.settings.homeLocation;
-  const center=loc?[loc.lat,loc.lon]:[40.4168,-3.7038];// Madrid default
+  const center=loc?[loc.lat,loc.lon]:[40.4168,-3.7038];
   leafMap=L.map(container,{zoomControl:true,attributionControl:false}).setView(center,13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(leafMap);
-
-  // Home marker
   if(loc){
-    const homeIcon=L.divIcon({html:'<div style="background:#2d6a4f;color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 10px rgba(45,106,79,.4);border:2px solid #fff">🏠</div>',iconSize:[36,36],iconAnchor:[18,18],className:''});
-    homeMarker=L.marker([loc.lat,loc.lon],{icon:homeIcon}).addTo(leafMap);
-    homeMarker.bindPopup(`<b>${loc.city||'Mi casa'}</b><br>Toca para ver el tiempo`);
+    const hi=L.divIcon({html:'<div style="background:#2d6a4f;color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 10px rgba(45,106,79,.4);border:2px solid #fff">🏠</div>',iconSize:[36,36],iconAnchor:[18,18],className:''});
+    homeMarker=L.marker([loc.lat,loc.lon],{icon:hi}).addTo(leafMap);
+    homeMarker.bindPopup(`<b>${loc.city||'Mi casa'}</b>`);
   }
-
-  // Weather marker if available
   if(weather){
-    const wxIcon=L.divIcon({html:`<div style="background:#fff;border:1.5px solid #e8e4dc;border-radius:12px;padding:6px 10px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;box-shadow:0 2px 10px rgba(26,26,24,.1);white-space:nowrap">${WEMOJI[weather.code]||'🌡️'} ${weather.temp}°C</div>`,iconSize:[80,36],iconAnchor:[40,18],className:''});
+    const wi=L.divIcon({html:`<div style="background:#fff;border:1.5px solid #e8e4dc;border-radius:12px;padding:6px 10px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;box-shadow:0 2px 10px rgba(26,26,24,.1);white-space:nowrap">${WEMOJI[weather.code]||'🌡️'} ${weather.temp}°C</div>`,iconSize:[90,36],iconAnchor:[45,18],className:''});
     if(wxMarker)wxMarker.remove();
-    wxMarker=L.marker([weather.lat||center[0],weather.lon||center[1]],{icon:wxIcon}).addTo(leafMap);
-    wxMarker.bindPopup(`<b>${WTXT[weather.code]||''}</b><br>💧 ${weather.humidity}% · 💨 ${weather.wind}km/h${weather.rain>0?`<br>🌧️ ${weather.rain}mm hoy`:''}`);
+    wxMarker=L.marker([weather.lat||center[0],weather.lon||center[1]],{icon:wi}).addTo(leafMap);
+    wxMarker.bindPopup(`<b>${WTXT[weather.code]||''}</b><br>💧 ${weather.humidity}% · 💨 ${weather.wind}km/h${weather.rain>0?`<br>🌧️ ${weather.rain}mm`:''}`);
   }
-
-  // Click to set home
   leafMap.on('click',e=>{
     const{lat,lng}=e.latlng;
     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=es`)
-      .then(r=>r.json()).then(gj=>{
-        const city=gj.address?.city||gj.address?.town||gj.address?.village||gj.address?.municipality||'Mi casa';
-        S.settings.homeLocation={lat,lon:lng,city};saveS();
-        toast('📍 Casa guardada: '+city);
-        initMap(container);
-      }).catch(()=>{
-        S.settings.homeLocation={lat,lon:lng,city:'Mi casa'};saveS();
-        toast('📍 Ubicación guardada');
-        initMap(container);
-      });
+      .then(r=>r.json()).then(gj=>{const city=gj.address?.city||gj.address?.town||gj.address?.village||'Mi casa';S.settings.homeLocation={lat,lon:lng,city};saveS();toast('📍 Casa guardada: '+city);initMap(container);}).catch(()=>{S.settings.homeLocation={lat,lon:lng,city:'Mi casa'};saveS();toast('📍 Ubicación guardada');initMap(container);});
   });
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// FILE UTILS
+// ═══════════════════════════════════
+function fileToB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});}
+function fileToDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
+async function handlePlantPhoto(file){
+  if(!file)return;
+  const dataUrl=await fileToDataURL(file);
+  _fp.photo=dataUrl;
+  const b64=await fileToB64(file);wizPhotoB64=b64;
+  render();
+}
+
+// ═══════════════════════════════════
 // SPARKLINE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function sparkline(entries){
   if(!entries||entries.length<2)return null;
-  const W=280,H=50;
-  const hs=entries.map(e=>e.height||0);
+  const W=280,H=50,hs=entries.map(e=>e.height||0);
   const mx=Math.max(...hs),mn=Math.min(...hs),rng=mx-mn||1;
   const pts=entries.map((e,i)=>[(i/(entries.length-1))*(W-8)+4,H-4-((e.height-mn)/rng)*(H-10)]);
   const d=pts.map(([x,y],i)=>`${i===0?'M':'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
   const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,class:'spark'});
-  // Fill area
-  const fp_pts=`${pts.map(([x,y])=>`${x},${y}`).join(' ')} ${pts[pts.length-1][0]},${H} ${pts[0][0]},${H}`;
-  svg.appendChild(svgEl('polygon',{points:fp_pts,fill:'rgba(45,106,79,.08)'}));
+  svg.appendChild(svgEl('polygon',{points:`${pts.map(([x,y])=>`${x},${y}`).join(' ')} ${pts[pts.length-1][0]},${H} ${pts[0][0]},${H}`,fill:'rgba(45,106,79,.08)'}));
   svg.appendChild(svgEl('path',{d,fill:'none',stroke:'#2d6a4f','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round'}));
-  pts.forEach(([x,y],i)=>{
-    svg.appendChild(svgEl('circle',{cx:x,cy:y,r:i===pts.length-1?'4':'3',fill:i===pts.length-1?'#2d6a4f':'#fff',stroke:'#2d6a4f','stroke-width':'2'}));
-  });
+  pts.forEach(([x,y],i)=>svg.appendChild(svgEl('circle',{cx:x,cy:y,r:i===pts.length-1?'4':'3',fill:i===pts.length-1?'#2d6a4f':'#fff',stroke:'#2d6a4f','stroke-width':'2'})));
   return svg;
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // RENDER
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function render(){
   const app=document.getElementById('app');
-  // Preserve toast
-  const existing_toast=app.querySelector('.toast');
+  const existingToast=app.querySelector('.toast');
   app.innerHTML='';
-  if(existing_toast)app.appendChild(existing_toast);
+  if(existingToast)app.appendChild(existingToast);
   app.appendChild(buildHeader());
   const pageEl=el('div',{cls:'page'});
   if(page==='home')pageEl.appendChild(buildHome());
@@ -554,6 +623,7 @@ function render(){
   else if(page==='detail')pageEl.appendChild(buildDetail());
   else if(page==='stats')pageEl.appendChild(buildStats());
   else if(page==='map')pageEl.appendChild(buildMapPage());
+  else if(page==='chat')pageEl.appendChild(buildChatPage());
   else if(page==='settings')pageEl.appendChild(buildSettings());
   app.appendChild(pageEl);
   app.appendChild(buildFAB());
@@ -561,67 +631,48 @@ function render(){
   if(activeSheet==='plant')app.appendChild(buildSheetPlant());
   if(activeSheet==='entry')app.appendChild(buildSheetEntry());
   if(activeSheet==='check')app.appendChild(buildSheetCheck());
-  // Init map after DOM
-  if(page==='map'){
-    setTimeout(()=>{
-      const mc=document.getElementById('leaflet-map');
-      if(mc)initMap(mc);
-    },100);
-  }
+  if(page==='map')setTimeout(()=>{const mc=document.getElementById('leaflet-map');if(mc)initMap(mc);},100);
+  if(page==='chat')setTimeout(()=>{const msgs=document.querySelector('.chat-msgs');if(msgs)msgs.scrollTop=msgs.scrollHeight;},50);
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // HEADER
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function buildHeader(){
   const p=S.plants.find(x=>x.id===selId);
   const isPlants=page==='list'||page==='detail';
-  const subtitle={home:'smart garden',list:'mis plantas',detail:p?p.name:'',stats:'estadísticas',map:'mapa & clima',settings:'ajustes'}[page]||'';
-
+  const subtitles={home:'smart garden',list:'mis plantas',detail:p?p.name:'',stats:'estadísticas',map:'mapa & clima',chat:'asistente IA',settings:'ajustes'};
   const left=el('div',{cls:'flex ac gap8'},
-    (page==='detail'||page==='settings')
-      ?el('button',{cls:'btn btn-g',style:{padding:'4px 8px',fontSize:'18px'},$click:()=>{page=page==='settings'?'home':'list';render();}},'←')
+    (page==='detail'||page==='settings'||page==='chat')
+      ?el('button',{cls:'btn btn-g',style:{padding:'4px 8px',fontSize:'18px'},$click:()=>{page=page==='settings'||page==='chat'?'home':'list';render();}},'←')
       :null,
-    el('div',{},
-      el('div',{cls:'logo'},'plant.ai'),
-      el('div',{cls:'logo-sub'},subtitle)
-    )
+    el('div',{},el('div',{cls:'logo'},'plant.ai'),el('div',{cls:'logo-sub'},subtitles[page]||''))
   );
-
   const right=weather
     ?el('div',{cls:'flex ac gap8'},
-        el('div',{cls:'tr'},
-          el('div',{cls:'fw7',style:{fontSize:'16px'}},(WEMOJI[weather.code]||'🌡️')+' '+weather.temp+'°'),
-          el('div',{cls:'fs10 ci3 fm'},(weather.city||'').slice(0,16))
-        ),
-        el('button',{cls:'btn btn-g btn-icon',style:{fontSize:'18px'},$click:()=>{page='map';render();}},
-          el('span',{style:{fontSize:'20px'}},'🗺️')
-        )
+        el('div',{cls:'tr'},el('div',{cls:'fw7',style:{fontSize:'16px'}},(WEMOJI[weather.code]||'🌡️')+' '+weather.temp+'°'),el('div',{cls:'fs10 ci3 fm'},(weather.city||'').slice(0,16))),
+        el('button',{cls:'btn btn-g',style:{padding:'4px 8px',fontSize:'20px'},$click:()=>{page='map';render();}},'🗺️')
       )
-    :el('button',{cls:'btn btn-g btn-icon',$click:()=>{page='map';render();}},el('span',{style:{fontSize:'20px'}},'🗺️'));
-
-  const navItems=[
-    {id:'home',icon:'⌂',label:'Inicio'},
-    {id:'list',icon:'◈',label:'Plantas'},
-    {id:'stats',icon:'◎',label:'Stats'},
-  ];
-
+    :el('button',{cls:'btn btn-g',style:{padding:'4px 8px',fontSize:'20px'},$click:()=>{page='map';render();}},'🗺️');
   const nav=el('div',{cls:'nav'},
-    ...navItems.map(n=>el('button',{
-      cls:'nb'+(page===n.id||(n.id==='list'&&isPlants)?' on':''),
-      $click:()=>{page=n.id;if(n.id!=='list')selId=null;render();}
-    },el('span',{cls:'nav-icon'},n.icon),n.label))
+    ...[{id:'home',icon:'⌂',label:'Inicio'},{id:'list',icon:'◈',label:'Plantas'},{id:'stats',icon:'◎',label:'Stats'},{id:'chat',icon:'💬',label:'Chat IA'}].map(n=>
+      el('button',{cls:'nb'+(page===n.id||(n.id==='list'&&isPlants)?' on':''),$click:()=>{page=n.id;if(n.id!=='list')selId=null;render();}},el('span',{style:{fontSize:'14px'}},n.icon),n.label)
+    )
   );
-
-  return el('div',{cls:'hdr'},
-    el('div',{cls:'hdr-top'},left,right),
-    nav
-  );
+  return el('div',{cls:'hdr'},el('div',{cls:'hdr-top'},left,right),nav);
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// PLANT PHOTO HELPER
+// ═══════════════════════════════════
+function plantPhoto(p,size=56,radius=14){
+  if(p.photo)return el('img',{cls:'pc-photo',src:p.photo,style:{width:size+'px',height:size+'px',borderRadius:radius+'px'}});
+  return el('div',{cls:'pc-photo-em',style:{width:size+'px',height:size+'px',borderRadius:radius+'px',fontSize:Math.floor(size*0.55)+'px'}},p.icon||'🌿');
+}
+
+// ═══════════════════════════════════
 // HOME PAGE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function buildHome(){
   const plants=S.plants;
   const needsW=plants.filter(p=>{const d=daysUntil(p.nextWatering);return d!==null&&d<=0;});
@@ -629,161 +680,64 @@ function buildHome(){
   const thresh=S.settings.rainMm||8;
   const rainedOut=weather&&weather.rain>=thresh;
   const frag=document.createDocumentFragment();
-
-  // Weather card
   frag.appendChild(buildWeatherCard());
-
-  // Stats
   frag.appendChild(el('div',{cls:'sg3'},
     statBox(plants.length,'Plantas 🌿','var(--i1)'),
     statBox(needsW.length,'Regar 💧',needsW.length>0?'var(--am)':'var(--i1)'),
     statBox(needsC.length,'Revisar 🔬',needsC.length>0?'var(--bl)':'var(--i1)')
   ));
-
-  // Rain info
-  if(rainedOut){
-    const outdoorP=plants.filter(p=>p.outdoor);
-    if(outdoorP.length>0){
-      frag.appendChild(el('div',{cls:'alert alert-b'},
-        el('div',{cls:'sl sl-bl mb8'},'🌧️ Ha llovido '+weather.rain+'mm hoy'),
-        el('div',{cls:'fs12 ci2 mb8'},'Plantas exteriores regadas automáticamente.'),
-        el('div',{},...outdoorP.map(p=>el('span',{cls:'pill'},p.icon+' '+p.name)))
-      ));
-    }
-  }
-
-  // Water alerts
+  if(rainedOut){const op=plants.filter(p=>p.outdoor);if(op.length>0)frag.appendChild(el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🌧️ Ha llovido '+weather.rain+'mm hoy'),el('div',{cls:'fs12 ci2 mb8'},'Plantas exteriores regadas automáticamente.'),el('div',{},...op.map(p=>el('span',{cls:'pill'},p.icon+' '+p.name)))));}
   const toW=needsW.filter(p=>!(rainedOut&&p.outdoor));
-  if(toW.length>0){
-    const box=el('div',{cls:'alert alert-y'},el('div',{cls:'sl sl-am mb8'},'💧 Necesitan agua hoy'));
-    toW.forEach(p=>{
-      box.appendChild(el('div',{cls:'ar'},
-        el('span',{style:{fontSize:'22px'}},p.icon),
-        el('span',{cls:'f1 fw7 fs13'},p.name),
-        btn('Regar','btn-p btn-sm',e=>{e.stopPropagation();waterPlant(p.id);})
-      ));
-    });
-    frag.appendChild(box);
-  }
-
-  // Check alerts (only if API key is set)
-  if(needsC.length>0&&getApiKey()){
-    const box=el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🔬 Check de salud pendiente'));
-    needsC.forEach(p=>{
-      box.appendChild(el('div',{cls:'ar'},
-        el('span',{style:{fontSize:'22px'}},p.icon),
-        el('span',{cls:'f1 fw7 fs13'},p.name),
-        btn('Analizar','btn-bl btn-sm',e=>{e.stopPropagation();runCheck(p.id);})
-      ));
-    });
-    frag.appendChild(box);
-  }
-
-  // API key reminder
-  if(!getApiKey()){
-    frag.appendChild(el('div',{cls:'card',style:{background:'linear-gradient(135deg,#f5f3ff,#faf8ff)',border:'1.5px solid #e9d5ff',cursor:'pointer'},$click:()=>{page='settings';render();}},
-      el('div',{cls:'flex ac gap10'},
-        el('span',{style:{fontSize:'28px'}},'🤖'),
-        el('div',{cls:'f1'},
-          el('div',{cls:'fw7 fs13'},'Activa la IA'),
-          el('div',{cls:'fs12 ci3'},'Añade tu API key para identificar plantas y hacer análisis de salud → Ajustes')
-        ),
-        el('span',{cls:'ci3',style:{fontSize:'18px'}},'›')
-      )
-    ));
-  }
-
-  // Plants
-  frag.appendChild(el('div',{cls:'flex jb ac mb8',style:{marginTop:'4px'}},
-    el('span',{cls:'sl',style:{marginBottom:0}},'Mis plantas'),
-    btn('Ver todas →','btn-g fs13 cgr',()=>{page='list';render();},{style:{padding:'4px 0'}})
-  ));
-
-  if(plants.length===0){
-    frag.appendChild(el('div',{cls:'card empty'},
-      el('div',{cls:'empty-em'},'🌱'),
-      el('div',{cls:'empty-t'},'Sin plantas aún'),
-      el('div',{cls:'empty-s'},'Empieza añadiendo tu primera planta'),
-      btn('+ Añadir planta','btn-p',()=>{_fp=BP();aiState='idle';aiIdent=null;activeSheet='plant';render();})
-    ));
-  }else{
-    plants.slice(0,3).forEach(p=>frag.appendChild(buildPlantCard(p)));
-    if(plants.length>3) frag.appendChild(btn('Ver las '+plants.length+' plantas →','btn-s btn-full',()=>{page='list';render();},{style:{marginTop:'4px'}}));
-  }
+  if(toW.length>0){const box=el('div',{cls:'alert alert-y'},el('div',{cls:'sl sl-am mb8'},'💧 Necesitan agua hoy'));toW.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Regar','btn-p btn-sm',e=>{e.stopPropagation();waterPlant(p.id);}))));frag.appendChild(box);}
+  if(needsC.length>0&&getKey()){const box=el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🔬 Check de salud pendiente'));needsC.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Analizar','btn-bl btn-sm',e=>{e.stopPropagation();runCheck(p.id);}))));frag.appendChild(box);}
+  if(!getKey())frag.appendChild(el('div',{cls:'card alert-pu',style:{cursor:'pointer'},$click:()=>{page='settings';render();}},el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'28px'}},'🤖'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs13'},'Activa la IA — es gratis'),el('div',{cls:'fs12 ci3'},'API key de Google Gemini → Ajustes')),el('span',{cls:'ci3',style:{fontSize:'18px'}},'›'))));
+  frag.appendChild(el('div',{cls:'flex jb ac mb8',style:{marginTop:'4px'}},el('span',{cls:'sl',style:{marginBottom:0}},'Mis plantas'),btn('Ver todas →','btn-g fs13 cgr',()=>{page='list';render();},{style:{padding:'4px 0'}})));
+  if(plants.length===0){frag.appendChild(el('div',{cls:'card empty'},el('div',{cls:'empty-em'},'🌱'),el('div',{cls:'empty-t'},'Sin plantas aún'),el('div',{cls:'empty-s'},'Empieza añadiendo tu primera planta'),btn('+ Añadir planta','btn-p',()=>{_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;activeSheet='plant';render();})));}
+  else{plants.slice(0,3).forEach(p=>frag.appendChild(buildPlantCard(p)));if(plants.length>3)frag.appendChild(btn('Ver las '+plants.length+' plantas →','btn-s btn-full',()=>{page='list';render();},{style:{marginTop:'4px'}}));}
   return frag;
 }
 
-function statBox(n,label,color){
-  return el('div',{cls:'sb2'},
-    el('div',{cls:'sn',style:{color}},String(n)),
-    el('div',{cls:'sl',style:{marginBottom:0,marginTop:'3px'}},label)
-  );
-}
+function statBox(n,label,color){return el('div',{cls:'sb2'},el('div',{cls:'sn',style:{color}},String(n)),el('div',{cls:'sl',style:{marginBottom:0,marginTop:'3px'}},label));}
 
-// ═══════════════════════════════════════════
-// WEATHER CARD
-// ═══════════════════════════════════════════
 function buildWeatherCard(){
-  if(wxState==='loading')return el('div',{cls:'card flex ac gap10',style:{padding:'14px 18px'}},
-    el('div',{style:{width:'8px',height:'8px',borderRadius:'50%',background:'#52b788',animation:'pulse 1s infinite'}}),
-    el('span',{cls:'fs13 ci3'},'Obteniendo clima…')
-  );
-  if(!weather){
-    return el('div',{cls:'wx-card'},
-      el('div',{cls:'flex ac gap10'},
-        el('span',{style:{fontSize:'28px'}},'🌍'),
-        el('div',{cls:'f1'},
-          el('div',{cls:'fw7 fs14'},'Sin datos de clima'),
-          el('div',{cls:'fs12 ci3'},'Necesitas permitir la ubicación')
-        ),
-        btn('↻ Obtener','btn-p btn-sm',fetchWeather)
-      )
-    );
-  }
-  const rain=weather.rain||0;
-  const thresh=S.settings.rainMm||8;
+  if(wxState==='loading')return el('div',{cls:'card flex ac gap10',style:{padding:'14px 18px'}},el('div',{style:{width:'8px',height:'8px',borderRadius:'50%',background:'#52b788',animation:'pulse 1s infinite'}}),el('span',{cls:'fs13 ci3'},'Obteniendo clima…'));
+  if(!weather)return el('div',{cls:'wx-card'},el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'28px'}},'🌍'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs14'},'Sin datos de clima'),el('div',{cls:'fs12 ci3'},'Necesitas permitir la ubicación')),btn('↻ Obtener','btn-p btn-sm',fetchWeather)));
+  const rain=weather.rain||0,thresh=S.settings.rainMm||8;
   return el('div',{cls:'wx-card'},
     el('div',{cls:'flex ac gap12'},
       el('div',{style:{fontSize:'36px'}},(WEMOJI[weather.code]||'🌡️')),
       el('div',{cls:'f1'},
-        el('div',{style:{fontSize:'21px',fontWeight:'700',fontFamily:'var(--fd)'}},
-          weather.temp+'°C ',el('span',{cls:'fs13 ci3',style:{fontFamily:'var(--fb)',fontWeight:'400'}},(WTXT[weather.code]||''))
-        ),
-        el('div',{cls:'fs12 ci3',style:{marginTop:'2px'}},'📍 '+weather.city+' · 💧'+weather.humidity+'% · 💨'+weather.wind+'km/h'+(rain>0?' · 🌧️ '+rain+'mm':''))
+        el('div',{style:{fontSize:'21px',fontWeight:'700',fontFamily:'var(--fd)'}},weather.temp+'°C ',el('span',{cls:'fs13 ci3',style:{fontFamily:'var(--fb)',fontWeight:'400'}},(WTXT[weather.code]||''))),
+        el('div',{cls:'fs12 ci3 mt4'},'📍 '+weather.city+' · 💧'+weather.humidity+'% · 💨'+weather.wind+'km/h'+(rain>0?' · 🌧️ '+rain+'mm':''))
       ),
       el('button',{style:{background:'none',border:'none',cursor:'pointer',color:'var(--i3)',fontSize:'16px',padding:'4px'},$click:fetchWeather},'↻')
     ),
-    rain>=thresh?el('div',{style:{marginTop:'10px',background:'rgba(29,78,216,.07)',borderRadius:'10px',padding:'8px 12px',fontSize:'12px',color:'var(--bl)',fontWeight:'600'}},'🌧️ '+rain+'mm detectados — riego exterior postponido automáticamente'):null
+    rain>=thresh?el('div',{style:{marginTop:'10px',background:'rgba(29,78,216,.07)',borderRadius:'10px',padding:'8px 12px',fontSize:'12px',color:'var(--bl)',fontWeight:'600'}},'🌧️ '+rain+'mm — riego exterior postponido automáticamente'):null
   );
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // PLANT CARD
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function buildPlantCard(p){
-  const du=daysUntil(p.nextWatering);
-  const overdue=du!==null&&du<=0;
+  const du=daysUntil(p.nextWatering),overdue=du!==null&&du<=0;
   const checkDue=daysUntil(p.nextCheck)!==null&&daysUntil(p.nextCheck)<=0;
   const vi=VIT[p.vitality]||VIT['bueno'];
   return el('div',{cls:'pc',$click:()=>{selId=p.id;activeTab='ficha';page='detail';render();}},
     el('div',{cls:'pc-line',style:{background:vi.dot}}),
-    el('div',{cls:'pc-ico'},p.icon),
+    plantPhoto(p),
     el('div',{cls:'pc-info'},
       el('div',{cls:'flex ac gap8 mb4'},el('span',{cls:'pc-name'},p.name),vbadge(p.vitality)),
       el('div',{cls:'pc-sp'},p.species||'Especie sin especificar'),
-      el('div',{cls:'pc-meta'},
-        el('span',{cls:'fs12 ci3'},'📍 '+(p.location||'—')),
-        overdue?el('span',{cls:'fs12 fw7 cam'},'💧 Regar ya'):null,
-        checkDue&&getApiKey()?el('span',{cls:'fs12 fw7 cbl'},'🔬 Revisar'):null
-      )
+      el('div',{cls:'pc-meta'},el('span',{cls:'fs12 ci3'},'📍 '+(p.location||'—')),overdue?el('span',{cls:'fs12 fw7 cam'},'💧 Regar ya'):null,checkDue&&getKey()?el('span',{cls:'fs12 fw7 cbl'},'🔬 Revisar'):null)
     ),
     el('div',{cls:'ci3',style:{fontSize:'18px',flexShrink:0}},'›')
   );
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // LIST PAGE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function buildList(){
   const frag=document.createDocumentFragment();
   const inp=el('input',{type:'text',placeholder:'Buscar plantas…',style:{marginBottom:'12px',display:'block'},val:search});
@@ -796,9 +750,9 @@ function buildList(){
   return frag;
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // DETAIL PAGE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function buildDetail(){
   const p=S.plants.find(x=>x.id===selId);
   if(!p)return el('div',{},'Planta no encontrada');
@@ -812,47 +766,44 @@ function buildDetail(){
   // Hero
   const hero=el('div',{cls:'card hero mb12'});
   hero.appendChild(el('div',{cls:'hero-bg',style:{background:vi.bg}}));
-  const heroTop=el('div',{cls:'flex gap10 ac',style:{position:'relative'}});
-  heroTop.appendChild(el('div',{cls:'hero-ico'},p.icon));
+  const heroTop=el('div',{cls:'flex gap12 ac',style:{position:'relative'}});
+  // Photo with edit button
+  const photoWrap=el('div',{style:{position:'relative',flexShrink:0}});
+  photoWrap.appendChild(plantPhoto(p,80,18));
+  const editPhotoLbl=el('label',{style:{position:'absolute',bottom:'-4px',right:'-4px',width:'26px',height:'26px',borderRadius:'50%',background:'var(--gr)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:'12px',border:'2px solid white',boxShadow:'0 2px 6px rgba(0,0,0,.2)'}},'📷');
+  const editPhotoInput=el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'}});
+  editPhotoInput.addEventListener('change',async e=>{
+    const file=e.target.files?.[0];if(!file)return;
+    const dataUrl=await fileToDataURL(file);
+    S.plants=S.plants.map(pp=>pp.id===p.id?{...pp,photo:dataUrl}:pp);
+    saveS();render();
+  });
+  editPhotoLbl.appendChild(editPhotoInput);
+  photoWrap.appendChild(editPhotoLbl);
+  heroTop.appendChild(photoWrap);
   const heroInfo=el('div',{cls:'f1'});
   heroInfo.appendChild(el('div',{style:{fontFamily:'var(--fd)',fontSize:'22px',fontWeight:'800',letterSpacing:'-.02em',marginBottom:'4px'}},p.name));
   heroInfo.appendChild(el('div',{cls:'fs13 ci3 italic mb8'},p.species||'—'));
   heroInfo.appendChild(vbadge(p.vitality,true));
   heroTop.appendChild(heroInfo);
   hero.appendChild(heroTop);
-
-  if(lastChk){
-    hero.appendChild(el('div',{style:{marginTop:'14px'}},
-      el('div',{cls:'flex jb mb4'},
-        el('span',{cls:'sl',style:{marginBottom:0}},'PUNTUACIÓN IA'),
-        el('span',{cls:'fs11 fw7',style:{color:vi.color}},lastChk.score+'/100')
-      ),
-      el('div',{cls:'sbt'},el('div',{cls:'sbf',style:{width:lastChk.score+'%',background:vi.dot}}))
-    ));
-  }
-
-  // Actions
-  const waterBtnLabel='💧 Regar'+(p.lastWatered===td()?' (hoy ✓)':'');
+  if(lastChk)hero.appendChild(el('div',{style:{marginTop:'14px'}},el('div',{cls:'flex jb mb4'},el('span',{cls:'sl',style:{marginBottom:0}},'PUNTUACIÓN IA'),el('span',{cls:'fs11 fw7',style:{color:vi.color}},lastChk.score+'/100')),el('div',{cls:'sbt'},el('div',{cls:'sbf',style:{width:lastChk.score+'%',background:vi.dot}}))));
+  // Next check info
+  const nextCheckDays=daysUntil(p.nextCheck);
+  hero.appendChild(el('div',{cls:'fs12 ci3',style:{marginTop:'10px',fontFamily:'var(--fm)'}},
+    '🔬 Próximo check: '+(nextCheckDays===null?'—':nextCheckDays<=0?'¡Pendiente ahora!':nextCheckDays===1?'Mañana':'en '+nextCheckDays+' días')+
+    (p.checkIntervalDays?' · cada '+p.checkIntervalDays+' días':'')
+  ));
   const actions=el('div',{cls:'flex gap8 mt14'});
-  const wbtn=btn(waterBtnLabel,'btn-p f1 fs13',()=>{
-    if(p.lastWatered===td()){toast('Ya fue regada hoy','w');return;}
-    waterPlant(p.id);
-  });
+  const wbtn=btn('💧 Regar'+(p.lastWatered===td()?' (hoy ✓)':''),'btn-p f1 fs13',()=>{if(p.lastWatered===td()){toast('Ya fue regada hoy','w');return;}waterPlant(p.id);});
   actions.appendChild(wbtn);
-  const cbtn=btn('🔬 '+(checkDue?'Check pendiente':'Analizar'),'btn-s f1 fs13',()=>runCheck(p.id));
+  const cbtn=btn('🔬 '+(checkDue?'¡Revisar ya!':'Analizar'),'btn-s f1 fs13',()=>runCheck(p.id));
   if(checkDue){cbtn.style.background='#eff6ff';cbtn.style.color='var(--bl)';cbtn.style.borderColor='#bfdbfe';}
-  if(!getApiKey()){cbtn.title='Configura tu API key en Ajustes';cbtn.style.opacity='0.5';}
+  if(!getKey()){cbtn.style.opacity='0.5';}
   actions.appendChild(cbtn);
   hero.appendChild(actions);
   frag.appendChild(hero);
-
-  // Tabs
-  frag.appendChild(el('div',{cls:'tabs'},
-    ...['ficha','historial','crecimiento','cuidados'].map(t=>
-      el('button',{cls:'tab'+(activeTab===t?' on':''),$click:()=>{activeTab=t;render();}},t[0].toUpperCase()+t.slice(1))
-    )
-  ));
-
+  frag.appendChild(el('div',{cls:'tabs'},...['ficha','historial','crecimiento','cuidados'].map(t=>el('button',{cls:'tab'+(activeTab===t?' on':''),$click:()=>{activeTab=t;render();}},t[0].toUpperCase()+t.slice(1)))));
   if(activeTab==='ficha')frag.appendChild(buildTabFicha(p,last,du,vi));
   else if(activeTab==='historial')frag.appendChild(buildTabHistorial(p));
   else if(activeTab==='crecimiento')frag.appendChild(buildTabCrecimiento(p));
@@ -862,83 +813,21 @@ function buildDetail(){
 
 function buildTabFicha(p,last,du,vi){
   const frag=document.createDocumentFragment();
-  frag.appendChild(el('div',{cls:'card'},
-    el('div',{cls:'sl'},'Datos de cuidado'),
-    el('div',{cls:'ig'},
-      ...[['💧','Riego',p.watering],['☀️','Luz',p.sunlight],['🪴','Maceta',p.pot],['🌍','Sustrato',p.soil],['🧪','Fertilizante',p.fertilizer],['📅','Adquirida',fmtL(p.acquired)]].map(([e,l,v])=>
-        el('div',{cls:'ic'},el('div',{cls:'ic-l'},e+' '+l),el('div',{cls:'ic-v'},v||'—'))
-      )
-    )
-  ));
-
-  frag.appendChild(el('div',{cls:'card'},
-    el('div',{cls:'sl'},'Riego'),
-    el('div',{cls:'flex jb ac'},
-      el('div',{},
-        el('div',{cls:'fs13 ci3'},'Último: ',el('b',{style:{color:'var(--i1)'}},fmt(p.lastWatered))),
-        el('div',{cls:'fs13 fw7 mt4',style:{color:du!==null&&du<=0?'var(--am)':'var(--gr)'}},'Próximo: '+(p.nextWatering?fmt(p.nextWatering)+' '+(du!==null?(du<=0?'(¡ya!)':`(${du}d)`):''):'No programado'))
-      ),
-      p.outdoor&&weather?el('div',{cls:'tr'},
-        el('div',{cls:'sl',style:{marginBottom:'2px'}},'UMBRAL'),
-        el('div',{cls:'fs14 fw7',style:{color:weather.rain>=(S.settings.rainMm||8)?'var(--bl)':'var(--i3)'}},(S.settings.rainMm||8)+'mm')
-      ):null
-    )
-  ));
-
-  if(last){
-    frag.appendChild(el('div',{cls:'card'},
-      el('div',{cls:'sl'},'Último registro · '+fmt(last.date)),
-      el('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'8px',textAlign:'center'}},
-        el('div',{cls:'ic tc'},el('div',{cls:'sn cgr',style:{fontSize:'22px'}},last.height,el('span',{cls:'fs11'},'cm')),el('div',{cls:'sl',style:{marginBottom:0}},'ALTURA')),
-        el('div',{cls:'ic tc'},el('div',{cls:'sn cgr',style:{fontSize:'22px'}},last.leaves),el('div',{cls:'sl',style:{marginBottom:0}},'HOJAS')),
-        el('div',{cls:'ic',style:{display:'flex',alignItems:'center',justifyContent:'center'}},vbadge(last.vitality))
-      ),
-      last.note?el('div',{cls:'quote'},'"'+last.note+'"'):null
-    ));
-  }
-
+  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Datos de cuidado'),el('div',{cls:'ig'},...[['💧','Riego',p.watering],['☀️','Luz',p.sunlight],['🪴','Maceta',p.pot],['🌍','Sustrato',p.soil],['🧪','Fertilizante',p.fertilizer],['📅','Adquirida',fmtL(p.acquired)]].map(([e,l,v])=>el('div',{cls:'ic'},el('div',{cls:'ic-l'},e+' '+l),el('div',{cls:'ic-v'},v||'—'))))));
+  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Riego'),el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fs13 ci3'},'Último: ',el('b',{style:{color:'var(--i1)'}},fmt(p.lastWatered))),el('div',{cls:'fs13 fw7 mt4',style:{color:du!==null&&du<=0?'var(--am)':'var(--gr)'}},'Próximo: '+(p.nextWatering?fmt(p.nextWatering)+' '+(du!==null?(du<=0?'(¡ya!)':`(${du}d)`):''):'No programado'))),p.outdoor&&weather?el('div',{cls:'tr'},el('div',{cls:'sl',style:{marginBottom:'2px'}},'UMBRAL'),el('div',{cls:'fs14 fw7',style:{color:weather.rain>=(S.settings.rainMm||8)?'var(--bl)':'var(--i3)'}},(S.settings.rainMm||8)+'mm')):null)));
+  if(last)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Último registro · '+fmt(last.date)),el('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'8px',textAlign:'center'}},el('div',{cls:'ic tc'},el('div',{cls:'sn cgr',style:{fontSize:'22px'}},last.height,el('span',{cls:'fs11'},'cm')),el('div',{cls:'sl',style:{marginBottom:0}},'ALTURA')),el('div',{cls:'ic tc'},el('div',{cls:'sn cgr',style:{fontSize:'22px'}},last.leaves),el('div',{cls:'sl',style:{marginBottom:0}},'HOJAS')),el('div',{cls:'ic',style:{display:'flex',alignItems:'center',justifyContent:'center'}},vbadge(last.vitality))),last.note?el('div',{cls:'quote'},'"'+last.note+'"'):null));
   if(p.notes)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Notas'),el('p',{cls:'fs13 ci2',style:{lineHeight:'1.7'}},p.notes)));
   if((p.tags||[]).length>0)frag.appendChild(el('div',{style:{marginBottom:'10px'}},...p.tags.map(t=>el('span',{cls:'pill'},'#'+t))));
-
-  if((p.checkHistory||[]).length>0){
-    const cc=el('div',{cls:'card'},el('div',{cls:'sl'},'Historial análisis IA'));
-    [...(p.checkHistory||[])].reverse().slice(0,5).forEach(c=>{
-      cc.appendChild(el('div',{cls:'ri'},
-        el('span',{cls:'fs11 ci3 fm',style:{minWidth:'60px'}},fmt(c.date)),
-        vbadge(c.vitality),
-        el('span',{cls:'f1 fs12 ci2'},c.headline),
-        el('span',{cls:'fs12 fw7',style:{color:(VIT[c.vitality]||VIT['bueno']).dot}},c.score)
-      ));
-    });
-    frag.appendChild(cc);
-  }
-
-  frag.appendChild(el('div',{style:{marginTop:'10px'}},
-    btn('Eliminar planta','btn-w btn-full',()=>{
-      if(confirm('¿Eliminar "'+p.name+'"?\nEsta acción no se puede deshacer.'))deletePlant(p.id);
-    })
-  ));
+  if((p.checkHistory||[]).length>0){const cc=el('div',{cls:'card'},el('div',{cls:'sl'},'Historial análisis IA'));[...(p.checkHistory||[])].reverse().slice(0,5).forEach(c=>{cc.appendChild(el('div',{cls:'ri'},el('span',{cls:'fs11 ci3 fm',style:{minWidth:'60px'}},fmt(c.date)),vbadge(c.vitality),el('span',{cls:'f1 fs12 ci2'},c.headline),el('span',{cls:'fs12 fw7',style:{color:(VIT[c.vitality]||VIT['bueno']).dot}},c.score)));});frag.appendChild(cc);}
+  frag.appendChild(el('div',{style:{marginTop:'10px'}},btn('Eliminar planta','btn-w btn-full',()=>{if(confirm('¿Eliminar "'+p.name+'"?\nEsta acción no se puede deshacer.'))deletePlant(p.id);})));
   return frag;
 }
 
 function buildTabHistorial(p){
   const frag=document.createDocumentFragment();
   const entries=[...(p.entries||[])].reverse();
-  if(entries.length===0)return el('div',{cls:'card empty'},
-    el('div',{cls:'empty-em'},'📋'),
-    el('div',{cls:'empty-t'},'Sin registros'),
-    btn('Primer registro','btn-p',()=>{_fe=BE();activeSheet='entry';render();})
-  );
-  entries.forEach(e=>{
-    frag.appendChild(el('div',{cls:'card',style:{padding:'14px'}},
-      el('div',{cls:'flex jb ac mb10'},el('span',{cls:'fs12 fw7 fm'},fmtL(e.date)),vbadge(e.vitality)),
-      el('div',{cls:'flex gap10'},
-        e.height>0?el('div',{cls:'ic tc',style:{padding:'8px 14px'}},el('div',{cls:'sn cgr',style:{fontSize:'20px'}},e.height,el('span',{cls:'fs11'},'cm')),el('div',{cls:'sl',style:{marginBottom:0}},'ALTURA')):null,
-        e.leaves>0?el('div',{cls:'ic tc',style:{padding:'8px 14px'}},el('div',{cls:'sn cgr',style:{fontSize:'20px'}},e.leaves),el('div',{cls:'sl',style:{marginBottom:0}},'HOJAS')):null
-      ),
-      e.note?el('div',{cls:'quote'},'"'+e.note+'"'):null
-    ));
-  });
+  if(entries.length===0)return el('div',{cls:'card empty'},el('div',{cls:'empty-em'},'📋'),el('div',{cls:'empty-t'},'Sin registros'),btn('Primer registro','btn-p',()=>{_fe=BE();activeSheet='entry';render();}));
+  entries.forEach(e=>frag.appendChild(el('div',{cls:'card',style:{padding:'14px'}},el('div',{cls:'flex jb ac mb10'},el('span',{cls:'fs12 fw7 fm'},fmtL(e.date)),vbadge(e.vitality)),el('div',{cls:'flex gap10'},e.height>0?el('div',{cls:'ic tc',style:{padding:'8px 14px'}},el('div',{cls:'sn cgr',style:{fontSize:'20px'}},e.height,el('span',{cls:'fs11'},'cm')),el('div',{cls:'sl',style:{marginBottom:0}},'ALTURA')):null,e.leaves>0?el('div',{cls:'ic tc',style:{padding:'8px 14px'}},el('div',{cls:'sn cgr',style:{fontSize:'20px'}},e.leaves),el('div',{cls:'sl',style:{marginBottom:0}},'HOJAS')):null),e.note?el('div',{cls:'quote'},'"'+e.note+'"'):null)));
   return frag;
 }
 
@@ -946,441 +835,387 @@ function buildTabCrecimiento(p){
   const frag=document.createDocumentFragment();
   const chartCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Evolución de altura'));
   const sp=sparkline(p.entries||[]);
-  if(sp)chartCard.appendChild(sp);
-  else chartCard.appendChild(el('div',{cls:'tc ci3 fs13',style:{padding:'20px'}},'Agrega 2+ registros para ver la gráfica'));
+  if(sp)chartCard.appendChild(sp);else chartCard.appendChild(el('div',{cls:'tc ci3 fs13',style:{padding:'20px'}},'Agrega 2+ registros para ver la gráfica'));
   frag.appendChild(chartCard);
-
   const hs=(p.entries||[]).map(e=>e.height).filter(h=>h>0);
-  if(hs.length>=2){
-    const mx=Math.max(...hs),mn=Math.min(...hs),gr=mx-mn;
-    const days=Math.max(1,(new Date(p.entries[p.entries.length-1].date)-new Date(p.entries[0].date))/864e5);
-    frag.appendChild(el('div',{cls:'card'},
-      el('div',{cls:'sl'},'Estadísticas'),
-      el('div',{cls:'ig'},
-        ...[  [mx+'cm','Altura máx'],['+'+gr+'cm','Crecimiento total'],[(gr/days*30).toFixed(1)+'cm','Por mes'],[p.entries.length+'','Registros']  ].map(([v,l])=>
-          el('div',{cls:'ic tc'},el('div',{style:{fontSize:'20px',fontWeight:'800',fontFamily:'var(--fd)',color:'var(--gr)'}},v),el('div',{cls:'sl',style:{marginBottom:0}},l))
-        )
-      )
-    ));
-  }
+  if(hs.length>=2){const mx=Math.max(...hs),mn=Math.min(...hs),gr=mx-mn,days=Math.max(1,(new Date(p.entries[p.entries.length-1].date)-new Date(p.entries[0].date))/864e5);frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Estadísticas'),el('div',{cls:'ig'},...[[mx+'cm','Altura máx'],['+'+gr+'cm','Crecimiento total'],[(gr/days*30).toFixed(1)+'cm','Por mes'],[p.entries.length+'','Registros']].map(([v,l])=>el('div',{cls:'ic tc'},el('div',{style:{fontSize:'20px',fontWeight:'800',fontFamily:'var(--fd)',color:'var(--gr)'}},v),el('div',{cls:'sl',style:{marginBottom:0}},l))))));}
   return frag;
 }
 
 function buildTabCuidados(p){
   const frag=document.createDocumentFragment();
-  const guide=el('div',{cls:'card alert-g',style:{marginBottom:'10px'}},el('div',{cls:'sl sl-gr'},'🌿 Guía · '+season()));
-  [['💧','Riego',p.watering+(p.outdoor?' — revisar lluvia':'')],['☀️','Luz',p.sunlight],['🧪','Abono',p.fertilizer],['🌡️','Temporada',season()==='Verano'?'Aumenta riego y ventilación':season()==='Invierno'?'Reduce riego, más luz':season()==='Primavera'?'Momento ideal para trasplantar':'Preparación para el invierno'],['📅','Contigo',Math.floor((Date.now()-new Date(p.acquired))/864e5/30)+' meses · desde '+fmtL(p.acquired)]].forEach(([e,l,v])=>{
-    guide.appendChild(el('div',{cls:'ri'},el('span',{style:{fontSize:'18px',width:'24px',textAlign:'center',flexShrink:0}},e),el('div',{},el('div',{cls:'sl',style:{marginBottom:'1px'}},l),el('div',{cls:'fs13'},v))));
-  });
-  frag.appendChild(guide);
-  if(p.outdoor){
-    frag.appendChild(el('div',{cls:'card'},
-      el('div',{cls:'sl sl-bl'},'🌧️ Umbral lluvia exterior'),
-      el('div',{cls:'fs13 ci2',style:{marginBottom:'10px'}},'Postpone riego si llueve más de:'),
-      el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}}),
-      el('div',{cls:'fs12 ci3 mt4'},'mm en las últimas 24h')
+  // AI Care Guide if available
+  const g=p.aiCareGuide;
+  if(g){
+    frag.appendChild(el('div',{cls:'card alert-g mb10'},
+      el('div',{cls:'sl sl-gr'},'🤖 Guía personalizada por IA'),
+      el('div',{cls:'fs13 ci2',style:{lineHeight:'1.7',marginBottom:'12px'}},g.summary||''),
+      el('div',{cls:'ig'},
+        el('div',{cls:'ic'},el('div',{cls:'ic-l'},'💧 Riego'),el('div',{cls:'ic-v'},g.wateringFrequency||'—')),
+        el('div',{cls:'ic'},el('div',{cls:'ic-l'},'🌿 Dificultad'),el('div',{cls:'ic-v'},g.difficulty||'—')),
+        el('div',{cls:'ic'},el('div',{cls:'ic-l'},'🪴 Trasplante'),el('div',{cls:'ic-v fs12'},g.transplantTip||'—')),
+        el('div',{cls:'ic'},el('div',{cls:'ic-l'},'🌍 Sustrato'),el('div',{cls:'ic-v fs12'},g.substrate||'—'))
+      )
+    ));
+    // Riego tip
+    if(g.wateringTip)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'💧 Cómo regar'),el('div',{cls:'fs13 ci2',style:{lineHeight:'1.7'}},g.wateringTip)));
+    // Seasonal tips
+    if(g.seasonalTips){
+      const sc=el('div',{cls:'card'},el('div',{cls:'sl'},'🗓️ Por temporada'));
+      Object.entries(g.seasonalTips).forEach(([s,t])=>sc.appendChild(el('div',{cls:'ri'},el('span',{cls:'fw7 fs13',style:{minWidth:'80px',textTransform:'capitalize'}},s),el('span',{cls:'f1 fs13 ci2'},t))));
+      frag.appendChild(sc);
+    }
+    // Common problems
+    if(g.commonProblems?.length>0){
+      const pc=el('div',{cls:'card'},el('div',{cls:'sl'},'⚠️ Problemas comunes'));
+      g.commonProblems.forEach(cp=>pc.appendChild(el('div',{cls:'ri',style:{flexDirection:'column',alignItems:'flex-start',gap:'4px'}},el('div',{cls:'fw7 fs13 cam'},cp.problem),el('div',{cls:'fs12 ci2'},cp.solution))));
+      frag.appendChild(pc);
+    }
+    // Beginner tips
+    if(g.beginnerTips?.length>0){
+      const bt=el('div',{cls:'card alert-pu'},el('div',{cls:'sl sl-pu'},'💡 Consejos clave'));
+      g.beginnerTips.forEach((t,i)=>bt.appendChild(el('div',{cls:'ri'},el('span',{cls:'fw7 fs12',style:{color:'var(--pu)',minWidth:'20px'}},i+1+'.'),el('span',{cls:'f1 fs13 ci2'},t))));
+      frag.appendChild(bt);
+    }
+  } else {
+    // Basic guide + option to generate AI guide
+    const guide=el('div',{cls:'card alert-g'},el('div',{cls:'sl sl-gr'},'🌿 Guía básica · '+season()));
+    [['💧','Riego',p.watering+(p.outdoor?' — revisar lluvia':'')],['☀️','Luz',p.sunlight],['🧪','Abono',p.fertilizer],['🌡️','Temporada',season()==='Verano'?'Aumenta riego y ventilación':season()==='Invierno'?'Reduce riego, más luz':season()==='Primavera'?'Momento ideal para trasplantar':'Preparación para el invierno'],['📅','Contigo',Math.floor((Date.now()-new Date(p.acquired))/864e5/30)+' meses']].forEach(([e,l,v])=>guide.appendChild(el('div',{cls:'ri'},el('span',{style:{fontSize:'18px',width:'24px',textAlign:'center',flexShrink:0}},e),el('div',{},el('div',{cls:'sl',style:{marginBottom:'1px'}},l),el('div',{cls:'fs13'},v)))));
+    frag.appendChild(guide);
+    if(getKey())frag.appendChild(el('div',{cls:'card alert-pu',style:{cursor:'pointer'},$click:async()=>{
+      if(!p.name){toast('La planta necesita nombre','w');return;}
+      _fp={...p,tags:(p.tags||[]).join(',')};
+      toast('🤖 Generando guía personalizada…','i');
+      const key=getKey();
+      try{
+        const wxInfo=weather?`Clima: ${weather.temp}°C, ${WTXT[weather.code]}, humedad ${weather.humidity}%, lluvia ${weather.rain}mm, ciudad ${weather.city}.`:'';
+        const result=await geminiJSON([{text:`Eres botánico experto. Genera guía de cuidados para: ${p.name} (${p.species||'?'}), ${p.location} (${p.outdoor?'exterior':'interior'}), luz: ${p.sunlight}, riego actual: ${p.watering}, temporada: ${season()}. ${wxInfo} Responde SOLO JSON:\n{"wateringFrequency":"Cada X días","wateringDays":7,"wateringTip":"consejo concreto","sunlight":"luz recomendada","substrate":"sustrato ideal","potSize":"maceta recomendada","fertilizer":"frecuencia","transplantTip":"cuándo trasplantar","checkIntervalDays":7,"difficulty":"fácil|moderado|difícil","seasonalTips":{"primavera":"tip","verano":"tip","otoño":"tip","invierno":"tip"},"commonProblems":[{"problem":"problema","solution":"solución"}],"beginnerTips":["consejo1","consejo2","consejo3"],"summary":"resumen 2 frases"}`}]);
+        S.plants=S.plants.map(pp=>pp.id===p.id?{...pp,aiCareGuide:result,checkIntervalDays:result.checkIntervalDays||pp.checkIntervalDays}:pp);
+        saveS();toast('✅ Guía IA generada');render();
+      }catch(e){toast('Error generando guía','w');}
+    }},
+      el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'24px'}},'🤖'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs13 cpu'},'Generar guía personalizada con IA'),el('div',{cls:'fs12 ci3'},'Análisis de cuidados adaptado a tu planta y clima')),el('span',{cls:'ci3',style:{fontSize:'18px'}},'›'))
     ));
   }
+  if(p.outdoor)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl sl-bl'},'🌧️ Umbral lluvia'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}}),el('div',{cls:'fs12 ci3 mt4'},'mm para riego automático exterior')));
   return frag;
 }
 
-// ═══════════════════════════════════════════
-// MAP PAGE
-// ═══════════════════════════════════════════
-function buildMapPage(){
-  const loc=S.settings.homeLocation;
-  const frag=document.createDocumentFragment();
-
-  // Header card
-  frag.appendChild(el('div',{cls:'card',style:{marginBottom:'10px'}},
-    el('div',{cls:'flex jb ac'},
-      el('div',{},
-        el('div',{cls:'fw7 fs14'},loc?'📍 '+loc.city:'📍 Sin ubicación guardada'),
-        el('div',{cls:'fs12 ci3 mt4'},loc?'Toca en el mapa para cambiar':'Toca en el mapa para guardar tu casa')
-      ),
-      btn(loc?'↻ Actualizar clima':'📡 Obtener clima','btn-p btn-sm',fetchWeather)
-    )
-  ));
-
-  // Weather detail card
-  if(weather){
-    frag.appendChild(el('div',{cls:'wx-card'},
-      el('div',{cls:'flex ac gap12'},
-        el('div',{style:{fontSize:'44px'}},(WEMOJI[weather.code]||'🌡️')),
-        el('div',{cls:'f1'},
-          el('div',{style:{fontFamily:'var(--fd)',fontSize:'24px',fontWeight:'800'}},weather.temp+'°C'),
-          el('div',{cls:'fs14 ci2'},(WTXT[weather.code]||'')),
-          el('div',{cls:'fs12 ci3 mt4'},'💧 Humedad '+weather.humidity+'% · 💨 Viento '+weather.wind+' km/h')
-        )
-      ),
-      weather.rain>0?el('div',{style:{marginTop:'12px',background:'rgba(29,78,216,.08)',borderRadius:'12px',padding:'10px 14px',fontSize:'14px',color:'var(--bl)',fontWeight:'700'}},'🌧️ '+weather.rain+' mm de lluvia hoy'):null
-    ));
-  }
-
-  // Map container
-  const mapCard=el('div',{cls:'card map-card',style:{padding:'0',overflow:'hidden'}});
-  const mapDiv=el('div',{id:'leaflet-map'});
-  mapCard.appendChild(mapDiv);
-  if(!loc&&!weather){
-    mapCard.appendChild(el('div',{cls:'map-overlay-btn',style:{bottom:'10px',top:'auto',left:'50%',transform:'translateX(-50%)'},
-      $click:fetchWeather},'📡 Obtener mi ubicación'));
-  }
-  frag.appendChild(mapCard);
-
-  frag.appendChild(el('div',{cls:'card',style:{marginTop:'4px'}},
-    el('div',{cls:'sl'},'Leyenda'),
-    el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'🏠'),el('span',{cls:'f1 fs13'},'Tu casa'),el('span',{cls:'fs12 ci3'},'Toca para ver el tiempo')),
-    el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'📊'),el('span',{cls:'f1 fs13'},'Temperatura actual'),el('span',{cls:'fs12 ci3'},'Actualizada ahora')),
-    el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'🖱️'),el('span',{cls:'f1 fs13'},'Toca en el mapa'),el('span',{cls:'fs12 ci3'},'Para cambiar tu casa'))
-  ));
-
-  return frag;
-}
-
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // STATS PAGE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function buildStats(){
   const plants=S.plants;
   const tg=plants.reduce((a,p)=>{const h=(p.entries||[]).map(e=>e.height||0);return a+(h.length>=2?Math.max(...h)-Math.min(...h):0);},0);
   const byV=Object.entries(plants.reduce((a,p)=>({...a,[p.vitality]:(a[p.vitality]||0)+1}),{}));
   const byL=Object.entries(plants.reduce((a,p)=>({...a,[p.location||'Sin ubicar']:(a[p.location||'Sin ubicar']||0)+1}),{}));
   const frag=document.createDocumentFragment();
-
-  frag.appendChild(el('div',{cls:'sg2'},
-    ...[  [plants.length,'Total plantas 🌿'],[tg+'cm','Crecimiento total 📈'],[plants.filter(p=>p.outdoor).length,'Exterior 🌳'],[plants.filter(p=>p.vitality==='óptimo').length,'Estado óptimo ✨']  ].map(([n,l])=>
-      el('div',{cls:'sb2'},el('div',{cls:'sn cgr'},String(n)),el('div',{cls:'sl',style:{marginBottom:0,marginTop:'3px'}},l))
-    )
-  ));
-
+  frag.appendChild(el('div',{cls:'sg2'},...[[plants.length,'Total plantas 🌿'],[tg+'cm','Crecimiento total 📈'],[plants.filter(p=>p.outdoor).length,'Exterior 🌳'],[plants.filter(p=>p.vitality==='óptimo').length,'Estado óptimo ✨']].map(([n,l])=>el('div',{cls:'sb2'},el('div',{cls:'sn cgr'},String(n)),el('div',{cls:'sl',style:{marginBottom:0,marginTop:'3px'}},l)))));
   const vitCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Estado de vitalidad'));
-  byV.forEach(([v,c])=>{
-    const vi=VIT[v]||VIT['bueno'];
-    vitCard.appendChild(el('div',{cls:'pr'},vbadge(v),el('div',{cls:'pt'},el('div',{cls:'pf',style:{width:(c/plants.length*100)+'%',background:vi.dot}})),el('span',{cls:'fs12 fw7',style:{color:vi.color,minWidth:'16px',textAlign:'right'}},c)));
-  });
+  byV.forEach(([v,c])=>{const vi=VIT[v]||VIT['bueno'];vitCard.appendChild(el('div',{cls:'pr'},vbadge(v),el('div',{cls:'pt'},el('div',{cls:'pf',style:{width:(c/plants.length*100)+'%',background:vi.dot}})),el('span',{cls:'fs12 fw7',style:{color:vi.color,minWidth:'16px',textAlign:'right'}},c)));});
   frag.appendChild(vitCard);
-
   const locCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Por ubicación'));
   byL.forEach(([l,c])=>locCard.appendChild(el('div',{cls:'ri'},el('span',{cls:'f1 fs13 ci2'},l),el('span',{cls:'fw7 cgr'},String(c)))));
   frag.appendChild(locCard);
-
   const wCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Próximos riegos'));
-  plants.filter(p=>p.nextWatering).sort((a,b)=>new Date(a.nextWatering)-new Date(b.nextWatering)).slice(0,6).forEach(p=>{
-    const d=daysUntil(p.nextWatering);
-    wCard.appendChild(el('div',{cls:'ri'},el('span',{style:{fontSize:'20px'}},p.icon),el('span',{cls:'f1 fs13'},p.name),el('span',{cls:'fs12 fw7 fm',style:{color:d<=0?'var(--am)':'var(--gr)'}},d<=0?'¡Hoy!':d===1?'Mañana':d+'d')));
-  });
+  plants.filter(p=>p.nextWatering).sort((a,b)=>new Date(a.nextWatering)-new Date(b.nextWatering)).slice(0,6).forEach(p=>{const d=daysUntil(p.nextWatering);wCard.appendChild(el('div',{cls:'ri'},plantPhoto(p,32,8),el('span',{cls:'f1 fs13'},p.name),el('span',{cls:'fs12 fw7 fm',style:{color:d<=0?'var(--am)':'var(--gr)'}},d<=0?'¡Hoy!':d===1?'Mañana':d+'d')));});
   frag.appendChild(wCard);
   return frag;
 }
 
-// ═══════════════════════════════════════════
-// SETTINGS PAGE
-// ═══════════════════════════════════════════
-function buildSettings(){
+// ═══════════════════════════════════
+// MAP PAGE
+// ═══════════════════════════════════
+function buildMapPage(){
+  const loc=S.settings.homeLocation;
   const frag=document.createDocumentFragment();
-
-  // API Key setup
-  frag.appendChild(el('div',{cls:'card',style:{background:'linear-gradient(135deg,#f5f3ff,#faf8ff)',border:'1.5px solid #e9d5ff'}},
-    el('div',{cls:'sl',style:{color:'#7c3aed'}},'🤖 API Key de Anthropic'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'Necesaria para identificar plantas con IA y hacer análisis de salud. Es gratis obtenerla.'),
-    el('div',{cls:'fg'},
-      el('label',{},'Tu API Key'),
-      el('input',{type:'text',placeholder:'sk-ant-api03-...',val:S.settings.apiKey||'',
-        $input:e=>{S.settings.apiKey=e.target.value.trim();saveS();}
-      })
-    ),
-    !S.settings.apiKey?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},
-      el('div',{cls:'fs12 ci2',style:{lineHeight:'1.6'}},'1. Ve a ',el('b',{},'console.anthropic.com'),el('br'),
-        '2. Crea una cuenta gratis',el('br'),
-        '3. Ve a API Keys y crea una nueva',el('br'),
-        '4. Pégala aquí arriba ↑'
-      )
-    ):el('div',{cls:'alert alert-g'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key configurada — IA activada'))
-  ));
-
-  // Rain threshold
-  frag.appendChild(el('div',{cls:'card'},
-    el('div',{cls:'sl'},'🌧️ Umbral de lluvia'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'10px'}},'mm de lluvia para regar automáticamente las plantas exteriores:'),
-    el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}})
-  ));
-
-  // Home location
-  frag.appendChild(el('div',{cls:'card'},
-    el('div',{cls:'sl'},'📍 Ubicación de casa'),
-    S.settings.homeLocation
-      ?el('div',{cls:'flex jb ac'},
-          el('div',{},el('div',{cls:'fw7 fs14'},S.settings.homeLocation.city||'Mi casa'),el('div',{cls:'fs12 ci3'},S.settings.homeLocation.lat.toFixed(4)+', '+S.settings.homeLocation.lon.toFixed(4))),
-          btn('Cambiar','btn-s btn-sm',()=>{page='map';render();})
-        )
-      :el('div',{cls:'flex jb ac'},
-          el('div',{cls:'fs13 ci3'},'Sin ubicación guardada'),
-          btn('Detectar','btn-p btn-sm',fetchWeather)
-        )
-  ));
-
-  // Backup
-  frag.appendChild(el('div',{cls:'card'},
-    el('div',{cls:'sl'},'💾 Datos'),
-    el('div',{cls:'flex gap8',style:{flexWrap:'wrap'}},
-      btn('📦 Exportar backup','btn-s',()=>{
-        const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
-        const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='plantai-backup.json';a.click();
-        toast('Backup exportado');
-      }),
-      el('label',{cls:'btn btn-s',style:{cursor:'pointer'}},
-        '📂 Importar',
-        el('input',{type:'file',accept:'.json',style:{display:'none'},$change:e=>{
-          const f=e.target.files?.[0];if(!f)return;
-          const r=new FileReader();
-          r.onload=ev=>{try{S=JSON.parse(ev.target.result);saveS();render();toast('Datos importados');}catch{toast('Archivo inválido','w');}};
-          r.readAsText(f);
-        }})
-      )
-    )
-  ));
-
+  frag.appendChild(el('div',{cls:'card mb10'},el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},loc?'📍 '+loc.city:'📍 Sin ubicación guardada'),el('div',{cls:'fs12 ci3 mt4'},loc?'Toca en el mapa para cambiar tu casa':'Toca en el mapa para guardar tu casa')),btn(loc?'↻ Clima':'📡 Obtener clima','btn-p btn-sm',fetchWeather))));
+  if(weather)frag.appendChild(el('div',{cls:'wx-card'},el('div',{cls:'flex ac gap12'},el('div',{style:{fontSize:'44px'}},(WEMOJI[weather.code]||'🌡️')),el('div',{cls:'f1'},el('div',{style:{fontFamily:'var(--fd)',fontSize:'24px',fontWeight:'800'}},weather.temp+'°C'),el('div',{cls:'fs14 ci2'},(WTXT[weather.code]||'')),el('div',{cls:'fs12 ci3 mt4'},'💧 '+weather.humidity+'% · 💨 '+weather.wind+' km/h'))),weather.rain>0?el('div',{style:{marginTop:'12px',background:'rgba(29,78,216,.08)',borderRadius:'12px',padding:'10px 14px',fontSize:'14px',color:'var(--bl)',fontWeight:'700'}},'🌧️ '+weather.rain+' mm de lluvia hoy'):null));
+  frag.appendChild(el('div',{cls:'card map-card',style:{padding:'0',overflow:'hidden'}},el('div',{id:'leaflet-map'})));
+  frag.appendChild(el('div',{cls:'card mt4'},el('div',{cls:'sl'},'Leyenda'),el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'🏠'),el('span',{cls:'f1 fs13'},'Tu casa — toca para cambiar')),el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'📊'),el('span',{cls:'f1 fs13'},'Temperatura actual'))));
   return frag;
 }
 
-// ═══════════════════════════════════════════
-// FAB
-// ═══════════════════════════════════════════
-function buildFAB(){
-  if(page==='settings'||page==='map')return el('button',{cls:'fab',$click:()=>{page='settings';render();}},el('span',{style:{fontSize:'20px'}},'⚙️'));
-  if(page==='detail')return el('button',{cls:'fab',style:{fontSize:'22px'},$click:()=>{_fe=BE();activeSheet='entry';render();}},'📊');
-  const fab=el('button',{cls:'fab',$click:()=>{_fp=BP();aiState='idle';aiIdent=null;activeSheet='plant';render();}},'＋');
-  // Settings gear in corner
-  const gear=el('button',{style:{position:'fixed',bottom:'calc(76px + var(--sab))',left:'20px',width:'44px',height:'44px',borderRadius:'50%',background:'var(--wh)',border:'1px solid var(--bd)',cursor:'pointer',fontSize:'18px',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px var(--sh)',zIndex:25},$click:()=>{page='settings';render();}},'⚙️');
-  const wrapper=document.createDocumentFragment();
-  wrapper.appendChild(gear);
-  wrapper.appendChild(fab);
-  return wrapper;
+// ═══════════════════════════════════
+// CHAT PAGE
+// ═══════════════════════════════════
+function buildChatPage(){
+  const wrap=el('div',{cls:'chat-wrap'});
+  const msgs=el('div',{cls:'chat-msgs'});
+
+  if(S.chatHistory.length===0){
+    msgs.appendChild(el('div',{cls:'chat-bubble ai'},'¡Hola! 👋 Soy tu asistente de plantas. Puedo ayudarte con cualquier duda sobre el cuidado de tus plantas, problemas que veas, cuándo trasplantar, qué sustrato usar... ¡pregúntame lo que quieras!'));
+    // Suggestions
+    const sugs=el('div',{cls:'chat-suggestions'});
+    ['¿Por qué se amarillean las hojas?','¿Cuándo trasplantar?','Mi planta tiene plagas','¿Qué sustrato necesita?','¿Cómo sé si necesita agua?'].forEach(s=>{
+      sugs.appendChild(el('button',{cls:'chat-sug',$click:()=>sendChat(s)},s));
+    });
+    msgs.appendChild(sugs);
+  } else {
+    S.chatHistory.forEach(m=>{
+      msgs.appendChild(el('div',{cls:'chat-bubble '+(m.role==='user'?'user':'ai')},m.text));
+    });
+  }
+  if(chatLoading)msgs.appendChild(el('div',{cls:'chat-bubble thinking'},'Pensando…'));
+  if(!getKey())msgs.appendChild(el('div',{cls:'chat-bubble ai'},'⚠️ Para usar el chat necesitas configurar tu API key de Gemini en ',el('b',{style:{cursor:'pointer',textDecoration:'underline'},$click:()=>{page='settings';render();}},'Ajustes'),'.'));
+
+  wrap.appendChild(msgs);
+
+  // Input
+  const inputRow=el('div',{cls:'chat-input-row'});
+  const inp=el('textarea',{cls:'chat-input',placeholder:'Pregunta sobre tus plantas…',rows:'1'});
+  inp.value=chatInput;
+  inp.addEventListener('input',e=>{chatInput=e.target.value;inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,100)+'px';});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat(chatInput);}});
+  const sendBtn=el('button',{cls:'chat-send',$click:()=>sendChat(chatInput)},'↑');
+  if(chatLoading||!getKey())sendBtn.style.opacity='0.5';
+  inputRow.appendChild(inp);
+  inputRow.appendChild(sendBtn);
+
+  // Context chips - quick plant references
+  if(S.plants.length>0&&getKey()){
+    const chips=el('div',{style:{display:'flex',gap:'6px',flexWrap:'wrap',paddingBottom:'8px',borderTop:'1px solid var(--bd)',paddingTop:'8px'}});
+    chips.appendChild(el('span',{cls:'fs11 ci3 fm ac',style:{display:'flex',alignItems:'center',marginRight:'4px'}},'Preguntar sobre:'));
+    S.plants.slice(0,4).forEach(p=>{
+      chips.appendChild(el('button',{cls:'chat-sug',$click:()=>{chatInput='¿Cómo está mi '+p.name+'? ¿Qué necesita ahora?';sendChat(chatInput);}},plantPhoto(p,20,6),p.name));
+    });
+    wrap.appendChild(chips);
+  }
+  wrap.appendChild(inputRow);
+
+  // Clear chat button
+  if(S.chatHistory.length>0)wrap.appendChild(el('button',{cls:'btn btn-g fs12',style:{marginTop:'4px',width:'100%',color:'var(--i3)'},$click:()=>{if(confirm('¿Borrar el historial del chat?')){S.chatHistory=[];saveS();render();}}},'Limpiar chat'));
+
+  return wrap;
 }
 
-// ═══════════════════════════════════════════
-// SHEETS
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// SETTINGS PAGE
+// ═══════════════════════════════════
+function buildSettings(){
+  const frag=document.createDocumentFragment();
+  frag.appendChild(el('div',{cls:'card alert-pu'},
+    el('div',{cls:'sl sl-pu'},'🤖 API Key de Google Gemini'),
+    el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'100% gratuita. Hasta 1.500 usos al mes sin coste.'),
+    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'AIza...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.trim();saveS();}})),
+    !S.settings.apiKey
+      ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'aistudio.google.com'),el('br'),'2. Inicia sesión con tu cuenta Google',el('br'),'3. Clic en "Get API key" → "Create API key"',el('br'),'4. Copia y pega aquí arriba ↑'))
+      :el('div',{cls:'alert alert-g'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key configurada — IA activada 🎉'))
+  ));
+  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'🌧️ Umbral de lluvia'),el('div',{cls:'fs13 ci2 mb10'},'mm para regar automáticamente las plantas exteriores:'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}})));
+  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'📍 Ubicación de casa'),S.settings.homeLocation?el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},S.settings.homeLocation.city||'Mi casa'),el('div',{cls:'fs12 ci3'},S.settings.homeLocation.lat.toFixed(4)+', '+S.settings.homeLocation.lon.toFixed(4))),btn('Cambiar','btn-s btn-sm',()=>{page='map';render();})):el('div',{cls:'flex jb ac'},el('div',{cls:'fs13 ci3'},'Sin ubicación'),btn('Detectar','btn-p btn-sm',fetchWeather))));
+  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'💾 Datos'),el('div',{cls:'flex gap8',style:{flexWrap:'wrap'}},btn('📦 Exportar','btn-s',()=>{const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='plantai-backup.json';a.click();toast('Backup exportado');}),el('label',{cls:'btn btn-s',style:{cursor:'pointer'}},'📂 Importar',el('input',{type:'file',accept:'.json',style:{display:'none'},$change:e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{S=JSON.parse(ev.target.result);saveS();render();toast('Datos importados');}catch{toast('Archivo inválido','w');}};r.readAsText(f);}}))),btn('🗑️ Borrar todo','btn-w btn-full mt8',()=>{if(confirm('¿Borrar TODAS las plantas y datos?\nEsto no se puede deshacer.')){{S={plants:[],settings:S.settings,chatHistory:[]};saveS();render();toast('Datos borrados','w');}}}))));
+  return frag;
+}
+
+// ═══════════════════════════════════
+// FAB
+// ═══════════════════════════════════
+function buildFAB(){
+  const gear=el('button',{style:{position:'fixed',bottom:'calc(76px + var(--sab))',left:'20px',width:'44px',height:'44px',borderRadius:'50%',background:'var(--wh)',border:'1px solid var(--bd)',cursor:'pointer',fontSize:'18px',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px var(--sh)',zIndex:25},$click:()=>{page='settings';render();}},'⚙️');
+  if(page==='settings'||page==='map'||page==='chat'){const wrap=document.createDocumentFragment();wrap.appendChild(gear);return wrap;}
+  if(page==='detail'){const wrap=document.createDocumentFragment();wrap.appendChild(gear);wrap.appendChild(el('button',{cls:'fab',style:{fontSize:'22px'},$click:()=>{_fe=BE();activeSheet='entry';render();}},'📊'));return wrap;}
+  const wrap=document.createDocumentFragment();
+  wrap.appendChild(gear);
+  wrap.appendChild(el('button',{cls:'fab',$click:()=>{_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;wizPhoto=null;wizPhotoB64=null;activeSheet='plant';render();}},'＋'));
+  return wrap;
+}
+
+// ═══════════════════════════════════
+// SHEET: ADD PLANT (WIZARD)
+// ═══════════════════════════════════
 function buildSheetPlant(){
-  const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov)closeSheet();}});
+  const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov&&!wizLoading)closeSheet();}});
   const sb=el('div',{cls:'sb'});
 
-  const shdr=el('div',{cls:'shdr'},
+  // WIZARD MODE: steps 0-4 are questions, step 5 is manual form
+  const totalSteps=WIZ_QUESTIONS.length;
+  const inWizard=wizStep<totalSteps&&!wizResult&&!wizLoading;
+  const showForm=wizStep>=totalSteps||wizResult;
+
+  if(wizLoading){
+    sb.appendChild(el('span',{cls:'sh'}));
+    sb.appendChild(el('div',{cls:'wiz-loading'},
+      el('div',{cls:'wiz-loading-em'},'🌿'),
+      el('div',{cls:'empty-t'},'Analizando tu situación…'),
+      el('div',{cls:'empty-s'},'La IA está creando una guía de cuidados personalizada para ti')
+    ));
+    ov.appendChild(sb);return ov;
+  }
+
+  sb.appendChild(el('div',{cls:'shdr'},
     el('span',{cls:'sh'}),
     el('div',{cls:'flex jb ac'},
-      el('div',{cls:'st'},'Nueva planta'),
+      el('div',{cls:'st'},wizResult?'Guía lista ✅':inWizard?'Nueva planta':'Nueva planta'),
       btn('×','btn-g',closeSheet,{style:{fontSize:'22px',padding:'4px 8px',color:'var(--i3)'}})
     )
-  );
-  sb.appendChild(shdr);
-
-  // AI identify box
-  const aiBox=el('div',{cls:'ai-box'});
-  aiBox.appendChild(el('div',{cls:'ai-label'},'🤖 Identificar con IA'));
-  if(!getApiKey()){
-    aiBox.appendChild(el('div',{cls:'fs12 ci3',style:{marginBottom:'8px'}},'Configura tu API key en ⚙️ Ajustes para usar esta función.'));
-  }else if(aiState==='idle'){
-    aiBox.appendChild(el('div',{cls:'fs13 ci3',style:{marginBottom:'10px'}},'Haz una foto y la IA identificará la planta y rellenará los datos automáticamente.'));
-  }else if(aiState==='loading'){
-    aiBox.appendChild(el('div',{style:{fontSize:'13px',color:'#7c3aed',marginBottom:'10px'}},'🔍 Analizando imagen…'));
-  }else if(aiState==='done'&&aiIdent){
-    const res=el('div',{cls:'ai-r'},
-      el('div',{style:{fontFamily:'var(--fd)',fontWeight:'800',fontSize:'16px',marginBottom:'3px'}},aiIdent.icon+' '+aiIdent.commonName),
-      el('div',{cls:'fs12 ci3 italic',style:{marginBottom:'6px'}},aiIdent.scientificName),
-      el('div',{cls:'fs12 ci2',style:{lineHeight:'1.6',marginBottom:'8px'}},aiIdent.description),
-      el('div',{cls:'flex gap8',style:{flexWrap:'wrap'}},
-        el('span',{cls:'pill',style:{background:'#f0fdf4',color:'#166534'}},'Confianza: '+aiIdent.confidence),
-        aiIdent.toxic?el('span',{cls:'pill',style:{background:'#fef2f2',color:'var(--rd)'}},'⚠️ Tóxica'):null,
-        el('span',{cls:'pill',style:{background:'#f0f9ff',color:'#0369a1'}},aiIdent.care?.difficulty||'')
-      )
-    );
-    if(aiIdent.tips){const ul=el('ul',{style:{margin:'10px 0 0',paddingLeft:'16px',fontSize:'12px',color:'var(--i3)',lineHeight:'1.7'}});aiIdent.tips.forEach(t=>ul.appendChild(el('li',{},t)));res.appendChild(ul);}
-    res.appendChild(el('div',{cls:'fs11 fw7 cgr fm mt8'},'✓ DATOS RELLENADOS AUTOMÁTICAMENTE'));
-    aiBox.appendChild(res);
-  }
-  const fi=el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'}});
-  fi.addEventListener('change',e=>identifyPlant(e.target.files?.[0]));
-  const pb=el('label',{cls:'btn btn-s btn-full',style:{cursor:'pointer'}},
-    '📷 '+(aiState==='loading'?'Analizando…':'Subir o tomar foto'),fi
-  );
-  if(!getApiKey()){pb.style.opacity='0.5';pb.style.pointerEvents='none';}
-  aiBox.appendChild(pb);
-  sb.appendChild(aiBox);
-
-  // Form
-  let nameEl,specEl,locEl,potEl,soilEl,waterEl,lightEl,fertEl,vitEl,dateEl,notesEl,tagsEl;
-
-  function fg(lbl,inputEl){return el('div',{cls:'fg'},el('label',{},lbl),inputEl);}
-  function fgs(lbl,inputEl){return el('div',{},el('label',{},lbl),inputEl);}
-  function sel(opts,val,cb){const s=el('select',{},...opts.map(o=>el('option',{value:o},o)));s.value=val;s.addEventListener('change',e=>cb(e.target.value));return s;}
-
-  sb.appendChild(fg('Nombre *', nameEl=el('input',{type:'text',placeholder:'Ej: Mi Monstera',val:_fp.name})));
-  nameEl.addEventListener('input',e=>_fp.name=e.target.value);
-
-  // Emoji grid
-  const eg=el('div',{cls:'fg'},el('label',{},'Icono'),el('div',{cls:'eg'}));
-  EMOJIS.forEach(em=>{
-    const eb=el('div',{cls:'eb'+(em===_fp.icon?' on':''),$click:()=>{_fp.icon=em;eg.querySelectorAll('.eb').forEach(b=>b.classList.remove('on'));eb.classList.add('on');}},em);
-    eg.querySelector('.eg').appendChild(eb);
-  });
-  sb.appendChild(eg);
-
-  const g1=el('div',{cls:'fg2'});
-  g1.appendChild(fgs('Especie', specEl=el('input',{type:'text',placeholder:'Nombre científico',val:_fp.species})));
-  specEl.addEventListener('input',e=>_fp.species=e.target.value);
-  g1.appendChild(fgs('Ubicación', locEl=el('input',{type:'text',placeholder:'Salón, balcón…',val:_fp.location})));
-  locEl.addEventListener('input',e=>_fp.location=e.target.value);
-  sb.appendChild(g1);
-
-  const togDiv=el('div',{cls:'fg'},el('label',{},'Tipo'),el('div',{cls:'trow'}));
-  [false,true].forEach(v=>{
-    const tb=el('button',{cls:'tbtn'+(_fp.outdoor===v?' on':''),$click:()=>{_fp.outdoor=v;togDiv.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));tb.classList.add('on');}},v?'🌿 Exterior':'🏠 Interior');
-    togDiv.querySelector('.trow').appendChild(tb);
-  });
-  sb.appendChild(togDiv);
-
-  const g2=el('div',{cls:'fg2'});
-  g2.appendChild(fgs('Maceta', potEl=el('input',{type:'text',placeholder:'Tamaño/material',val:_fp.pot})));
-  potEl.addEventListener('input',e=>_fp.pot=e.target.value);
-  g2.appendChild(fgs('Sustrato', soilEl=el('input',{type:'text',placeholder:'Tipo de tierra',val:_fp.soil})));
-  soilEl.addEventListener('input',e=>_fp.soil=e.target.value);
-  sb.appendChild(g2);
-
-  const g3=el('div',{cls:'fg2'});
-  g3.appendChild(fgs('Riego', waterEl=sel(WATERS,_fp.watering,v=>_fp.watering=v)));
-  g3.appendChild(fgs('Luz', lightEl=sel(LIGHTS,_fp.sunlight,v=>_fp.sunlight=v)));
-  sb.appendChild(g3);
-
-  const g4=el('div',{cls:'fg2'});
-  g4.appendChild(fgs('Fertilizante', fertEl=sel(FERTS,_fp.fertilizer,v=>_fp.fertilizer=v)));
-  g4.appendChild(fgs('Vitalidad', vitEl=sel(Object.keys(VIT).map(k=>VIT[k].label),VIT[_fp.vitality]?.label||'Bueno',v=>{const k=Object.keys(VIT).find(k=>VIT[k].label===v)||'bueno';_fp.vitality=k;})));
-  sb.appendChild(g4);
-
-  sb.appendChild(fg('Fecha adquisición', dateEl=el('input',{type:'date',val:_fp.acquired})));
-  dateEl.addEventListener('change',e=>_fp.acquired=e.target.value);
-
-  sb.appendChild(fg('Notas', notesEl=el('textarea',{placeholder:'Observaciones, historia…'},_fp.notes||'')));
-  notesEl.addEventListener('input',e=>_fp.notes=e.target.value);
-
-  sb.appendChild(fg('Etiquetas (coma)', tagsEl=el('input',{type:'text',placeholder:'interior, tropical, favorita',val:_fp.tags||''})));
-  tagsEl.addEventListener('input',e=>_fp.tags=e.target.value);
-
-  sb.appendChild(el('div',{cls:'fg2',style:{gridTemplateColumns:'1fr 2fr'}},
-    btn('Cancelar','btn-s',closeSheet),
-    btn('🌱 Añadir planta','btn-p',()=>{
-      _fp.name=nameEl.value;_fp.species=specEl.value;_fp.location=locEl.value;
-      _fp.pot=potEl.value;_fp.soil=soilEl.value;_fp.tags=tagsEl.value;_fp.notes=notesEl.value;
-      addPlant();
-    })
   ));
+
+  if(inWizard){
+    // Progress dots
+    const prog=el('div',{cls:'wiz-progress'});
+    for(let i=0;i<totalSteps;i++)prog.appendChild(el('div',{cls:'wiz-dot'+(i<=wizStep?' on':'')}));
+    sb.appendChild(prog);
+
+    const q=WIZ_QUESTIONS[wizStep];
+    sb.appendChild(el('div',{cls:'wiz-step'},
+      el('div',{cls:'wiz-q'},q.q),
+      el('div',{cls:'wiz-sub'},q.sub),
+      el('div',{cls:'wiz-opts'},...q.opts.map(o=>
+        el('button',{cls:'wiz-opt'+(wizAnswers[q.key]===o.val?' on':''),$click:()=>{
+          wizAnswers[q.key]=o.val;
+          if(wizStep<totalSteps-1){wizStep++;render();}
+          else{
+            // Last question — ask for plant name then run wizard
+            wizStep=totalSteps;render();
+          }
+        }},el('span',{cls:'wiz-opt-em'},o.em),o.label)
+      ))
+    ));
+
+    if(wizStep>0)sb.appendChild(el('button',{cls:'btn btn-g btn-full mt12 fs13 ci3',$click:()=>{wizStep--;render();}},'← Anterior'));
+    sb.appendChild(el('button',{cls:'btn btn-g btn-full mt4 fs12 ci3',$click:()=>{wizStep=totalSteps;render();}},'Saltar y rellenar manualmente'));
+  }
+
+  if(showForm&&!wizResult){
+    // Plant name + photo before running wizard
+    sb.appendChild(el('div',{cls:'mb12'},
+      el('div',{cls:'st mb8'},'¿Cómo se llama tu planta?'),
+      el('div',{cls:'fs13 ci3 mb16'},'Puedes hacer una foto para que la IA la identifique automáticamente.')
+    ));
+
+    // Photo
+    const photoArea=el('div',{});
+    if(_fp.photo){
+      photoArea.appendChild(el('img',{cls:'photo-preview',src:_fp.photo}));
+      photoArea.appendChild(btn('Cambiar foto','btn-s btn-full mb10',()=>{_fp.photo=null;wizPhotoB64=null;render();}));
+    } else {
+      const ph=el('div',{cls:'photo-placeholder'});
+      ph.appendChild(el('span',{style:{fontSize:'36px'}},'📷'));
+      ph.appendChild(el('span',{cls:'fs13 ci3'},'Toca para hacer una foto'));
+      const fi=el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'}});
+      fi.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){handlePlantPhoto(f);identifyPlant(f);}});
+      ph.addEventListener('click',()=>fi.click());
+      ph.appendChild(fi);
+      photoArea.appendChild(ph);
+    }
+    sb.appendChild(photoArea);
+
+    if(aiState==='loading')sb.appendChild(el('div',{cls:'fs13',style:{color:'var(--pu)',marginBottom:'10px',textAlign:'center'}},'🔍 Identificando planta…'));
+    if(aiState==='done'&&aiIdent)sb.appendChild(el('div',{cls:'card alert-g mb12'},el('div',{cls:'fw7 fs14 mb4'},aiIdent.icon+' '+aiIdent.commonName),el('div',{cls:'fs12 ci3'},aiIdent.scientificName),el('div',{cls:'fs11 fw7 cgr mt8 fm'},'✓ DATOS RELLENADOS')));
+
+    sb.appendChild(el('div',{cls:'fg'},el('label',{},'Nombre *'),el('input',{type:'text',placeholder:'Ej: Mi Monstera',val:_fp.name,$input:e=>_fp.name=e.target.value})));
+
+    const locEl=el('input',{type:'text',placeholder:'Salón, habitación, balcón…',val:_fp.location||'',$input:e=>_fp.location=e.target.value});
+    sb.appendChild(el('div',{cls:'fg'},el('label',{},'¿Dónde va a estar?'),locEl));
+
+    if(getKey()&&_fp.name){
+      sb.appendChild(btn('🤖 Generar guía de cuidados con IA','btn-pu btn-full mb8',()=>{
+        if(!_fp.name.trim()){toast('Escribe el nombre primero','w');return;}
+        // apply wizard location answer
+        if(wizAnswers.location){const loc={interior:'Interior',ventana:'Junto a ventana',balcon:'Balcón',jardin:'Jardín'}[wizAnswers.location];if(loc&&!_fp.location)_fp.location=loc;}
+        _fp.outdoor=wizAnswers.location==='balcon'||wizAnswers.location==='jardin';
+        runWizard();
+      }));
+    }
+    sb.appendChild(btn('Añadir sin guía IA','btn-s btn-full',()=>{if(!_fp.name.trim()){toast('El nombre es obligatorio','w');return;}if(wizAnswers.location){const loc={interior:'Interior',ventana:'Junto a ventana',balcon:'Balcón',jardin:'Jardín'}[wizAnswers.location];if(loc&&!_fp.location)_fp.location=loc;}_fp.outdoor=wizAnswers.location==='balcon'||wizAnswers.location==='jardin';addPlant();}));
+  }
+
+  if(wizResult){
+    const vi=VIT['óptimo'];
+    sb.appendChild(el('div',{cls:'wiz-result'},
+      el('div',{cls:'fw8 fs14 fd mb4 cgr'},'✅ Guía personalizada generada'),
+      el('div',{cls:'fs13 ci2',style:{lineHeight:'1.6'}},wizResult.summary||'')
+    ));
+    sb.appendChild(el('div',{cls:'ig mb12'},
+      el('div',{cls:'ic'},el('div',{cls:'ic-l'},'💧 Riego'),el('div',{cls:'ic-v'},wizResult.wateringFrequency||'—')),
+      el('div',{cls:'ic'},el('div',{cls:'ic-l'},'🌿 Dificultad'),el('div',{cls:'ic-v'},wizResult.difficulty||'—')),
+      el('div',{cls:'ic'},el('div',{cls:'ic-l'},'🌍 Sustrato'),el('div',{cls:'ic-v fs12'},wizResult.substrate||'—')),
+      el('div',{cls:'ic'},el('div',{cls:'ic-l'},'🪴 Maceta'),el('div',{cls:'ic-v'},wizResult.potSize||'—'))
+    ));
+    if(wizResult.wateringTip)sb.appendChild(el('div',{cls:'card mb8'},el('div',{cls:'sl'},'💧 Cómo regar'),el('div',{cls:'fs13 ci2',style:{lineHeight:'1.6'}},wizResult.wateringTip)));
+    if(wizResult.transplantTip)sb.appendChild(el('div',{cls:'card alert-y mb8'},el('div',{cls:'sl sl-am'},'🪴 Trasplante'),el('div',{cls:'fs13 ci2',style:{lineHeight:'1.6'}},wizResult.transplantTip)));
+    if(wizResult.beginnerTips?.length>0){
+      const bt=el('div',{cls:'card alert-pu mb12'},el('div',{cls:'sl sl-pu'},'💡 Consejos clave'));
+      wizResult.beginnerTips.forEach((t,i)=>bt.appendChild(el('div',{cls:'ri'},el('span',{cls:'fw7 fs12 cpu',style:{minWidth:'20px'}},i+1+'.'),el('span',{cls:'f1 fs13 ci2'},t))));
+      sb.appendChild(bt);
+    }
+    sb.appendChild(btn('🌱 Añadir esta planta','btn-p btn-full',()=>{addPlant();}));
+    sb.appendChild(btn('← Volver atrás','btn-g btn-full mt4 fs13',()=>{wizResult=null;render();}));
+  }
 
   ov.appendChild(sb);return ov;
 }
 
+// ═══════════════════════════════════
+// SHEET: ADD ENTRY
+// ═══════════════════════════════════
 function buildSheetEntry(){
   const p=S.plants.find(x=>x.id===selId);
   const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov)closeSheet();}});
   const sb=el('div',{cls:'sb'});
-  sb.appendChild(el('div',{cls:'shdr'},
-    el('span',{cls:'sh'}),
-    el('div',{cls:'st'},'Registrar crecimiento'),
-    p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null
-  ));
-
-  function fg(lbl,inputEl){return el('div',{cls:'fg'},el('label',{},lbl),inputEl);}
-
+  sb.appendChild(el('div',{cls:'shdr'},el('span',{cls:'sh'}),el('div',{cls:'st'},'Registrar crecimiento'),p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null));
   const dateEl=el('input',{type:'date',val:_fe.date});dateEl.addEventListener('change',e=>_fe.date=e.target.value);
-  sb.appendChild(fg('Fecha',dateEl));
-
+  sb.appendChild(el('div',{cls:'fg'},el('label',{},'Fecha'),dateEl));
   const g=el('div',{cls:'fg2'});
   const hEl=el('input',{type:'number',placeholder:'0',val:_fe.height||''});hEl.addEventListener('input',e=>_fe.height=e.target.value);
   const lEl=el('input',{type:'number',placeholder:'0',val:_fe.leaves||''});lEl.addEventListener('input',e=>_fe.leaves=e.target.value);
   g.appendChild(el('div',{},el('label',{},'Altura (cm)'),hEl));
   g.appendChild(el('div',{},el('label',{},'Nº hojas'),lEl));
   sb.appendChild(g);
+  const vitEl=el('select',{},...Object.keys(VIT).map(k=>el('option',{value:k},VIT[k].label)));vitEl.value=_fe.vitality;vitEl.addEventListener('change',e=>_fe.vitality=e.target.value);
+  sb.appendChild(el('div',{cls:'fg'},el('label',{},'Vitalidad'),vitEl));
+  const noteEl=el('textarea',{placeholder:'Nueva hoja, color, plagas, raíces…'},_fe.note||'');noteEl.addEventListener('input',e=>_fe.note=e.target.value);
+  sb.appendChild(el('div',{cls:'fg'},el('label',{},'Observaciones'),noteEl));
 
-  const vitEl=el('select',{},...Object.keys(VIT).map(k=>el('option',{value:k},VIT[k].label)));
-  vitEl.value=_fe.vitality;vitEl.addEventListener('change',e=>_fe.vitality=e.target.value);
-  sb.appendChild(fg('Vitalidad',vitEl));
+  // Foto del registro
+  const fotoLbl=el('label',{cls:'btn btn-s btn-full mb12',style:{cursor:'pointer'}},'📷 Añadir foto al registro',el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'},$change:async e=>{const f=e.target.files?.[0];if(!f)return;const url=await fileToDataURL(f);_fe.photoUrl=url;render();}}));
+  if(_fe.photoUrl)sb.appendChild(el('img',{src:_fe.photoUrl,style:{width:'100%',height:'140px',objectFit:'cover',borderRadius:'12px',marginBottom:'10px'}}));
+  sb.appendChild(fotoLbl);
 
-  const noteEl=el('textarea',{placeholder:'Nueva hoja, color, plagas, raíces…'},_fe.note||'');
-  noteEl.addEventListener('input',e=>_fe.note=e.target.value);
-  sb.appendChild(fg('Observaciones',noteEl));
-
-  sb.appendChild(el('div',{cls:'fg2',style:{gridTemplateColumns:'1fr 2fr'}},
-    btn('Cancelar','btn-s',closeSheet),
-    btn('📊 Guardar','btn-p',()=>{_fe.height=hEl.value;_fe.leaves=lEl.value;_fe.note=noteEl.value;addEntry();})
-  ));
-
+  sb.appendChild(el('div',{cls:'fg2',style:{gridTemplateColumns:'1fr 2fr'}},btn('Cancelar','btn-s',closeSheet),btn('📊 Guardar','btn-p',()=>{_fe.height=hEl.value;_fe.leaves=lEl.value;_fe.note=noteEl.value;addEntry();})));
   ov.appendChild(sb);return ov;
 }
 
+// ═══════════════════════════════════
+// SHEET: CHECK RESULT
+// ═══════════════════════════════════
 function buildSheetCheck(){
   const p=S.plants.find(x=>x.id===selId);
   const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov&&checkState!=='loading')closeSheet();}});
   const sb=el('div',{cls:'sb'});
-  sb.appendChild(el('div',{cls:'shdr'},
-    el('span',{cls:'sh'}),
-    el('div',{cls:'st'},'Análisis IA'),
-    p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null
-  ));
-
-  if(checkState==='loading'){
-    sb.appendChild(el('div',{cls:'empty',style:{padding:'50px 20px'}},
-      el('div',{style:{fontSize:'48px',animation:'spin 2s linear infinite',display:'inline-block',marginBottom:'16px'}},'🔬'),
-      el('div',{cls:'empty-t'},'Analizando el estado…'),
-      el('div',{cls:'empty-s'},'La IA evalúa todos los datos de tu planta')
-    ));
-  }else if(checkState==='done'&&checkResult){
+  sb.appendChild(el('div',{cls:'shdr'},el('span',{cls:'sh'}),el('div',{cls:'st'},'Análisis IA'),p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null));
+  if(checkState==='loading'){sb.appendChild(el('div',{cls:'wiz-loading'},el('div',{cls:'wiz-loading-em'},'🔬'),el('div',{cls:'empty-t'},'Analizando el estado…'),el('div',{cls:'empty-s'},'La IA evalúa todos los datos de tu planta')));}
+  else if(checkState==='done'&&checkResult){
     const vi=VIT[checkResult.vitality]||VIT['bueno'];
-    sb.appendChild(el('div',{cls:'check-hero',style:{background:vi.bg,border:'1.5px solid '+vi.dot+'40',marginBottom:'14px'}},
+    sb.appendChild(el('div',{style:{background:vi.bg,border:'1.5px solid '+vi.dot+'40',borderRadius:'18px',padding:'20px',marginBottom:'14px',textAlign:'center'}},
       el('div',{style:{marginBottom:'8px'}},vbadge(checkResult.vitality,true)),
-      el('div',{cls:'check-headline fd',style:{color:vi.color}},checkResult.headline),
-      el('div',{cls:'check-score fw8',style:{color:vi.dot}},checkResult.score,el('span',{style:{fontSize:'16px',fontWeight:'400',color:vi.color}},'/100')),
-      el('div',{cls:'check-score-track'},el('div',{cls:'sbf',style:{width:checkResult.score+'%',background:vi.dot}}))
+      el('div',{style:{fontFamily:'var(--fd)',fontSize:'20px',fontWeight:'800',color:vi.color,margin:'8px 0'}},checkResult.headline),
+      el('div',{style:{fontSize:'36px',fontWeight:'900',color:vi.dot}},checkResult.score,el('span',{style:{fontSize:'16px',fontWeight:'400',color:vi.color}},'/100')),
+      el('div',{cls:'sbt mt12'},el('div',{cls:'sbf',style:{width:checkResult.score+'%',background:vi.dot}}))
     ));
     sb.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Diagnóstico'),el('p',{cls:'fs14 ci2',style:{lineHeight:'1.7',margin:0}},checkResult.diagnosis)));
-    if(checkResult.positives?.length>0){
-      const pc=el('div',{cls:'card alert-g'});
-      pc.appendChild(el('div',{cls:'sl sl-gr'},'✓ Puntos positivos'));
-      checkResult.positives.forEach(p=>pc.appendChild(el('div',{cls:'ri'},el('span',{cls:'cgr fw7'},'✓'),el('span',{cls:'f1 fs13 ci2'},p))));
-      sb.appendChild(pc);
-    }
+    if(checkResult.transplantNeeded)sb.appendChild(el('div',{cls:'card alert-y'},el('div',{cls:'sl sl-am'},'🪴 Trasplante recomendado'),el('div',{cls:'fs13 ci2',style:{lineHeight:'1.6'}},checkResult.transplantReason||'')));
+    if(checkResult.positives?.length>0){const pc=el('div',{cls:'card alert-g'});pc.appendChild(el('div',{cls:'sl sl-gr'},'✓ Puntos positivos'));checkResult.positives.forEach(p=>pc.appendChild(el('div',{cls:'ri'},el('span',{cls:'cgr fw7'},'✓'),el('span',{cls:'f1 fs13 ci2'},p))));sb.appendChild(pc);}
     if(checkResult.actions?.length>0){
       const ac=el('div',{cls:'card'},el('div',{cls:'sl'},'Acciones recomendadas'));
-      checkResult.actions.forEach(a=>{
-        const pcolor=a.priority==='alta'?'var(--rd)':a.priority==='media'?'var(--am)':'var(--gr)';
-        const pbg=a.priority==='alta'?'#fef2f2':a.priority==='media'?'#fffbeb':'#f0faf4';
-        ac.appendChild(el('div',{cls:'ri ac'},
-          el('span',{cls:'fs10 fw8 fm upper',style:{padding:'3px 7px',borderRadius:'100px',background:pbg,color:pcolor,flexShrink:0}},a.priority),
-          el('span',{cls:'f1 fs13 ci2',style:{lineHeight:'1.5'}},a.action)
-        ));
-      });
-      sb.appendChild(ac);
+      checkResult.actions.forEach(a=>{const pcolor=a.priority==='alta'?'var(--rd)':a.priority==='media'?'var(--am)':'var(--gr)';const pbg=a.priority==='alta'?'#fef2f2':a.priority==='media'?'#fffbeb':'#f0faf4';ac.appendChild(el('div',{cls:'ri ac'},el('span',{cls:'fs10 fw8 fm upper',style:{padding:'3px 7px',borderRadius:'100px',background:pbg,color:pcolor,flexShrink:0}},a.priority),el('span',{cls:'f1 fs13 ci2',style:{lineHeight:'1.5'}},a.action)));});sb.appendChild(ac);
     }
-    sb.appendChild(el('div',{cls:'fs12 ci3 tc mb12'},'Próximo análisis en '+checkResult.nextCheckDays+' días'));
+    sb.appendChild(el('div',{cls:'fs12 ci3 tc mb12'},'Próximo análisis en '+checkResult.nextCheckDays+' días · cada '+checkResult.nextCheckDays+' días'));
     sb.appendChild(btn('Entendido','btn-p btn-full',closeSheet));
-  }else if(checkState==='error'){
-    sb.appendChild(el('div',{cls:'empty'},
-      el('div',{cls:'empty-em'},'❌'),
-      el('div',{cls:'empty-t'},'Error en el análisis'),
-      btn('Reintentar','btn-p',()=>p&&runCheck(p.id))
-    ));
-  }
-
+  } else if(checkState==='error'){sb.appendChild(el('div',{cls:'empty'},el('div',{cls:'empty-em'},'❌'),el('div',{cls:'empty-t'},'Error en el análisis'),btn('Reintentar','btn-p',()=>p&&runCheck(p.id))));}
   ov.appendChild(sb);return ov;
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   render();
-  setTimeout(fetchWeather,500);
+  setTimeout(fetchWeather,600);
   if('serviceWorker' in navigator){
     const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(fetch(e.request).catch(()=>new Response('',{status:200})));}});`;
-    const blob=new Blob([sw],{type:'application/javascript'});
-    navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})),{scope:'./'}).catch(()=>{});
   }
 });
 </script>
