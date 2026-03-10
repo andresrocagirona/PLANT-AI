@@ -328,26 +328,41 @@ const getKey=()=>S.settings.apiKey||'';
 async function gemini(parts,temperature=0.2){
   const key=getKey();
   if(!key)throw new Error('NO_KEY');
-  const models=['gemini-2.0-flash','gemini-2.0-flash-lite','gemini-1.5-flash','gemini-1.5-flash-latest'];
+  // Try models in order, surface real errors
+  const models=['gemini-2.0-flash','gemini-1.5-flash','gemini-1.5-flash-latest'];
+  let lastError='';
   for(const model of models){
+    let r,j;
     try{
-      const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
+      r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
         body:JSON.stringify({contents:[{parts:parts}],generationConfig:{temperature,maxOutputTokens:1500}})
       });
-      const j=await r.json();
-      if(j.error){
-        const msg=j.error.message||'';
-        if(msg.includes('not found')||msg.includes('not support')||msg.includes('ListModels')||msg.includes('deprecated')){continue;}
-        throw new Error(msg);
+      j=await r.json();
+    }catch(netErr){
+      throw new Error('Sin conexión a internet');
+    }
+    if(j.error){
+      const msg=j.error.message||'';
+      const code=j.error.code||0;
+      // API key bad / quota / billing - throw immediately, no point trying other models
+      if(code===400||code===403||msg.includes('API_KEY')||msg.includes('invalid')||msg.includes('quota')||msg.includes('billing')||msg.includes('PERMISSION')){
+        throw new Error('API key inválida o sin cuota. Ve a Ajustes y comprueba la key.');
       }
-      const text=(j.candidates?.[0]?.content?.parts?.[0]?.text||'');
-      if(!text)continue;
-      return text.replace(/```json|```/g,'').trim();
-    }catch(e){if(e.message==='NO_KEY')throw e;}
+      // Model not available - try next
+      if(msg.includes('not found')||msg.includes('not support')||msg.includes('ListModels')||msg.includes('404')||code===404){
+        lastError=msg;continue;
+      }
+      throw new Error(msg);
+    }
+    const text=(j.candidates?.[0]?.content?.parts?.[0]?.text||'');
+    if(!text){lastError='Sin respuesta del modelo';continue;}
+    return text.replace(/```json|```/g,'').trim();
   }
-  throw new Error('No se pudo conectar con la IA. Comprueba tu API key en Ajustes.');
+  throw new Error(lastError||'La IA no está disponible ahora. Inténtalo más tarde.');
 }
+
 async function geminiJSON(parts){
   const txt=await gemini(parts,0.1);
   try{return JSON.parse(txt);}
@@ -1048,7 +1063,21 @@ function buildSettings(){
     el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'AIza...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.trim();saveS();}})),
     !S.settings.apiKey
       ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'aistudio.google.com'),el('br'),'2. Inicia sesión con tu cuenta Google',el('br'),'3. Clic en "Get API key" → "Create API key"',el('br'),'4. Copia y pega aquí arriba ↑'))
-      :el('div',{cls:'alert alert-g'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key configurada — IA activada 🎉'))
+      :el('div',{},
+          el('div',{cls:'alert alert-g mb8'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key guardada')),
+          el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
+            const btn=document.getElementById('test-api-btn');
+            btn.textContent='Probando…';btn.disabled=true;
+            try{
+              const txt=await gemini([{text:'Responde solo: OK'}],0);
+              if(txt){btn.textContent='✅ Funciona perfectamente';btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';}
+            }catch(e){
+              btn.textContent='❌ '+e.message;
+              btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';
+              btn.disabled=false;
+            }
+          }},'🔌 Probar conexión con Gemini')
+        )
   ));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'🌧️ Umbral de lluvia'),el('div',{cls:'fs13 ci2 mb10'},'mm para regar automáticamente las plantas exteriores:'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}})));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'📍 Ubicación de casa'),S.settings.homeLocation?el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},S.settings.homeLocation.city||'Mi casa'),el('div',{cls:'fs12 ci3'},S.settings.homeLocation.lat.toFixed(4)+', '+S.settings.homeLocation.lon.toFixed(4))),btn('Cambiar','btn-s btn-sm',()=>{page='map';render();})):el('div',{cls:'flex jb ac'},el('div',{cls:'fs13 ci3'},'Sin ubicación'),btn('Detectar','btn-p btn-sm',fetchWeather))));
