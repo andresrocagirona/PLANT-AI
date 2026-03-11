@@ -617,7 +617,7 @@ Responde SOLO JSON sin markdown:
     const nc=new Date();nc.setDate(nc.getDate()+(result.nextCheckDays||7));
     S.plants=S.plants.map(pp=>{
       if(pp.id!==plantId)return pp;
-      return{...pp,vitality:result.vitality,lastCheck:td(),nextCheck:nc.toISOString().split('T')[0],checkIntervalDays:result.nextCheckDays||pp.checkIntervalDays||7,checkHistory:[...(pp.checkHistory||[]),{date:td(),vitality:result.vitality,score:result.score,headline:result.headline}].slice(-10)};
+      return{...pp,vitality:result.vitality,lastCheck:td(),nextCheck:nc.toISOString().split('T')[0],checkIntervalDays:result.nextCheckDays||pp.checkIntervalDays||7,lastCheckFull:{...result,date:td()},checkHistory:[...(pp.checkHistory||[]),{date:td(),vitality:result.vitality,score:result.score,headline:result.headline}].slice(-10)};
     });
     saveS();
   }catch(e){
@@ -906,11 +906,78 @@ function buildDetail(){
   actions.appendChild(cbtn);
   hero.appendChild(actions);
   frag.appendChild(hero);
-  frag.appendChild(el('div',{cls:'tabs'},...['ficha','historial','crecimiento','cuidados'].map(t=>el('button',{cls:'tab'+(activeTab===t?' on':''),$click:()=>{activeTab=t;render();}},t[0].toUpperCase()+t.slice(1)))));
+  const tabs=['ficha','historial','crecimiento','cuidados'];
+  if(p.lastCheckFull)tabs.splice(1,0,'análisis');
+  frag.appendChild(el('div',{cls:'tabs'},...tabs.map(t=>el('button',{cls:'tab'+(activeTab===t?' on':''),$click:()=>{activeTab=t;render();}},t[0].toUpperCase()+t.slice(1)))));
   if(activeTab==='ficha')frag.appendChild(buildTabFicha(p,last,du,vi));
+  else if(activeTab==='análisis')frag.appendChild(buildTabAnalisis(p));
   else if(activeTab==='historial')frag.appendChild(buildTabHistorial(p));
   else if(activeTab==='crecimiento')frag.appendChild(buildTabCrecimiento(p));
   else if(activeTab==='cuidados')frag.appendChild(buildTabCuidados(p));
+  return frag;
+}
+
+function buildTabAnalisis(p){
+  const frag=document.createDocumentFragment();
+  const r=p.lastCheckFull;
+  if(!r)return frag;
+  const vi=VIT[r.vitality]||VIT['bueno'];
+
+  // Score card
+  const scoreCard=el('div',{cls:'card',style:{textAlign:'center',padding:'20px'}});
+  scoreCard.appendChild(el('div',{style:{fontSize:'13px',fontFamily:'var(--fm)',letterSpacing:'.06em',color:'var(--i3)',marginBottom:'8px'}},'ÚLTIMO ANÁLISIS · '+fmtL(r.date)));
+  scoreCard.appendChild(el('div',{style:{fontSize:'52px',fontWeight:'900',fontFamily:'var(--fd)',color:vi.dot,lineHeight:'1'}},r.score,el('span',{style:{fontSize:'18px',fontWeight:'400',color:vi.color}},'/100')));
+  scoreCard.appendChild(el('div',{style:{marginTop:'10px'}},vbadge(r.vitality,true)));
+  scoreCard.appendChild(el('div',{cls:'sbt mt12'},el('div',{cls:'sbf',style:{width:r.score+'%',background:vi.dot}})));
+  scoreCard.appendChild(el('div',{style:{marginTop:'10px',fontSize:'18px',fontWeight:'800',fontFamily:'var(--fd)',color:vi.color}},r.headline));
+  frag.appendChild(scoreCard);
+
+  // Diagnosis
+  frag.appendChild(el('div',{cls:'card'},
+    el('div',{cls:'sl'},'🔍 Diagnóstico'),
+    el('p',{cls:'fs14 ci2',style:{lineHeight:'1.75',margin:0}},r.diagnosis)
+  ));
+
+  // Actions
+  if(r.actions?.length>0){
+    const ac=el('div',{cls:'card'});
+    ac.appendChild(el('div',{cls:'sl'},'⚡ Acciones recomendadas'));
+    r.actions.forEach(a=>{
+      const pcolor=a.priority==='alta'?'var(--rd)':a.priority==='media'?'var(--am)':'var(--gr)';
+      const pbg=a.priority==='alta'?'#fef2f2':a.priority==='media'?'#fffbeb':'#f0faf4';
+      ac.appendChild(el('div',{cls:'ri ac',style:{padding:'10px 0',borderBottom:'1px solid var(--bd)'}},
+        el('span',{cls:'fs10 fw8 fm upper',style:{padding:'3px 8px',borderRadius:'100px',background:pbg,color:pcolor,flexShrink:0}},a.priority),
+        el('span',{cls:'f1 fs13 ci2',style:{lineHeight:'1.6'}},a.action)
+      ));
+    });
+    frag.appendChild(ac);
+  }
+
+  // Positives
+  if(r.positives?.length>0){
+    const pc=el('div',{cls:'card alert-g'});
+    pc.appendChild(el('div',{cls:'sl sl-gr'},'✅ Puntos positivos'));
+    r.positives.forEach(pos=>pc.appendChild(el('div',{cls:'ri',style:{padding:'6px 0'}},
+      el('span',{style:{color:'var(--gr)',fontWeight:'700',marginRight:'8px'}},'✓'),
+      el('span',{cls:'f1 fs13 ci2'},pos)
+    )));
+    frag.appendChild(pc);
+  }
+
+  // Transplant warning
+  if(r.transplantNeeded){
+    frag.appendChild(el('div',{cls:'card alert-y'},
+      el('div',{cls:'sl sl-am'},'🪴 Trasplante recomendado'),
+      el('div',{cls:'fs13 ci2',style:{lineHeight:'1.6'}},r.transplantReason||'')
+    ));
+  }
+
+  // Next check
+  frag.appendChild(el('div',{cls:'card',style:{textAlign:'center'}},
+    el('div',{cls:'fs12 ci3 fm'},'Próximo análisis en '+r.nextCheckDays+' días'),
+    el('button',{cls:'btn btn-s mt10',$click:()=>{checkState='idle';checkResult=null;activeSheet='check';render();}},'🔬 Nuevo análisis')
+  ));
+
   return frag;
 }
 
