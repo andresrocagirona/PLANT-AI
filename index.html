@@ -22,6 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="https://g4f.dev/dist/js/client.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -399,16 +400,24 @@ function buildProgressBar(){
   );
 }
 
-// IA via Pollinations.ai - gratis, sin API key, sin registro, con visión
-// Tier anónimo: 1 petición cada 15s — suficiente para uso normal
+// IA via g4f.dev - gratis, sin API key, sin registro, con visión
+let _g4fClient=null;
+async function getG4F(){
+  if(_g4fClient)return _g4fClient;
+  // Import dinámico del cliente g4f
+  try{
+    const mod=await import('https://g4f.dev/dist/js/client.js');
+    _g4fClient=new mod.default();
+    return _g4fClient;
+  }catch(e){throw new Error('Sin conexión a internet');}
+}
+
 async function gemini(parts){
   const textParts=parts.filter(p=>p.text);
   const imageParts=parts.filter(p=>p.inline_data);
+  const hasImage=imageParts.length>0;
 
-  // Con imagen: openai-large (mejor visión). Sin imagen: openai (más rápido)
-  const model=imageParts.length>0?'openai-large':'openai';
-
-  // Construir contenido OpenAI-compatible: texto primero, imagen después
+  // Construir contenido: texto primero, imagen después
   const content=[];
   textParts.forEach(p=>content.push({type:'text',text:p.text}));
   imageParts.forEach(p=>content.push({
@@ -416,35 +425,28 @@ async function gemini(parts){
     image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}
   }));
 
-  // Si solo hay texto, enviar como string simple (más rápido)
   const msgContent=content.length===1&&content[0].type==='text'?content[0].text:content;
 
-  let r;
   try{
-    r=await fetch('https://text.pollinations.ai/openai',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:model,
-        messages:[{role:'user',content:msgContent}],
-        max_tokens:1000
-      })
+    const client=await getG4F();
+    const result=await client.chat.completions.create({
+      model:hasImage?'gpt-4o':'gpt-4o-mini',
+      messages:[{role:'user',content:msgContent}],
+      max_tokens:1000
     });
-  }catch(e){throw new Error('Sin conexión a internet');}
-
-  if(!r.ok){
-    const errText=await r.text().catch(()=>'');
-    const msg=errText.toLowerCase();
-    if(r.status===429||msg.includes('rate')||msg.includes('limit')||msg.includes('too many')){
+    const text=result.choices?.[0]?.message?.content||'';
+    if(!text)throw new Error('Sin respuesta');
+    return text.replace(/```json|```/g,'').trim();
+  }catch(e){
+    const msg=(e.message||'').toLowerCase();
+    if(msg.includes('rate')||msg.includes('quota')||msg.includes('limit')||msg.includes('429')){
       throw new Error('QUOTA');
     }
-    throw new Error('Error de IA ('+r.status+')');
+    if(msg.includes('sin conexión')||msg.includes('network')||msg.includes('fetch')){
+      throw new Error('Sin conexión a internet');
+    }
+    throw e;
   }
-
-  const j=await r.json();
-  const text=j.choices?.[0]?.message?.content||'';
-  if(!text)throw new Error('Sin respuesta de la IA');
-  return text.replace(/```json|```/g,'').trim();
 }
 
 async function geminiJSON(parts){
@@ -1343,7 +1345,7 @@ function buildSettings(){
   const frag=document.createDocumentFragment();
   frag.appendChild(el('div',{cls:'card alert-pu'},
     el('div',{cls:'sl sl-pu'},'🤖 IA gratuita — sin configuración'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'16px',lineHeight:'1.6'}},'La IA funciona automáticamente sin cuenta ni API key, usando Pollinations.ai.'),
+    el('div',{cls:'fs13 ci2',style:{marginBottom:'16px',lineHeight:'1.6'}},'La IA funciona automáticamente sin cuenta ni API key. Powered by g4f.dev con acceso a GPT-4o.'),
     el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
       const btn=document.getElementById('test-api-btn');
       btn.textContent='Probando…';btn.disabled=true;
