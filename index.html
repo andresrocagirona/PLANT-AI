@@ -325,51 +325,81 @@ function vbadge(v,lg=false){
 // GEMINI API
 // ═══════════════════════════════════
 const getKey=()=>S.settings.apiKey||'';
-async function gemini(parts,temperature=0.2){
+async function compressImage(file,maxW=512){
+  return new Promise(res=>{
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const scale=Math.min(1,maxW/Math.max(img.width,img.height));
+      const c=document.createElement('canvas');
+      c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg',0.6).split(',')[1]);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);fileToB64(file).then(res);};
+    img.src=url;
+  });
+}
+
+// IA via OpenRouter - gratis, soporta vision, sin limites raros de Gemini
+async function callOpenRouter(messages){
   const key=getKey();
   if(!key)throw new Error('NO_KEY');
-  // Try models in order, surface real errors
-  const models=['gemini-2.5-flash','gemini-2.5-flash-lite','gemini-2.0-flash','gemini-2.0-flash-lite'];
-  let lastError='';
-  for(const model of models){
-    let r,j;
-    try{
-      r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({contents:[{parts:parts}],generationConfig:{temperature,maxOutputTokens:1500}})
-      });
-      j=await r.json();
-    }catch(netErr){
-      throw new Error('Sin conexión a internet');
+  let r;
+  try{
+    r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+key,
+        'HTTP-Referer':'https://plant.ai',
+        'X-Title':'plant.ai'
+      },
+      body:JSON.stringify({
+        model:'openrouter/free',
+        messages:messages,
+        max_tokens:1500
+      })
+    });
+  }catch(e){throw new Error('Sin conexion a internet');}
+  const j=await r.json();
+  if(j.error){
+    const msg=(j.error.message||'').toLowerCase();
+    if(msg.includes('quota')||msg.includes('rate limit')||msg.includes('limit')){
+      throw new Error('QUOTA');
     }
-    if(j.error){
-      const msg=j.error.message||'';
-      const code=j.error.code||0;
-      // API key bad / quota / billing - throw immediately, no point trying other models
-      if(code===400||code===403||code===401||msg.toLowerCase().includes('api_key')||msg.toLowerCase().includes('invalid')||msg.toLowerCase().includes('quota')||msg.toLowerCase().includes('billing')||msg.toLowerCase().includes('permission')||msg.toLowerCase().includes('api key')||msg.toLowerCase().includes('key')){
-        throw new Error('API_KEY_ERROR:'+msg);
-      }
-      // Model not available - try next
-      if(msg.includes('not found')||msg.includes('not support')||msg.includes('ListModels')||msg.includes('404')||code===404){
-        lastError=msg;continue;
-      }
-      throw new Error(msg);
+    if(r.status===401||msg.includes('auth')||msg.includes('invalid api key')){
+      throw new Error('KEY');
     }
-    const text=(j.candidates?.[0]?.content?.parts?.[0]?.text||'');
-    if(!text){lastError='Sin respuesta del modelo';continue;}
-    return text.replace(/```json|```/g,'').trim();
+    throw new Error(j.error.message||'Error de IA');
   }
-  throw new Error(lastError||'La IA no está disponible ahora. Inténtalo más tarde.');
+  const text=j.choices?.[0]?.message?.content||'';
+  if(!text)throw new Error('Sin respuesta de la IA');
+  return text.replace(/```json|```/g,'').trim();
+}
+
+// Wrapper compatibles con el codigo existente que usaba partes de Gemini
+async function gemini(parts,temperature=0.2){
+  const msgs=[{role:'user',content:[]}];
+  for(const p of parts){
+    if(p.text)msgs[0].content.push({type:'text',text:p.text});
+    else if(p.inline_data)msgs[0].content.push({type:'image_url',image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}});
+  }
+  // Si solo hay texto, enviar como string simple (mas compatible)
+  if(msgs[0].content.length===1&&msgs[0].content[0].type==='text'){
+    msgs[0].content=msgs[0].content[0].text;
+  }
+  return await callOpenRouter(msgs);
 }
 
 async function geminiJSON(parts){
-  const txt=await gemini(parts,0.1);
+  const txt=await gemini(parts);
   try{return JSON.parse(txt);}
   catch{
-    const m=txt.match(/\{[\s\S]*\}/s);
+    const m=txt.match(/\{[\s\S]*\}/);
     if(m)try{return JSON.parse(m[0]);}catch{}
-    throw new Error('La IA no devolvió JSON válido');
+    throw new Error('Respuesta no valida');
   }
 }
 
@@ -438,23 +468,6 @@ function closeSheet(){activeSheet=null;render();}
 // ═══════════════════════════════════
 // AI — IDENTIFY PLANT
 // ═══════════════════════════════════
-async function compressImage(file,maxW=800){
-  return new Promise(res=>{
-    const img=new Image();
-    const url=URL.createObjectURL(file);
-    img.onload=()=>{
-      const scale=Math.min(1,maxW/Math.max(img.width,img.height));
-      const c=document.createElement('canvas');
-      c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
-      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      URL.revokeObjectURL(url);
-      res(c.toDataURL('image/jpeg',0.7).split(',')[1]);
-    };
-    img.onerror=()=>{URL.revokeObjectURL(url);fileToB64(file).then(res);};
-    img.src=url;
-  });
-}
-
 async function identifyPlant(file){
   if(!file)return;
   if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
@@ -469,7 +482,7 @@ async function identifyPlant(file){
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
   }catch(e){
     aiState='error';
-    toast('No se pudo identificar la planta. Inténtalo de nuevo.','w');
+    toast(e.message.includes('QUOTA')?'⏱️ Límite alcanzado, espera 1 minuto':'No se pudo identificar la planta. Inténtalo de nuevo.','w');
   }
   render();
 }
@@ -610,7 +623,7 @@ Responde siempre en español. Sé concreto y útil. Máximo 3 párrafos cortos.`
     history.forEach(m=>parts.push({text:(m.role==='user'?'Usuario: ':'Asistente: ')+m.text+'\n'}));
     const reply=await gemini(parts,0.7);
     S.chatHistory.push({role:'ai',text:reply});
-  }catch(e){S.chatHistory.push({role:'ai',text:e.message==='NO_KEY'?'⚠️ Necesitas configurar tu API key de Gemini en Ajustes para usar el chat.':'Lo siento, hubo un error. Inténtalo de nuevo.'});}
+  }catch(e){S.chatHistory.push({role:'ai',text:e.message==='NO_KEY'?'⚠️ Necesitas configurar tu API key de OpenRouter en Ajustes.':e.message==='QUOTA'?'⏱️ Limite de peticiones alcanzado. Espera 1 minuto e intenta de nuevo.':e.message==='KEY'?'⚠️ API key invalida. Ve a Ajustes.':'Lo siento, hubo un error. Inténtalo de nuevo.'});}
   chatLoading=false;saveS();render();
   setTimeout(()=>{const msgs=document.querySelector('.chat-msgs');if(msgs)msgs.scrollTop=msgs.scrollHeight;},50);
 }
@@ -1058,35 +1071,27 @@ function buildChatPage(){
 function buildSettings(){
   const frag=document.createDocumentFragment();
   frag.appendChild(el('div',{cls:'card alert-pu'},
-    el('div',{cls:'sl sl-pu'},'🤖 API Key de Google Gemini'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'100% gratuita. Hasta 1.500 usos al mes sin coste.'),
-    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'AIza...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.replace(/\s/g,'');saveS();},$paste:e=>{setTimeout(()=>{const v=e.target.value.replace(/\s/g,'');e.target.value=v;S.settings.apiKey=v;saveS();},10);}})),
+    el('div',{cls:'sl sl-pu'},'🤖 API Key de OpenRouter (gratis)'),
+    el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'Gratis con OpenRouter. Soporta fotos e IA sin los limites de Gemini.'),
+    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'sk-or-v1-...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.replace(/\s/g,'');saveS();},$paste:e=>{setTimeout(()=>{const v=e.target.value.replace(/\s/g,'');e.target.value=v;S.settings.apiKey=v;saveS();},10);}})),
     !S.settings.apiKey
-      ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'aistudio.google.com'),el('br'),'2. Inicia sesión con tu cuenta Google',el('br'),'3. Clic en "Get API key" → "Create API key"',el('br'),'4. Copia y pega aquí arriba ↑'))
+      ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'openrouter.ai/settings/keys'),el('br'),'2. Inicia sesión con tu cuenta Google',el('br'),'3. Pulsa "Create Key" y copia la key',el('br'),'4. Pega aqui arriba (empieza por sk-or-...)'))
       :el('div',{},
           el('div',{cls:'alert alert-g mb8'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key guardada')),
           el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
             const btn=document.getElementById('test-api-btn');
             btn.textContent='Probando…';btn.disabled=true;
             try{
-              // Direct test call bypassing error handling
-              const key=getKey().replace(/\s/g,'');
-              const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say OK'}]}]})});
-              const j=await r.json();
-              if(j.error){
-                btn.textContent='❌ Google dice: '+j.error.message;
-                btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
-              } else {
-                btn.textContent='✅ Funciona correctamente 🎉';
-                btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
-                S.settings._workingModel='gemini-1.5-flash';saveS();
-              }
-            }catch(e){
-              btn.textContent='❌ Error de red: '+e.message;
-              btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';
-              btn.disabled=false;
+              const txt=await gemini([{text:'Di OK en una palabra'}]);
+              btn.textContent='✅ Funciona perfectamente 🎉';
+              btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
+            }catch(er){
+              if(er.message==='KEY')btn.textContent='❌ API key invalida. Ve a openrouter.ai';
+              else if(er.message==='QUOTA')btn.textContent='⏱️ Limite alcanzado, espera 1 minuto';
+              else btn.textContent='❌ '+er.message;
+              btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
             }
-          }},'🔌 Probar conexión con Gemini')
+            }},'🔌 Probar conexión con OpenRouter')
         )
   ));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'🌧️ Umbral de lluvia'),el('div',{cls:'fs13 ci2 mb10'},'mm para regar automáticamente las plantas exteriores:'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}})));
