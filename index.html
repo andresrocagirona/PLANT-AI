@@ -332,7 +332,7 @@ function vbadge(v,lg=false){
 // GEMINI API
 // ═══════════════════════════════════
 const getKey=()=>S.settings.apiKey||'';
-async function compressImage(file,maxW=512){
+async function compressImage(file,maxW=400){
   return new Promise(res=>{
     const img=new Image();
     const url=URL.createObjectURL(file);
@@ -342,7 +342,7 @@ async function compressImage(file,maxW=512){
       c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);
       URL.revokeObjectURL(url);
-      res(c.toDataURL('image/jpeg',0.6).split(',')[1]);
+      res(c.toDataURL('image/jpeg',0.5).split(',')[1]);
     };
     img.onerror=()=>{URL.revokeObjectURL(url);fileToB64(file).then(res);};
     img.src=url;
@@ -404,7 +404,7 @@ async function callOpenRouter(messages){
         models:['meta-llama/llama-3.2-11b-vision-instruct:free','google/gemma-3-12b-it:free','mistralai/mistral-small-3.1-24b-instruct:free'],
         route:'fallback',
         messages:messages,
-        max_tokens:1000
+        max_tokens:600
       })
     });
   }catch(e){throw new Error('Sin conexion a internet');}
@@ -522,7 +522,7 @@ async function identifyPlant(file){
     const b64=await compressImage(file);
     const result=await geminiJSON([
       {inline_data:{mime_type:'image/jpeg',data:b64}},
-      {text:'Identifica esta planta. Responde SOLO JSON sin markdown ni texto extra. Formato exacto: {"commonName":"nombre en español","scientificName":"nombre científico","family":"familia","confidence":"alta","icon":"🌿","care":{"watering":"1× semana","sunlight":"Indirecta","fertilizer":"Mensual","difficulty":"fácil"},"description":"descripción 2 frases","tips":["tip1","tip2","tip3"],"toxic":false}'}
+      {text:'Identifica esta planta. Solo JSON: {"commonName":"nombre","scientificName":"cientifico","icon":"emoji","care":{"watering":"frecuencia","sunlight":"luz","difficulty":"fácil"},"description":"1 frase","tips":["tip1","tip2"],"toxic":false}'}
     ]);
     stopAIProgress();aiIdent=result;aiState='done';
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
@@ -618,7 +618,7 @@ async function runCheck(plantId,photoB64){
     const wxInfo=weather?`Clima ahora: ${weather.temp}°C, ${WTXT[weather.code]}, humedad ${weather.humidity}%, lluvia hoy ${weather.rain}mm.`:'';
     const checkParts=[];
     if(checkPhotoB64)checkParts.push({inline_data:{mime_type:'image/jpeg',data:checkPhotoB64}});
-    checkParts.push({text:`Eres botánico experto. Analiza el estado de esta planta y da recomendaciones muy concretas y útiles.
+    checkParts.push({text:`Analiza esta planta. JSON solo:
 
 Planta: ${p.name} (${p.species||'?'})
 Ubicación: ${p.location} (${p.outdoor?'exterior':'interior'})
