@@ -22,7 +22,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://js.puter.com/v2/"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -241,6 +240,8 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.4}
 <div id="app"></div>
 <script>
 'use strict';
+
+
 // ═══════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════
@@ -398,33 +399,52 @@ function buildProgressBar(){
   );
 }
 
-// IA via Puter.js - completamente gratis, sin API key, con vision
-// Usa claude-sonnet-4-5 para texto y google/gemini-2.5-flash para vision
+// IA via Pollinations.ai - gratis, sin API key, sin registro, con visión
+// Tier anónimo: 1 petición cada 15s — suficiente para uso normal
 async function gemini(parts){
   const textParts=parts.filter(p=>p.text);
   const imageParts=parts.filter(p=>p.inline_data);
-  const prompt=textParts.map(p=>p.text).join('\n');
 
+  // Con imagen: openai-large (mejor visión). Sin imagen: openai (más rápido)
+  const model=imageParts.length>0?'openai-large':'openai';
+
+  // Construir contenido OpenAI-compatible: texto primero, imagen después
+  const content=[];
+  textParts.forEach(p=>content.push({type:'text',text:p.text}));
+  imageParts.forEach(p=>content.push({
+    type:'image_url',
+    image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}
+  }));
+
+  // Si solo hay texto, enviar como string simple (más rápido)
+  const msgContent=content.length===1&&content[0].type==='text'?content[0].text:content;
+
+  let r;
   try{
-    let response;
-    if(imageParts.length>0){
-      // Con imagen: pasar como data URL al segundo argumento de puter.ai.chat
-      const img=imageParts[0];
-      const dataUrl='data:'+img.inline_data.mime_type+';base64,'+img.inline_data.data;
-      response=await puter.ai.chat(prompt, dataUrl, {model:'google/gemini-2.5-flash'});
-    } else {
-      response=await puter.ai.chat(prompt, {model:'google/gemini-2.5-flash'});
+    r=await fetch('https://text.pollinations.ai/openai',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:model,
+        messages:[{role:'user',content:msgContent}],
+        max_tokens:1000
+      })
+    });
+  }catch(e){throw new Error('Sin conexión a internet');}
+
+  if(!r.ok){
+    const errText=await r.text().catch(()=>'');
+    const msg=errText.toLowerCase();
+    if(r.status===429||msg.includes('rate')||msg.includes('limit')||msg.includes('too many')){
+      throw new Error('QUOTA');
     }
-    // puter devuelve string o objeto con message.content
-    if(typeof response==='string')return response.replace(/```json|```/g,'').trim();
-    const text=response?.message?.content||response?.text||'';
-    if(!text)throw new Error('Sin respuesta');
-    return text.replace(/```json|```/g,'').trim();
-  }catch(e){
-    const msg=(e.message||'').toLowerCase();
-    if(msg.includes('rate')||msg.includes('quota')||msg.includes('limit'))throw new Error('QUOTA');
-    throw e;
+    throw new Error('Error de IA ('+r.status+')');
   }
+
+  const j=await r.json();
+  const text=j.choices?.[0]?.message?.content||'';
+  if(!text)throw new Error('Sin respuesta de la IA');
+  return text.replace(/```json|```/g,'').trim();
 }
 
 async function geminiJSON(parts){
@@ -1323,7 +1343,7 @@ function buildSettings(){
   const frag=document.createDocumentFragment();
   frag.appendChild(el('div',{cls:'card alert-pu'},
     el('div',{cls:'sl sl-pu'},'🤖 IA gratuita — sin configuración'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'16px',lineHeight:'1.6'}},'La IA funciona sin API key. Usa Puter.js con acceso gratuito a Gemini 2.5 Flash y más modelos.'),
+    el('div',{cls:'fs13 ci2',style:{marginBottom:'16px',lineHeight:'1.6'}},'La IA funciona automáticamente sin cuenta ni API key, usando Pollinations.ai.'),
     el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
       const btn=document.getElementById('test-api-btn');
       btn.textContent='Probando…';btn.disabled=true;
