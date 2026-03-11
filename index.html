@@ -401,7 +401,7 @@ async function callOpenRouter(messages){
         'X-Title':'plant.ai'
       },
       body:JSON.stringify({
-        models:['meta-llama/llama-3.2-11b-vision-instruct:free','google/gemini-2.0-flash-exp:free','qwen/qwen2.5-vl-7b-instruct:free'],
+        models:['meta-llama/llama-3.2-11b-vision-instruct:free','google/gemma-3-12b-it:free','mistralai/mistral-small-3.1-24b-instruct:free'],
         route:'fallback',
         messages:messages,
         max_tokens:1000
