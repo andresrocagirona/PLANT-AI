@@ -400,24 +400,16 @@ function buildProgressBar(){
   );
 }
 
-// IA via g4f.dev - gratis, sin API key, sin registro, con visión
-let _g4fClient=null;
-async function getG4F(){
-  if(_g4fClient)return _g4fClient;
-  // Import dinámico del cliente g4f
-  try{
-    const mod=await import('https://g4f.dev/dist/js/client.js');
-    _g4fClient=new mod.default();
-    return _g4fClient;
-  }catch(e){throw new Error('Sin conexión a internet');}
-}
-
+// IA via Groq - gratis con key propia, rapidísimo, visión con Llama 4 Scout
 async function gemini(parts){
+  const key=getKey();
+  if(!key)throw new Error('NO_KEY');
+
   const textParts=parts.filter(p=>p.text);
   const imageParts=parts.filter(p=>p.inline_data);
   const hasImage=imageParts.length>0;
 
-  // Construir contenido: texto primero, imagen después
+  // Texto primero, imagen después (requerido por Llama 4)
   const content=[];
   textParts.forEach(p=>content.push({type:'text',text:p.text}));
   imageParts.forEach(p=>content.push({
@@ -426,29 +418,39 @@ async function gemini(parts){
   }));
 
   const msgContent=content.length===1&&content[0].type==='text'?content[0].text:content;
+  // Scout para visión (multimodal), llama-3.3 para texto (más rápido y barato)
+  const model=hasImage
+    ?'meta-llama/llama-4-scout-17b-16e-instruct'
+    :'llama-3.3-70b-versatile';
 
+  let r;
   try{
-    const client=await getG4F();
-    const result=await client.chat.completions.create({
-      model:hasImage?'gpt-4o':'gpt-4o-mini',
-      messages:[{role:'user',content:msgContent}],
-      max_tokens:1000
+    r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+key
+      },
+      body:JSON.stringify({
+        model:model,
+        messages:[{role:'user',content:msgContent}],
+        max_tokens:1000,
+        temperature:0.1
+      })
     });
-    const text=result.choices?.[0]?.message?.content||'';
-    if(!text)throw new Error('Sin respuesta');
-    return text.replace(/```json|```/g,'').trim();
-  }catch(e){
-    const msg=(e.message||'').toLowerCase();
-    if(msg.includes('rate')||msg.includes('quota')||msg.includes('limit')||msg.includes('429')){
-      throw new Error('QUOTA');
-    }
-    if(msg.includes('sin conexión')||msg.includes('network')||msg.includes('fetch')){
-      throw new Error('Sin conexión a internet');
-    }
-    throw e;
-  }
-}
+  }catch(e){throw new Error('Sin conexión a internet');}
 
+  const j=await r.json();
+  if(j.error){
+    const msg=(j.error.message||'').toLowerCase();
+    if(r.status===401||msg.includes('invalid api key')||msg.includes('auth'))throw new Error('KEY');
+    if(r.status===429||msg.includes('rate')||msg.includes('quota'))throw new Error('QUOTA');
+    throw new Error(j.error.message||'Error de IA');
+  }
+  const text=j.choices?.[0]?.message?.content||'';
+  if(!text)throw new Error('Sin respuesta de la IA');
+  return text.replace(/```json|```/g,'').trim();
+}
 async function geminiJSON(parts){
   const txt=await gemini(parts);
   try{return JSON.parse(txt);}
@@ -1344,20 +1346,28 @@ function buildChatPage(){
 function buildSettings(){
   const frag=document.createDocumentFragment();
   frag.appendChild(el('div',{cls:'card alert-pu'},
-    el('div',{cls:'sl sl-pu'},'🤖 IA gratuita — sin configuración'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'16px',lineHeight:'1.6'}},'La IA funciona automáticamente sin cuenta ni API key. Powered by g4f.dev con acceso a GPT-4o.'),
-    el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
-      const btn=document.getElementById('test-api-btn');
-      btn.textContent='Probando…';btn.disabled=true;
-      try{
-        const txt=await gemini([{text:'Responde solo la palabra: OK'}]);
-        btn.textContent='✅ IA funcionando perfectamente 🎉';
-        btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
-      }catch(er){
-        btn.textContent='❌ '+er.message;
-        btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
-      }
-    }},'🔌 Probar conexión con IA')
+    el('div',{cls:'sl sl-pu'},'🤖 API Key de Groq (gratuita)'),
+    el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'Groq es gratis, rapidísimo y sin límites prácticos. Sin tarjeta de crédito.'),
+    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'gsk_...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.replace(/\s/g,'');saveS();},$paste:e=>{setTimeout(()=>{const v=e.target.value.replace(/\s/g,'');e.target.value=v;S.settings.apiKey=v;saveS();},10);}})),
+    !S.settings.apiKey
+      ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'console.groq.com/keys'),el('br'),'2. Inicia sesión con Google o email',el('br'),'3. Pulsa "Create API Key" y cópiala',el('br'),'4. Pégala aquí (empieza por gsk_...)'))
+      :el('div',{},
+          el('div',{cls:'alert alert-g mb8'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key guardada')),
+          el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
+            const btn=document.getElementById('test-api-btn');
+            btn.textContent='Probando…';btn.disabled=true;
+            try{
+              const txt=await gemini([{text:'Responde solo: OK'}]);
+              btn.textContent='✅ Groq funcionando perfectamente 🎉';
+              btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
+            }catch(er){
+              if(er.message==='KEY')btn.textContent='❌ API key inválida. Revísala en console.groq.com';
+              else if(er.message==='QUOTA')btn.textContent='⏱️ Límite alcanzado, espera un momento';
+              else btn.textContent='❌ '+er.message;
+              btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
+            }
+          }},'🔌 Probar conexión con Groq')
+        )
   ));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'🌧️ Umbral de lluvia'),el('div',{cls:'fs13 ci2 mb10'},'mm para regar automáticamente las plantas exteriores:'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}})));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'📍 Ubicación de casa'),S.settings.homeLocation?el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},S.settings.homeLocation.city||'Mi casa'),el('div',{cls:'fs12 ci3'},S.settings.homeLocation.lat.toFixed(4)+', '+S.settings.homeLocation.lon.toFixed(4))),btn('Cambiar','btn-s btn-sm',()=>{page='map';render();})):el('div',{cls:'flex jb ac'},el('div',{cls:'fs13 ci3'},'Sin ubicación'),btn('Detectar','btn-p btn-sm',fetchWeather))));
