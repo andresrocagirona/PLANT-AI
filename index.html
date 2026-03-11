@@ -387,9 +387,22 @@ function buildProgressBar(){
 }
 
 // IA via OpenRouter - gratis, soporta vision, sin limites raros de Gemini
-async function callOpenRouter(messages){
+async function callOpenRouter(messages, hasImage=false){
   const key=getKey();
   if(!key)throw new Error('NO_KEY');
+  // Vision models (support images) vs text-only models
+  const visionModels=['meta-llama/llama-3.2-11b-vision-instruct:free','google/gemini-2.0-flash-exp:free'];
+  const textModels=['meta-llama/llama-3.1-8b-instruct:free','mistralai/mistral-small-3.1-24b-instruct:free','google/gemma-3-12b-it:free'];
+  const body={
+    messages:messages,
+    max_tokens:hasImage?700:900,
+    route:'fallback'
+  };
+  if(hasImage){
+    body.models=visionModels;
+  } else {
+    body.models=textModels;
+  }
   let r;
   try{
     r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
@@ -400,23 +413,14 @@ async function callOpenRouter(messages){
         'HTTP-Referer':'https://plant.ai',
         'X-Title':'plant.ai'
       },
-      body:JSON.stringify({
-        models:['meta-llama/llama-3.2-11b-vision-instruct:free','google/gemma-3-12b-it:free','mistralai/mistral-small-3.1-24b-instruct:free'],
-        route:'fallback',
-        messages:messages,
-        max_tokens:600
-      })
+      body:JSON.stringify(body)
     });
   }catch(e){throw new Error('Sin conexion a internet');}
   const j=await r.json();
   if(j.error){
     const msg=(j.error.message||'').toLowerCase();
-    if(msg.includes('quota')||msg.includes('rate limit')||msg.includes('limit')){
-      throw new Error('QUOTA');
-    }
-    if(r.status===401||msg.includes('auth')||msg.includes('invalid api key')){
-      throw new Error('KEY');
-    }
+    if(msg.includes('quota')||msg.includes('rate limit')){throw new Error('QUOTA');}
+    if(r.status===401||msg.includes('auth')||msg.includes('invalid api key')){throw new Error('KEY');}
     throw new Error(j.error.message||'Error de IA');
   }
   const text=j.choices?.[0]?.message?.content||'';
@@ -427,15 +431,18 @@ async function callOpenRouter(messages){
 // Wrapper compatibles con el codigo existente que usaba partes de Gemini
 async function gemini(parts,temperature=0.2){
   const msgs=[{role:'user',content:[]}];
+  let hasImage=false;
   for(const p of parts){
     if(p.text)msgs[0].content.push({type:'text',text:p.text});
-    else if(p.inline_data)msgs[0].content.push({type:'image_url',image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}});
+    else if(p.inline_data){
+      hasImage=true;
+      msgs[0].content.push({type:'image_url',image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}});
+    }
   }
-  // Si solo hay texto, enviar como string simple (mas compatible)
   if(msgs[0].content.length===1&&msgs[0].content[0].type==='text'){
     msgs[0].content=msgs[0].content[0].text;
   }
-  return await callOpenRouter(msgs);
+  return await callOpenRouter(msgs,hasImage);
 }
 
 async function geminiJSON(parts){
@@ -522,7 +529,7 @@ async function identifyPlant(file){
     const b64=await compressImage(file);
     const result=await geminiJSON([
       {inline_data:{mime_type:'image/jpeg',data:b64}},
-      {text:'Identifica esta planta. Solo JSON: {"commonName":"nombre","scientificName":"cientifico","icon":"emoji","care":{"watering":"frecuencia","sunlight":"luz","difficulty":"fácil"},"description":"1 frase","tips":["tip1","tip2"],"toxic":false}'}
+      {text:'Identifica esta planta. Responde SOLO JSON sin texto extra: {"commonName":"nombre en español","scientificName":"nombre científico","icon":"emoji","care":{"watering":"frecuencia riego","sunlight":"tipo luz","difficulty":"fácil|moderado|difícil"},"description":"descripción en 1 frase","tips":["tip1","tip2"],"toxic":false}'}
     ]);
     stopAIProgress();aiIdent=result;aiState='done';
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
@@ -618,7 +625,7 @@ async function runCheck(plantId,photoB64){
     const wxInfo=weather?`Clima ahora: ${weather.temp}°C, ${WTXT[weather.code]}, humedad ${weather.humidity}%, lluvia hoy ${weather.rain}mm.`:'';
     const checkParts=[];
     if(checkPhotoB64)checkParts.push({inline_data:{mime_type:'image/jpeg',data:checkPhotoB64}});
-    checkParts.push({text:`Analiza esta planta. JSON solo:
+    checkParts.push({text:`Analiza el estado de esta planta. Responde SOLO JSON:
 
 Planta: ${p.name} (${p.species||'?'})
 Ubicación: ${p.location} (${p.outdoor?'exterior':'interior'})
