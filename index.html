@@ -423,18 +423,26 @@ async function callOpenRouter(messages){
   return text.replace(/```json|```/g,'').trim();
 }
 
-// Wrapper compatibles con el codigo existente que usaba partes de Gemini
+// Wrapper compatible con el formato interno de la app
 async function gemini(parts,temperature=0.2){
-  const msgs=[{role:'user',content:[]}];
-  for(const p of parts){
-    if(p.text)msgs[0].content.push({type:'text',text:p.text});
-    else if(p.inline_data)msgs[0].content.push({type:'image_url',image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}});
+  // Separar texto e imágenes
+  const textParts=parts.filter(p=>p.text);
+  const imageParts=parts.filter(p=>p.inline_data);
+  
+  if(imageParts.length===0){
+    // Solo texto — enviar como string simple (más rápido y compatible)
+    const text=textParts.map(p=>p.text).join('\n');
+    return await callOpenRouter([{role:'user',content:text}]);
   }
-  // Si solo hay texto, enviar como string simple (mas compatible)
-  if(msgs[0].content.length===1&&msgs[0].content[0].type==='text'){
-    msgs[0].content=msgs[0].content[0].text;
-  }
-  return await callOpenRouter(msgs);
+  
+  // Con imágenes — texto primero, luego imagen (requerido por muchos modelos)
+  const content=[];
+  textParts.forEach(p=>content.push({type:'text',text:p.text}));
+  imageParts.forEach(p=>content.push({
+    type:'image_url',
+    image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}
+  }));
+  return await callOpenRouter([{role:'user',content}]);
 }
 
 async function geminiJSON(parts){
@@ -526,8 +534,9 @@ async function identifyPlant(file){
     stopAIProgress();aiIdent=result;aiState='done';
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
   }catch(e){
+    stopAIProgress();
     aiState='error';
-    toast(e.message.includes('QUOTA')?'⏱️ Límite alcanzado, espera 1 minuto':'No se pudo identificar la planta. Inténtalo de nuevo.','w');
+    toast(e.message==='QUOTA'?'⏱️ Límite alcanzado, espera 1 minuto':e.message==='KEY'?'⚠️ API key inválida':'No se pudo identificar la planta. Inténtalo de nuevo.','w');
   }
   render();
 }
