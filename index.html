@@ -22,6 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -386,63 +387,33 @@ function buildProgressBar(){
   );
 }
 
-// IA via OpenRouter - gratis, soporta vision, sin limites raros de Gemini
-async function callOpenRouter(messages){
-  const key=getKey();
-  if(!key)throw new Error('NO_KEY');
-  let r;
-  try{
-    r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+key,
-        'HTTP-Referer':'https://plant.ai',
-        'X-Title':'plant.ai'
-      },
-      body:JSON.stringify({
-        model:'openrouter/free',
-        messages:messages,
-        max_tokens:1000
-      })
-    });
-  }catch(e){throw new Error('Sin conexion a internet');}
-  const j=await r.json();
-  if(j.error){
-    const msg=(j.error.message||'').toLowerCase();
-    if(msg.includes('quota')||msg.includes('rate limit')||msg.includes('limit')){
-      throw new Error('QUOTA');
-    }
-    if(r.status===401||msg.includes('auth')||msg.includes('invalid api key')){
-      throw new Error('KEY');
-    }
-    throw new Error(j.error.message||'Error de IA');
-  }
-  const text=j.choices?.[0]?.message?.content||'';
-  if(!text)throw new Error('Sin respuesta de la IA');
-  return text.replace(/```json|```/g,'').trim();
-}
-
-// Wrapper compatible con el formato interno de la app
-async function gemini(parts,temperature=0.2){
-  // Separar texto e imágenes
+// IA via Puter.js - completamente gratis, sin API key, con vision
+// Usa claude-sonnet-4-5 para texto y google/gemini-2.5-flash para vision
+async function gemini(parts){
   const textParts=parts.filter(p=>p.text);
   const imageParts=parts.filter(p=>p.inline_data);
-  
-  if(imageParts.length===0){
-    // Solo texto — enviar como string simple (más rápido y compatible)
-    const text=textParts.map(p=>p.text).join('\n');
-    return await callOpenRouter([{role:'user',content:text}]);
+  const prompt=textParts.map(p=>p.text).join('\n');
+
+  try{
+    let response;
+    if(imageParts.length>0){
+      // Con imagen: pasar como data URL al segundo argumento de puter.ai.chat
+      const img=imageParts[0];
+      const dataUrl='data:'+img.inline_data.mime_type+';base64,'+img.inline_data.data;
+      response=await puter.ai.chat(prompt, dataUrl, {model:'google/gemini-2.5-flash'});
+    } else {
+      response=await puter.ai.chat(prompt, {model:'google/gemini-2.5-flash'});
+    }
+    // puter devuelve string o objeto con message.content
+    if(typeof response==='string')return response.replace(/```json|```/g,'').trim();
+    const text=response?.message?.content||response?.text||'';
+    if(!text)throw new Error('Sin respuesta');
+    return text.replace(/```json|```/g,'').trim();
+  }catch(e){
+    const msg=(e.message||'').toLowerCase();
+    if(msg.includes('rate')||msg.includes('quota')||msg.includes('limit'))throw new Error('QUOTA');
+    throw e;
   }
-  
-  // Con imágenes — texto primero, luego imagen (requerido por muchos modelos)
-  const content=[];
-  textParts.forEach(p=>content.push({type:'text',text:p.text}));
-  imageParts.forEach(p=>content.push({
-    type:'image_url',
-    image_url:{url:'data:'+p.inline_data.mime_type+';base64,'+p.inline_data.data}
-  }));
-  return await callOpenRouter([{role:'user',content}]);
 }
 
 async function geminiJSON(parts){
@@ -522,7 +493,7 @@ function closeSheet(){activeSheet=null;render();}
 // ═══════════════════════════════════
 async function identifyPlant(file){
   if(!file)return;
-  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
+  // No key needed with puter.js
   aiState='loading';aiIdent=null;aiProgress=0;render();
   startAIProgress(20000);
   try{
@@ -536,7 +507,7 @@ async function identifyPlant(file){
   }catch(e){
     stopAIProgress();
     aiState='error';
-    toast(e.message==='QUOTA'?'⏱️ Límite alcanzado, espera 1 minuto':e.message==='KEY'?'⚠️ API key inválida':'No se pudo identificar la planta. Inténtalo de nuevo.','w');
+    toast(e.message==='QUOTA'?'⏱️ Demasiadas peticiones, espera un momento':'No se pudo identificar la planta. Inténtalo de nuevo.','w');
   }
   render();
 }
@@ -553,7 +524,7 @@ const WIZ_QUESTIONS=[
 ];
 
 async function runWizard(){
-  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
+  // No key needed with puter.js
   wizLoading=true;wizResult=null;aiProgress=0;render();
   startAIProgress(18000);
   try{
@@ -616,7 +587,7 @@ let checkPhotoB64=null;
 async function runCheck(plantId,photoB64){
   const p=S.plants.find(x=>x.id===plantId);
   if(!p)return;
-  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
+  // No key needed with puter.js
   selId=plantId;checkState='loading';checkResult=null;activeSheet='check';checkPhotoB64=photoB64||null;aiProgress=0;render();
   startAIProgress(12000);
   const last=p.entries?.[p.entries.length-1];
@@ -662,7 +633,7 @@ Responde SOLO JSON sin markdown:
 // ═══════════════════════════════════
 async function sendChat(msg){
   if(!msg.trim()||chatLoading)return;
-  if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
+  // No key needed with puter.js
   const plantsCtx=S.plants.map(p=>`${p.name} (${p.species||'?'}, ${p.location}, ${p.vitality})`).join(', ');
   const wxCtx=weather?`Clima actual: ${weather.temp}°C, ${WTXT[weather.code]}, ${weather.city}.`:'';
   S.chatHistory.push({role:'user',text:msg});
@@ -679,7 +650,7 @@ Responde siempre en español. Sé concreto y útil. Máximo 3 párrafos cortos.`
     history.forEach(m=>parts.push({text:(m.role==='user'?'Usuario: ':'Asistente: ')+m.text+'\n'}));
     const reply=await gemini(parts,0.7);
     S.chatHistory.push({role:'ai',text:reply});
-  }catch(e){S.chatHistory.push({role:'ai',text:e.message==='NO_KEY'?'⚠️ Necesitas configurar tu API key de OpenRouter en Ajustes.':e.message==='QUOTA'?'⏱️ Limite de peticiones alcanzado. Espera 1 minuto e intenta de nuevo.':e.message==='KEY'?'⚠️ API key invalida. Ve a Ajustes.':'Lo siento, hubo un error. Inténtalo de nuevo.'});}
+  }catch(e){S.chatHistory.push({role:'ai',text:e.message==='NO_KEY'?'Lo siento, hubo un error. Inténtalo de nuevo.':e.message==='QUOTA'?'⏱️ Limite de peticiones alcanzado. Espera 1 minuto e intenta de nuevo.':e.message==='KEY'?'⚠️ API key invalida. Ve a Ajustes.':'Lo siento, hubo un error. Inténtalo de nuevo.'});}
   chatLoading=false;saveS();render();
   setTimeout(()=>{const msgs=document.querySelector('.chat-msgs');if(msgs)msgs.scrollTop=msgs.scrollHeight;},50);
 }
@@ -1127,28 +1098,20 @@ function buildChatPage(){
 function buildSettings(){
   const frag=document.createDocumentFragment();
   frag.appendChild(el('div',{cls:'card alert-pu'},
-    el('div',{cls:'sl sl-pu'},'🤖 API Key de OpenRouter (gratis)'),
-    el('div',{cls:'fs13 ci2',style:{marginBottom:'12px',lineHeight:'1.6'}},'Gratis con OpenRouter. Soporta fotos e IA sin los limites de Gemini.'),
-    el('div',{cls:'fg'},el('label',{},'Tu API Key'),el('input',{type:'text',placeholder:'sk-or-v1-...',val:S.settings.apiKey||'',$input:e=>{S.settings.apiKey=e.target.value.replace(/\s/g,'');saveS();},$paste:e=>{setTimeout(()=>{const v=e.target.value.replace(/\s/g,'');e.target.value=v;S.settings.apiKey=v;saveS();},10);}})),
-    !S.settings.apiKey
-      ?el('div',{cls:'alert alert-y',style:{marginBottom:'0'}},el('div',{cls:'fs12 ci2',style:{lineHeight:'1.8'}},'1. Ve a ',el('b',{},'openrouter.ai/settings/keys'),el('br'),'2. Inicia sesión con tu cuenta Google',el('br'),'3. Pulsa "Create Key" y copia la key',el('br'),'4. Pega aqui arriba (empieza por sk-or-...)'))
-      :el('div',{},
-          el('div',{cls:'alert alert-g mb8'},el('div',{cls:'fs13 fw7 cgr'},'✓ API Key guardada')),
-          el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
-            const btn=document.getElementById('test-api-btn');
-            btn.textContent='Probando…';btn.disabled=true;
-            try{
-              const txt=await gemini([{text:'Di OK en una palabra'}]);
-              btn.textContent='✅ Funciona perfectamente 🎉';
-              btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
-            }catch(er){
-              if(er.message==='KEY')btn.textContent='❌ API key invalida. Ve a openrouter.ai';
-              else if(er.message==='QUOTA')btn.textContent='⏱️ Limite alcanzado, espera 1 minuto';
-              else btn.textContent='❌ '+er.message;
-              btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
-            }
-            }},'🔌 Probar conexión con OpenRouter')
-        )
+    el('div',{cls:'sl sl-pu'},'🤖 IA gratuita — sin configuración'),
+    el('div',{cls:'fs13 ci2',style:{marginBottom:'16px',lineHeight:'1.6'}},'La IA funciona sin API key. Usa Puter.js con acceso gratuito a Gemini 2.5 Flash y más modelos.'),
+    el('button',{cls:'btn btn-s btn-full',id:'test-api-btn',$click:async()=>{
+      const btn=document.getElementById('test-api-btn');
+      btn.textContent='Probando…';btn.disabled=true;
+      try{
+        const txt=await gemini([{text:'Responde solo la palabra: OK'}]);
+        btn.textContent='✅ IA funcionando perfectamente 🎉';
+        btn.style.color='var(--gr)';btn.style.borderColor='var(--gr)';
+      }catch(er){
+        btn.textContent='❌ '+er.message;
+        btn.style.color='var(--rd)';btn.style.borderColor='var(--rd)';btn.disabled=false;
+      }
+    }},'🔌 Probar conexión con IA')
   ));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'🌧️ Umbral de lluvia'),el('div',{cls:'fs13 ci2 mb10'},'mm para regar automáticamente las plantas exteriores:'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}})));
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'📍 Ubicación de casa'),S.settings.homeLocation?el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},S.settings.homeLocation.city||'Mi casa'),el('div',{cls:'fs12 ci3'},S.settings.homeLocation.lat.toFixed(4)+', '+S.settings.homeLocation.lon.toFixed(4))),btn('Cambiar','btn-s btn-sm',()=>{page='map';render();})):el('div',{cls:'flex jb ac'},el('div',{cls:'fs13 ci3'},'Sin ubicación'),btn('Detectar','btn-p btn-sm',fetchWeather))));
