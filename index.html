@@ -217,6 +217,12 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.4}
 @keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.ai-progress{background:var(--cr);border-radius:100px;height:6px;overflow:hidden;margin:14px 0 8px;position:relative}
+.ai-progress-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gl),var(--gr));transition:width 0.8s ease;position:relative;overflow:hidden}
+.ai-progress-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:shimmer 1.5s infinite}
+.ai-status{font-family:var(--fm);font-size:11px;color:var(--i3);text-align:center;letter-spacing:.04em}
+.ai-timer{font-family:var(--fm);font-size:12px;color:var(--i3);text-align:center;margin-top:4px}
 </style>
 </head>
 <body>
@@ -275,6 +281,7 @@ let chatInput='',chatLoading=false;
 
 // Wizard state
 let wizStep=0,wizAnswers={},wizLoading=false,wizResult=null,wizPhoto=null,wizPhotoB64=null;
+let aiProgress=0,aiStatusMsg='',aiStartTime=0,aiProgressTimer=null;
 
 let _fp={},_fe={};
 const BP=()=>({name:'',icon:'🌿',photo:null,species:'',location:'',outdoor:false,pot:'',soil:'',acquired:td(),watering:'1× semana',sunlight:'Indirecta brillante',fertilizer:'Mensual',vitality:'bueno',notes:'',tags:'',aiCareGuide:null,checkIntervalDays:7});
@@ -342,6 +349,43 @@ async function compressImage(file,maxW=512){
   });
 }
 
+// ═══════════════════════════════════
+// AI PROGRESS
+// ═══════════════════════════════════
+function startAIProgress(estimatedMs=15000){
+  aiProgress=2;aiStartTime=Date.now();
+  aiStatusMsg='Conectando con la IA…';
+  clearInterval(aiProgressTimer);
+  aiProgressTimer=setInterval(()=>{
+    const elapsed=Date.now()-aiStartTime;
+    const pct=Math.min(92,2+(elapsed/estimatedMs)*90);
+    aiProgress=pct;
+    const left=Math.max(0,Math.round((estimatedMs-elapsed)/1000));
+    if(pct<30)aiStatusMsg='Conectando con la IA…';
+    else if(pct<55)aiStatusMsg='Analizando imagen…';
+    else if(pct<75)aiStatusMsg='Procesando resultados…';
+    else aiStatusMsg='Casi listo…';
+    // Update progress bar in DOM without full re-render
+    const bar=document.querySelector('.ai-progress-bar');
+    const status=document.querySelector('.ai-status');
+    const timer=document.querySelector('.ai-timer');
+    if(bar)bar.style.width=pct+'%';
+    if(status)status.textContent=aiStatusMsg;
+    if(timer)timer.textContent=left>0?'~'+left+'s':' ';
+  },400);
+}
+function stopAIProgress(){
+  clearInterval(aiProgressTimer);aiProgressTimer=null;
+  aiProgress=100;aiStatusMsg='¡Listo!';
+}
+function buildProgressBar(){
+  return el('div',{style:{padding:'0 4px'}},
+    el('div',{cls:'ai-progress'},el('div',{cls:'ai-progress-bar',style:{width:aiProgress+'%'}})),
+    el('div',{cls:'ai-status'},aiStatusMsg),
+    el('div',{cls:'ai-timer'},' ')
+  );
+}
+
 // IA via OpenRouter - gratis, soporta vision, sin limites raros de Gemini
 async function callOpenRouter(messages){
   const key=getKey();
@@ -357,9 +401,10 @@ async function callOpenRouter(messages){
         'X-Title':'plant.ai'
       },
       body:JSON.stringify({
-        model:'openrouter/free',
+        models:['meta-llama/llama-3.2-11b-vision-instruct:free','google/gemini-2.0-flash-exp:free','mistralai/mistral-small-3.1-24b-instruct:free','qwen/qwen2.5-vl-7b-instruct:free'],
+        route:'fallback',
         messages:messages,
-        max_tokens:1500
+        max_tokens:1000
       })
     });
   }catch(e){throw new Error('Sin conexion a internet');}
@@ -471,14 +516,15 @@ function closeSheet(){activeSheet=null;render();}
 async function identifyPlant(file){
   if(!file)return;
   if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
-  aiState='loading';aiIdent=null;render();
+  aiState='loading';aiIdent=null;aiProgress=0;render();
+  startAIProgress(20000);
   try{
     const b64=await compressImage(file);
     const result=await geminiJSON([
       {inline_data:{mime_type:'image/jpeg',data:b64}},
       {text:'Identifica esta planta. Responde SOLO JSON sin markdown ni texto extra. Formato exacto: {"commonName":"nombre en español","scientificName":"nombre científico","family":"familia","confidence":"alta","icon":"🌿","care":{"watering":"1× semana","sunlight":"Indirecta","fertilizer":"Mensual","difficulty":"fácil"},"description":"descripción 2 frases","tips":["tip1","tip2","tip3"],"toxic":false}'}
     ]);
-    aiIdent=result;aiState='done';
+    stopAIProgress();aiIdent=result;aiState='done';
     _fp={..._fp,name:result.commonName||_fp.name,species:result.scientificName||_fp.species,icon:result.icon||_fp.icon,notes:result.description||_fp.notes};
   }catch(e){
     aiState='error';
@@ -500,7 +546,8 @@ const WIZ_QUESTIONS=[
 
 async function runWizard(){
   if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
-  wizLoading=true;wizResult=null;render();
+  wizLoading=true;wizResult=null;aiProgress=0;render();
+  startAIProgress(18000);
   try{
     const wxInfo=weather?`Clima actual: ${weather.temp}°C, ${WTXT[weather.code]||''}, humedad ${weather.humidity}%, lluvia hoy ${weather.rain}mm. Ciudad: ${weather.city}.`:'Sin datos de clima disponibles.';
     const photoB64=wizPhotoB64;
@@ -536,7 +583,7 @@ Genera una guía de cuidados personalizada y adaptada a su situación. Responde 
   "summary": "resumen de 2 frases del cuidado principal"
 }`});
     const result=await geminiJSON(parts);
-    wizResult=result;
+    stopAIProgress();wizResult=result;
     // Apply to plant form
     if(result.wateringDays){
       // Find closest watering option
@@ -562,7 +609,8 @@ async function runCheck(plantId,photoB64){
   const p=S.plants.find(x=>x.id===plantId);
   if(!p)return;
   if(!getKey()){toast('⚠️ Configura tu API key de Gemini en Ajustes','w');return;}
-  selId=plantId;checkState='loading';checkResult=null;activeSheet='check';checkPhotoB64=photoB64||null;render();
+  selId=plantId;checkState='loading';checkResult=null;activeSheet='check';checkPhotoB64=photoB64||null;aiProgress=0;render();
+  startAIProgress(12000);
   const last=p.entries?.[p.entries.length-1];
   const dw=daysAgo(p.lastWatered);
   const dn=daysUntil(p.nextWatering);
@@ -586,7 +634,7 @@ Guía IA previa: ${p.aiCareGuide?p.aiCareGuide.summary:'ninguna'}
 Responde SOLO JSON sin markdown:
 {"vitality":"óptimo|bueno|atención|crítico","score":85,"headline":"frase muy corta del estado","diagnosis":"2-3 frases diagnóstico concreto","actions":[{"priority":"alta|media|baja","action":"acción muy concreta y práctica"}],"nextCheckDays":7,"positives":["punto positivo 1","punto positivo 2"],"transplantNeeded":false,"transplantReason":"razón si necesita trasplante"}`});
     const result=await geminiJSON(checkParts);
-    checkResult=result;checkState='done';
+    stopAIProgress();checkResult=result;checkState='done';
     const nc=new Date();nc.setDate(nc.getDate()+(result.nextCheckDays||7));
     S.plants=S.plants.map(pp=>{
       if(pp.id!==plantId)return pp;
@@ -594,7 +642,7 @@ Responde SOLO JSON sin markdown:
     });
     saveS();
   }catch(e){
-    checkState='error';
+    stopAIProgress();checkState='error';
     const msg=e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'❌ '+e.message;
     toast(msg,'w');
   }
@@ -1130,7 +1178,8 @@ function buildSheetPlant(){
     sb.appendChild(el('div',{cls:'wiz-loading'},
       el('div',{cls:'wiz-loading-em'},'🌿'),
       el('div',{cls:'empty-t'},'Analizando tu situación…'),
-      el('div',{cls:'empty-s'},'La IA está creando una guía de cuidados personalizada para ti')
+      el('div',{cls:'empty-s'},'La IA está creando una guía de cuidados personalizada para ti'),
+      buildProgressBar()
     ));
     ov.appendChild(sb);return ov;
   }
@@ -1193,7 +1242,7 @@ function buildSheetPlant(){
     }
     sb.appendChild(photoArea);
 
-    if(aiState==='loading')sb.appendChild(el('div',{cls:'fs13',style:{color:'var(--pu)',marginBottom:'10px',textAlign:'center'}},'🔍 Identificando planta…'));
+    if(aiState==='loading')sb.appendChild(el('div',{style:{marginBottom:'14px'}},el('div',{cls:'fs13 tc',style:{color:'var(--pu)',marginBottom:'8px'}},'🔍 Identificando planta…'),buildProgressBar()));
     if(aiState==='done'&&aiIdent)sb.appendChild(el('div',{cls:'card alert-g mb12'},el('div',{cls:'fw7 fs14 mb4'},aiIdent.icon+' '+aiIdent.commonName),el('div',{cls:'fs12 ci3'},aiIdent.scientificName),el('div',{cls:'fs11 fw7 cgr mt8 fm'},'✓ DATOS RELLENADOS')));
 
     sb.appendChild(el('div',{cls:'fg'},el('label',{},'Nombre *'),el('input',{type:'text',placeholder:'Ej: Mi Monstera',val:_fp.name,$input:e=>_fp.name=e.target.value})));
@@ -1297,7 +1346,7 @@ function buildSheetCheck(){
       ),
       btn('Analizar sin foto','btn-s btn-full',()=>runCheck(selId,null))
     ));
-  } else if(checkState==='loading'){sb.appendChild(el('div',{cls:'wiz-loading'},el('div',{cls:'wiz-loading-em'},'🔬'),el('div',{cls:'empty-t'},'Analizando el estado…'),el('div',{cls:'empty-s'},'La IA evalúa todos los datos de tu planta')));}
+  } else if(checkState==='loading'){sb.appendChild(el('div',{cls:'wiz-loading'},el('div',{cls:'wiz-loading-em'},'🔬'),el('div',{cls:'empty-t'},'Analizando el estado…'),el('div',{cls:'empty-s'},'La IA evalúa todos los datos de tu planta'),buildProgressBar()));}
   else if(checkState==='done'&&checkResult){
     const vi=VIT[checkResult.vitality]||VIT['bueno'];
     sb.appendChild(el('div',{style:{background:vi.bg,border:'1.5px solid '+vi.dot+'40',borderRadius:'18px',padding:'20px',marginBottom:'14px',textAlign:'center'}},
