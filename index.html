@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="plant.ai">
-<meta name="theme-color" content="#2d6a4f">
+<meta name="theme-color" content="#0a0a0a">
 <title>plant.ai</title>
 <script>
 (function(){
@@ -19,228 +19,790 @@
 </script>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='114' fill='%232d6a4f'/%3E%3Ccircle cx='256' cy='195' r='95' fill='%2352b788'/%3E%3Cellipse cx='185' cy='235' rx='72' ry='42' fill='%2340916c' transform='rotate(-30 185 235)'/%3E%3Cellipse cx='325' cy='235' rx='72' ry='42' fill='%2340916c' transform='rotate(30 325 235)'/%3E%3Crect x='246' y='265' width='20' height='115' rx='10' fill='%231b4332'/%3E%3Cellipse cx='256' cy='195' rx='58' ry='68' fill='%2374c69d'/%3E%3Cellipse cx='256' cy='168' rx='32' ry='42' fill='%2395d5b2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module" src="https://g4f.dev/dist/js/client.js"></script>
 <style>
+/* ══════════════════════════════════════════
+   plant.ai — Bold Modern Design System
+   ══════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --cr:#f7f4ef;--pa:#faf8f5;--wh:#fff;
-  --i1:#1a1a18;--i2:#4a4a45;--i3:#9a9990;
-  --gr:#2d6a4f;--gl:#52b788;--gx:#d8f3dc;
-  --am:#d97706;--rd:#dc2626;--bl:#1d4ed8;
-  --pu:#7c3aed;--pux:#f5f3ff;
-  --bd:#e8e4dc;--sh:rgba(26,26,24,.07);
-  --fd:'Fraunces',Georgia,serif;
-  --fb:'DM Sans','Helvetica Neue',sans-serif;
+  --bg:#f5f5f7;
+  --bg2:#ffffff;
+  --t1:#0a0a0a;
+  --t2:#3d3d3d;
+  --t3:#9a9a9a;
+  --t4:#c8c8c8;
+  /* Brand greens */
+  --gr:#00c96e;
+  --gr-d:#00a558;
+  --gr-bg:rgba(0,201,110,0.10);
+  /* Semantic */
+  --am:#ff9500;
+  --am-bg:rgba(255,149,0,0.12);
+  --rd:#ff3b30;
+  --rd-bg:rgba(255,59,48,0.10);
+  --bl:#0066ff;
+  --bl-bg:rgba(0,102,255,0.10);
+  --pu:#8b5cf6;
+  --pu-bg:rgba(139,92,246,0.10);
+  /* Card gradients */
+  --g1:linear-gradient(135deg,#00c96e 0%,#00b4d8 100%);
+  --g2:linear-gradient(135deg,#ff6b6b 0%,#ffd93d 100%);
+  --g3:linear-gradient(135deg,#8b5cf6 0%,#ec4899 100%);
+  --g4:linear-gradient(135deg,#f97316 0%,#eab308 100%);
+  --g5:linear-gradient(135deg,#06b6d4 0%,#6366f1 100%);
+  --g6:linear-gradient(135deg,#10b981 0%,#3b82f6 100%);
+  /* Surfaces */
+  --sep:rgba(0,0,0,0.07);
+  --sep2:rgba(0,0,0,0.04);
+  --sh:0 2px 16px rgba(0,0,0,0.06);
+  --sh2:0 8px 40px rgba(0,0,0,0.12);
+  /* Fonts */
+  --fd:'DM Sans',system-ui,sans-serif;
+  --fb:'DM Sans',system-ui,sans-serif;
   --fm:'DM Mono','Courier New',monospace;
-  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);
+  --sat:env(safe-area-inset-top);
+  --sab:env(safe-area-inset-bottom);
 }
-html,body{height:100%;background:var(--cr);font-family:var(--fb);color:var(--i1);overscroll-behavior:none;-webkit-overflow-scrolling:touch}
-#app{max-width:430px;margin:0 auto;min-height:100vh;position:relative}
-.fd{font-family:var(--fd)}.fm{font-family:var(--fm)}
+html,body{height:100%;background:var(--bg);font-family:var(--fb);color:var(--t1);overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+#app{max-width:430px;margin:0 auto;min-height:100vh;position:relative;background:var(--bg)}
+
+/* ── Utilities ──────────────────────────────── */
 .fw7{font-weight:700}.fw8{font-weight:800}
 .fs10{font-size:10px}.fs11{font-size:11px}.fs12{font-size:12px}.fs13{font-size:13px}.fs14{font-size:14px}.fs16{font-size:16px}
-.ci1{color:var(--i1)}.ci2{color:var(--i2)}.ci3{color:var(--i3)}
-.cgr{color:var(--gr)}.cam{color:var(--am)}.crd{color:var(--rd)}.cbl{color:var(--bl)}.cpu{color:var(--pu)}
-.upper{text-transform:uppercase;letter-spacing:.08em}.italic{font-style:italic}
-.page{padding:14px 16px calc(110px + var(--sab));animation:fadeIn .2s ease}
-.hdr{background:rgba(250,248,245,.96);border-bottom:1px solid var(--bd);padding:calc(14px + var(--sat)) 18px 12px;position:sticky;top:0;z-index:30;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.logo{font-family:var(--fd);font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1}
-.logo-sub{font-family:var(--fm);font-size:10px;color:var(--i3);letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
-.nav{display:flex;background:var(--cr);border-radius:14px;padding:3px;gap:2px}
-.nb{flex:1;padding:9px 2px;border:none;border-radius:11px;cursor:pointer;font-size:12px;font-weight:500;background:transparent;color:var(--i3);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--fb)}
-.nb.on{font-weight:700;background:var(--wh);color:var(--i1);box-shadow:0 1px 6px var(--sh)}
-.card{background:var(--wh);border-radius:20px;border:1px solid var(--bd);padding:18px;margin-bottom:10px;box-shadow:0 2px 14px var(--sh)}
-.sl{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--i3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
-.sl-gr{color:var(--gr)}.sl-bl{color:var(--bl)}.sl-am{color:var(--am)}.sl-pu{color:var(--pu)}
-
-/* Plant card */
-.pc{background:var(--wh);border-radius:20px;border:1px solid var(--bd);padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 14px var(--sh);display:flex;align-items:center;gap:14px;cursor:pointer;position:relative;overflow:hidden;transition:transform .1s}
-.pc:active{transform:scale(.98)}
-.pc-line{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
-.pc-photo{width:56px;height:56px;border-radius:14px;object-fit:cover;flex-shrink:0;background:var(--cr)}
-.pc-photo-em{width:56px;height:56px;border-radius:14px;background:var(--cr);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
-.pc-info{flex:1;min-width:0}
-.pc-name{font-family:var(--fd);font-weight:700;font-size:16px;letter-spacing:-.01em;margin-bottom:3px}
-.pc-sp{font-size:12px;color:var(--i3);font-style:italic;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pc-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-
-/* Vitality badge */
-.vb{display:inline-flex;align-items:center;gap:5px;border-radius:100px;padding:3px 9px;font-size:12px;font-weight:700}
-.vb.lg{font-size:13px;padding:5px 13px}
-.vb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.vb.lg .vb-dot{width:8px;height:8px}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:100px;border:none;cursor:pointer;font-weight:600;font-size:14px;transition:all .15s;gap:6px;font-family:var(--fb)}
-.btn:active{transform:scale(.95)}
-.btn-p{background:var(--gr);color:#fff;box-shadow:0 4px 14px rgba(45,106,79,.3)}
-.btn-s{background:var(--wh);color:var(--i1);border:1.5px solid var(--bd)}
-.btn-w{background:#fef2f2;color:var(--rd);border:1.5px solid #fecaca}
-.btn-g{background:transparent;color:var(--i3);border:none;padding:6px 10px}
-.btn-bl{background:#dbeafe;color:var(--bl);border:none}
-.btn-pu{background:var(--pux);color:var(--pu);border:none}
-.btn-sm{padding:7px 14px;font-size:13px}
-.btn-full{width:100%}
-.fab{position:fixed;bottom:calc(76px + var(--sab));right:20px;width:56px;height:56px;border-radius:50%;background:var(--gr);border:none;cursor:pointer;font-size:24px;color:#fff;box-shadow:0 6px 24px rgba(45,106,79,.4);z-index:25;display:flex;align-items:center;justify-content:center;transition:transform .1s}
-.fab:active{transform:scale(.9)}
-.safe-bottom{position:fixed;bottom:0;left:0;right:0;height:calc(66px + var(--sab));background:var(--pa);border-top:1px solid var(--bd);max-width:430px;margin:0 auto;z-index:28}
-
-/* Forms */
-.fg{margin-bottom:14px}
-.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-label{font-family:var(--fm);font-size:12px;font-weight:600;color:var(--i3);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
-input[type=text],input[type=number],input[type=date],select,textarea{width:100%;background:var(--pa);border:1.5px solid var(--bd);border-radius:12px;padding:11px 13px;color:var(--i1);outline:none;font-family:var(--fb);font-size:16px;transition:border-color .15s;-webkit-appearance:none;appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--gr)}
-textarea{resize:vertical;min-height:70px;line-height:1.5}
-.trow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.tbtn{padding:11px;border:1.5px solid var(--bd);border-radius:12px;background:var(--pa);cursor:pointer;font-weight:600;font-size:14px;font-family:var(--fb);transition:all .15s;text-align:center}
-.tbtn.on{border-color:var(--gr);background:var(--gx);color:var(--gr)}
-.eg{display:flex;gap:6px;flex-wrap:wrap}
-.eb{font-size:22px;width:42px;height:42px;background:var(--cr);border:1.5px solid var(--bd);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.eb.on{border-color:var(--gr);background:var(--gx)}
-
-/* Sheet */
-.ov{position:fixed;inset:0;background:rgba(26,26,24,.45);z-index:50;display:flex;align-items:flex-end;animation:fadeIn .15s ease;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-.sb{background:var(--pa);border-radius:28px 28px 0 0;padding:0 20px calc(40px + var(--sab));width:100%;max-width:430px;margin:0 auto;max-height:92vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(26,26,24,.15);animation:slideUp .25s ease;-webkit-overflow-scrolling:touch}
-.sh{width:40px;height:4px;background:var(--bd);border-radius:4px;margin:14px auto 20px;display:block}
-.shdr{position:sticky;top:0;background:var(--pa);padding:4px 0 16px;z-index:2}
-.st{font-family:var(--fd);font-size:22px;font-weight:800}
-
-/* Toast */
-.toast{position:fixed;top:max(20px,var(--sat));left:50%;transform:translateX(-50%);background:var(--gr);color:#fff;padding:10px 22px;border-radius:100px;font-weight:700;font-size:13px;z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.2);animation:slideUp .2s ease;pointer-events:none}
-.toast-w{background:var(--rd)}.toast-i{background:var(--bl)}
-
-/* Alerts */
-.alert{border-radius:18px;padding:14px 16px;margin-bottom:10px}
-.alert-y{background:#fffbeb;border:1.5px solid #fde68a}
-.alert-b{background:#eff6ff;border:1.5px solid #bfdbfe}
-.alert-g{background:#f0faf4;border:1.5px solid var(--gx)}
-.alert-pu{background:var(--pux);border:1.5px solid #e9d5ff}
-.ar{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.ar:last-child{margin-bottom:0}
-
-/* Info cells */
-.ig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ic{background:var(--cr);border-radius:12px;padding:11px}
-.ic-l{font-family:var(--fm);font-size:10px;color:var(--i3);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
-.ic-v{font-size:13px;font-weight:600}
-
-/* Stats */
-.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.sg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.sb2{background:var(--wh);border-radius:16px;border:1px solid var(--bd);padding:14px;text-align:center;box-shadow:0 2px 8px var(--sh)}
-.sn{font-family:var(--fd);font-size:24px;font-weight:800;line-height:1}
-
-/* Hero */
-.hero{position:relative;overflow:hidden}
-.hero-bg{position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;opacity:.5}
-.hero-photo{width:80px;height:80px;border-radius:18px;object-fit:cover;flex-shrink:0;border:2px solid var(--bd)}
-.hero-photo-em{width:80px;height:80px;border-radius:18px;background:var(--cr);display:flex;align-items:center;justify-content:center;font-size:44px;flex-shrink:0}
-
-/* Tabs */
-.tabs{display:flex;background:var(--cr);border-radius:14px;padding:4px;gap:2px;margin-bottom:14px}
-.tab{flex:1;padding:9px 4px;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:500;background:transparent;color:var(--i3);transition:all .15s;font-family:var(--fb)}
-.tab.on{font-weight:700;background:var(--wh);color:var(--i1);box-shadow:0 1px 4px var(--sh)}
-.ri{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
-.ri:last-child{border-bottom:none}
-.pr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.pt{flex:1;height:6px;background:var(--cr);border-radius:6px;overflow:hidden}
-.pf{height:100%;border-radius:6px}
-.pill{display:inline-block;background:var(--gx);color:var(--gr);border-radius:100px;padding:3px 10px;font-size:12px;font-weight:600;margin:0 4px 4px 0}
-.quote{font-size:13px;color:var(--i3);font-style:italic;border-left:3px solid var(--gl);padding-left:12px;margin-top:10px}
-.sbt{height:6px;background:var(--cr);border-radius:10px;overflow:hidden;margin-top:4px}
-.sbf{height:100%;border-radius:10px;transition:width .6s}
-
-/* Map */
-#leaflet-map{width:100%;height:260px;border-radius:14px;overflow:hidden;z-index:1}
-.map-card{position:relative}
-.wx-card{background:linear-gradient(135deg,#e8f5e9,#f0faf4);border-radius:20px;border:1px solid #c8e6c9;padding:16px 18px;margin-bottom:12px;box-shadow:0 2px 14px var(--sh)}
-
-/* AI wizard */
-.wiz-step{animation:fadeIn .2s ease}
-.wiz-q{font-family:var(--fd);font-size:20px;font-weight:700;margin-bottom:6px;line-height:1.3}
-.wiz-sub{font-size:14px;color:var(--i3);margin-bottom:20px;line-height:1.5}
-.wiz-opts{display:flex;flex-direction:column;gap:8px}
-.wiz-opt{background:var(--wh);border:1.5px solid var(--bd);border-radius:14px;padding:14px 16px;cursor:pointer;font-size:14px;font-weight:500;transition:all .15s;text-align:left;font-family:var(--fb);display:flex;align-items:center;gap:10px}
-.wiz-opt:active,.wiz-opt.on{border-color:var(--gr);background:var(--gx);color:var(--gr);font-weight:700}
-.wiz-opt-em{font-size:22px;width:32px;text-align:center;flex-shrink:0}
-.wiz-progress{display:flex;gap:4px;margin-bottom:24px}
-.wiz-dot{flex:1;height:4px;border-radius:2px;background:var(--bd);transition:background .3s}
-.wiz-dot.on{background:var(--gr)}
-.wiz-loading{text-align:center;padding:40px 20px}
-.wiz-loading-em{font-size:52px;animation:spin 2s linear infinite;display:inline-block;margin-bottom:16px}
-.wiz-result{background:var(--gx);border-radius:16px;padding:16px;margin-bottom:14px}
-
-/* Chat */
-.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px - var(--sat) - var(--sab));min-height:300px}
-.chat-msgs{flex:1;overflow-y:auto;padding:4px 0 12px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
-.chat-bubble{max-width:85%;padding:12px 15px;border-radius:18px;font-size:14px;line-height:1.55;animation:slideUp .2s ease}
-.chat-bubble.ai{background:var(--wh);border:1px solid var(--bd);border-radius:4px 18px 18px 18px;align-self:flex-start;color:var(--i1)}
-.chat-bubble.user{background:var(--gr);color:#fff;border-radius:18px 18px 4px 18px;align-self:flex-end}
-.chat-bubble.thinking{background:var(--cr);color:var(--i3);font-style:italic;align-self:flex-start}
-.chat-input-row{display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--bd)}
-.chat-input{flex:1;background:var(--wh);border:1.5px solid var(--bd);border-radius:20px;padding:11px 16px;font-family:var(--fb);font-size:15px;color:var(--i1);outline:none;resize:none;max-height:100px;overflow-y:auto;line-height:1.4}
-.chat-input:focus{border-color:var(--gr)}
-.chat-send{width:44px;height:44px;border-radius:50%;background:var(--gr);border:none;cursor:pointer;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .1s}
-.chat-send:active{transform:scale(.9)}
-.chat-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 2px}
-.chat-sug{background:var(--cr);border:1px solid var(--bd);border-radius:100px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);color:var(--i2);transition:all .15s;white-space:nowrap}
-.chat-sug:active{background:var(--gx);color:var(--gr)}
-
-/* Photo upload */
-.photo-preview{width:100%;height:160px;object-fit:cover;border-radius:14px;display:block;margin-bottom:10px}
-.photo-placeholder{width:100%;height:120px;background:var(--cr);border-radius:14px;border:2px dashed var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:10px;transition:all .15s}
-.photo-placeholder:active{background:var(--gx);border-color:var(--gl)}
-
-/* AI box */
-.ai-box{background:linear-gradient(135deg,#f5f3ff,#faf8ff);border:1.5px solid #e9d5ff;border-radius:16px;padding:16px;margin-bottom:20px}
-.ai-r{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px}
-.spark{width:100%;height:44px;overflow:visible}
-
-/* Misc */
-.flex{display:flex}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}
+.ci1{color:var(--t1)}.ci2{color:var(--t2)}.ci3{color:var(--t3)}
+.cgr{color:var(--gr-d)}.cam{color:var(--am)}.crd{color:var(--rd)}.cbl{color:var(--bl)}.cpu{color:var(--pu)}
+.upper{text-transform:uppercase;letter-spacing:.06em}.italic{font-style:italic}
+.flex{display:flex}.gap6{gap:6px}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}
 .ac{align-items:center}.jb{justify-content:space-between}.f1{flex:1}
 .tc{text-align:center}.tr{text-align:right}
 .mt4{margin-top:4px}.mt8{margin-top:8px}.mt10{margin-top:10px}.mt12{margin-top:12px}.mt14{margin-top:14px}.mt16{margin-top:16px}
 .mb4{margin-bottom:4px}.mb8{margin-bottom:8px}.mb10{margin-bottom:10px}.mb12{margin-bottom:12px}
-.empty{text-align:center;padding:40px 20px}
-.empty-em{font-size:52px;margin-bottom:14px}
-.empty-t{font-family:var(--fd);font-size:18px;font-weight:700;margin-bottom:8px}
-.empty-s{font-size:14px;color:var(--i3);margin-bottom:20px}
-select option{background:var(--pa);color:var(--i1)}
+.fd{font-family:var(--fd)}.fm{font-family:var(--fm)}
+.pr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pt{flex:1;height:4px;background:var(--sep);border-radius:4px;overflow:hidden}
+.pf{height:100%;border-radius:4px;transition:width .6s}
+.sbt{height:4px;background:var(--sep);border-radius:10px;overflow:hidden;margin-top:6px}
+.sbf{height:100%;border-radius:10px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+/* ── Page ───────────────────────────────────── */
+.page{padding:16px 16px calc(100px + var(--sab));animation:fadeIn .2s ease}
+
+/* ── Header ─────────────────────────────────── */
+.hdr{
+  background:rgba(245,245,247,0.94);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--sep);
+  padding:calc(12px + var(--sat)) 20px 0;
+  position:sticky;top:0;z-index:30;
+}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px}
+.logo{font-size:22px;font-weight:800;letter-spacing:-.04em;color:var(--t1);line-height:1}
+.logo-dot{color:var(--gr-d)}
+.logo-sub{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.16em;text-transform:uppercase;margin-top:1px}
+
+/* ── Bottom nav ─────────────────────────────── */
+.safe-bottom{
+  position:fixed;bottom:0;left:0;right:0;
+  padding-bottom:var(--sab);
+  background:rgba(245,245,247,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--sep);
+  max-width:430px;margin:0 auto;z-index:28;
+}
+.nav{display:flex;padding:8px 12px 10px;gap:0}
+.nb{
+  flex:1;padding:8px 4px 4px;border:none;border-radius:14px;
+  cursor:pointer;font-size:10px;font-weight:600;
+  background:transparent;color:var(--t3);
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:4px;font-family:var(--fb);
+  letter-spacing:-.01em;
+}
+.nb.on{color:var(--t1)}
+.nb.on svg{opacity:1}
+.nb svg{opacity:.45;transition:all .15s}
+
+/* ── FAB ────────────────────────────────────── */
+.fab{
+  position:fixed;bottom:calc(76px + var(--sab));right:18px;
+  width:50px;height:50px;border-radius:50%;
+  background:var(--t1);border:none;cursor:pointer;
+  color:#fff;box-shadow:0 4px 20px rgba(0,0,0,0.25);
+  z-index:25;display:flex;align-items:center;justify-content:center;
+  transition:transform .12s,box-shadow .12s;
+}
+.fab:active{transform:scale(.92);box-shadow:0 2px 10px rgba(0,0,0,.2)}
+
+/* ── Cards ──────────────────────────────────── */
+.card{
+  background:var(--bg2);
+  border-radius:20px;
+  border:1px solid var(--sep);
+  padding:18px;margin-bottom:10px;
+  box-shadow:var(--sh);
+}
+.sl{font-family:var(--fm);font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:12px}
+.sl-gr{color:var(--gr-d)}.sl-bl{color:var(--bl)}.sl-am{color:var(--am)}.sl-pu{color:var(--pu)}
+
+/* ── Gradient hero cards ─────────────────────── */
+.gcard{
+  border-radius:24px;padding:22px 20px;margin-bottom:10px;
+  position:relative;overflow:hidden;min-height:140px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 8px 32px rgba(0,0,0,0.14);
+}
+.gcard-title{font-size:26px;font-weight:800;letter-spacing:-.04em;color:#fff;line-height:1.1;max-width:70%}
+.gcard-sub{font-size:13px;color:rgba(255,255,255,.75);font-weight:500;margin-top:4px}
+.gcard-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);border-radius:100px;padding:5px 12px;font-size:12px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,.25)}
+.gcard-orb{position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.12);pointer-events:none}
+.gcard-orb2{position:absolute;right:20px;bottom:-40px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
+
+/* ── Plant card ─────────────────────────────── */
+.pc{
+  background:var(--bg2);
+  border-radius:20px;border:1px solid var(--sep);
+  padding:14px 16px;margin-bottom:8px;
+  box-shadow:var(--sh);
+  display:flex;align-items:center;gap:13px;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .12s;
+}
+.pc:active{transform:scale(.98)}
+.pc-line{position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:0 3px 3px 0}
+.pc-photo{width:52px;height:52px;border-radius:14px;object-fit:cover;flex-shrink:0;background:var(--bg)}
+.pc-photo-em{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#00c96e22,#00b4d822);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-info{flex:1;min-width:0}
+.pc-name{font-weight:700;font-size:15px;letter-spacing:-.03em;margin-bottom:2px;color:var(--t1)}
+.pc-sp{font-size:12px;color:var(--t3);font-style:italic;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* ── Vitality badge ─────────────────────────── */
+.vb{display:inline-flex;align-items:center;gap:5px;border-radius:100px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:-.01em}
+.vb.lg{font-size:12px;padding:5px 12px}
+.vb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.vb.lg .vb-dot{width:7px;height:7px}
+
+/* ── Buttons ────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 22px;border-radius:100px;border:none;
+  cursor:pointer;font-weight:700;font-size:14px;
+  transition:all .14s;gap:7px;font-family:var(--fb);
+  letter-spacing:-.02em;
+}
+.btn:active{transform:scale(.96)}
+.btn-p{background:var(--t1);color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+.btn-s{background:var(--bg2);color:var(--t1);border:1.5px solid var(--sep)}
+.btn-w{background:var(--rd-bg);color:var(--rd);border:1.5px solid rgba(255,59,48,.15)}
+.btn-g{background:transparent;color:var(--t3);border:none;padding:6px 10px}
+.btn-bl{background:var(--bl-bg);color:var(--bl);border:1.5px solid rgba(0,102,255,.15)}
+.btn-pu{background:var(--pu-bg);color:var(--pu);border:1.5px solid rgba(139,92,246,.15)}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:100px}
+.btn-full{width:100%}
+
+/* ── Sheet ──────────────────────────────────── */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:50;display:flex;align-items:flex-end;animation:fadeIn .18s ease;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.sb{
+  background:var(--bg2);
+  border-radius:28px 28px 0 0;
+  padding:0 20px calc(44px + var(--sab));
+  width:100%;max-width:430px;margin:0 auto;
+  max-height:92vh;overflow-y:auto;
+  box-shadow:0 -12px 60px rgba(0,0,0,0.15);
+  animation:slideUp .26s cubic-bezier(.4,0,.2,1);
+  -webkit-overflow-scrolling:touch;
+}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:16px 0 20px}
+.sh-title{font-weight:800;font-size:20px;letter-spacing:-.04em;color:var(--t1)}
+.sh-close{width:32px;height:32px;border-radius:50%;background:var(--sep2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:background .12s}
+.sh-close:active{background:var(--sep)}
+.shdr{position:sticky;top:0;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:4px 0 16px;z-index:2}
+.st{font-weight:800;font-size:24px;letter-spacing:-.04em}
+
+/* ── Toast ──────────────────────────────────── */
+.toast{
+  position:fixed;top:max(20px,calc(var(--sat) + 12px));left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 22px;border-radius:100px;
+  font-weight:700;font-size:13px;letter-spacing:-.02em;
+  z-index:200;white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.22);
+  animation:slideUp .2s ease;pointer-events:none;
+}
+.toast-w{background:var(--rd)}
+.toast-i{background:var(--bl)}
+
+/* ── Alerts ─────────────────────────────────── */
+.alert{border-radius:18px;padding:14px 16px;margin-bottom:10px}
+.alert-y{background:#fffbeb;border:1.5px solid #fde68a}
+.alert-b{background:var(--bl-bg);border:1.5px solid rgba(0,102,255,.15)}
+.alert-g{background:var(--gr-bg);border:1.5px solid rgba(0,201,110,.2)}
+.alert-pu{background:var(--pu-bg);border:1.5px solid rgba(139,92,246,.15)}
+.ar{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ar:last-child{margin-bottom:0}
+
+/* ── Info grid ──────────────────────────────── */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ic{background:var(--bg);border-radius:14px;padding:12px;border:1px solid var(--sep)}
+.ic-l{font-family:var(--fm);font-size:10px;color:var(--t3);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.ic-v{font-size:13px;font-weight:700;color:var(--t1)}
+
+/* ── Stats ──────────────────────────────────── */
+.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.sg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.sb2{background:var(--bg2);border-radius:20px;border:1px solid var(--sep);padding:16px;text-align:center;box-shadow:var(--sh)}
+.sn{font-weight:800;font-size:24px;line-height:1;letter-spacing:-.04em}
+
+/* ── Hero detail ────────────────────────────── */
+.hero{position:relative;overflow:hidden}
+.hero-bg{position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;opacity:.25;filter:blur(30px)}
+.hero-photo{width:76px;height:76px;border-radius:20px;object-fit:cover;flex-shrink:0;border:2px solid var(--sep)}
+.hero-photo-em{width:76px;height:76px;border-radius:20px;background:linear-gradient(135deg,#00c96e22,#00b4d822);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── Tabs ───────────────────────────────────── */
+.tabs{display:flex;background:var(--sep2);border-radius:14px;padding:3px;gap:2px;margin-bottom:16px}
+.tab{flex:1;padding:8px 3px;border:none;border-radius:11px;cursor:pointer;font-size:11px;font-weight:600;background:transparent;color:var(--t3);transition:all .15s;font-family:var(--fb);letter-spacing:-.01em}
+.tab.on{font-weight:700;background:var(--bg2);color:var(--t1);box-shadow:0 1px 6px rgba(0,0,0,.07)}
+
+/* ── Row items ──────────────────────────────── */
+.ri{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--sep)}
+.ri:last-child{border-bottom:none}
+
+/* ── Pills ──────────────────────────────────── */
+.pill{display:inline-block;background:var(--gr-bg);color:var(--gr-d);border-radius:100px;padding:3px 10px;font-size:12px;font-weight:700;margin:0 4px 4px 0}
+.quote{font-size:13px;color:var(--t2);border-left:3px solid var(--gr);padding-left:12px;margin-top:10px;line-height:1.6}
+
+/* ── Forms ──────────────────────────────────── */
+.fg{margin-bottom:16px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+label{font-family:var(--fm);font-size:10px;font-weight:600;color:var(--t3);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}
+input[type=text],input[type=number],input[type=date],select,textarea{
+  width:100%;background:var(--bg);
+  border:1.5px solid var(--sep);
+  border-radius:14px;padding:13px 14px;
+  color:var(--t1);outline:none;font-family:var(--fb);font-size:15px;font-weight:500;
+  transition:border-color .15s;
+  -webkit-appearance:none;appearance:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--t1)}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.trow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tbtn{padding:12px;border:1.5px solid var(--sep);border-radius:14px;background:var(--bg);cursor:pointer;font-weight:600;font-size:13px;font-family:var(--fb);transition:all .15s;text-align:center;color:var(--t1)}
+.tbtn.on{border-color:var(--t1);background:var(--t1);color:#fff}
+.eg{display:flex;gap:6px;flex-wrap:wrap}
+.eb{font-size:20px;width:40px;height:40px;background:var(--bg);border:1.5px solid var(--sep);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.eb.on{border-color:var(--t1);background:var(--t1);color:#fff}
+
+/* ── Map ────────────────────────────────────── */
+#leaflet-map{width:100%;height:260px;border-radius:18px;overflow:hidden;z-index:1}
+.map-card{position:relative}
+.wx-card{background:var(--bg2);border-radius:20px;border:1px solid var(--sep);padding:16px 18px;margin-bottom:10px;box-shadow:var(--sh)}
+
+/* ── AI Wizard ──────────────────────────────── */
+.wiz-step{animation:fadeIn .2s ease}
+.wiz-q{font-weight:800;font-size:20px;letter-spacing:-.04em;margin-bottom:6px;line-height:1.25;color:var(--t1)}
+.wiz-sub{font-size:13px;color:var(--t3);margin-bottom:20px;line-height:1.5}
+.wiz-opts{display:flex;flex-direction:column;gap:8px}
+.wiz-opt{background:var(--bg);border:1.5px solid var(--sep);border-radius:16px;padding:14px 16px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;text-align:left;font-family:var(--fb);display:flex;align-items:center;gap:12px;color:var(--t1);letter-spacing:-.01em}
+.wiz-opt:active,.wiz-opt.on{border-color:var(--t1);background:var(--t1);color:#fff}
+.wiz-opt:active .wiz-opt-em,.wiz-opt.on .wiz-opt-em{background:rgba(255,255,255,.15)}
+.wiz-opt-em{width:38px;height:38px;border-radius:10px;background:var(--sep2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.wiz-progress{display:flex;gap:4px;margin-bottom:24px}
+.wiz-dot{flex:1;height:3px;border-radius:2px;background:var(--sep);transition:background .3s}
+.wiz-dot.on{background:var(--t1)}
+.wiz-loading{text-align:center;padding:40px 20px}
+.wiz-loading-em{animation:spin 2s linear infinite;display:inline-block;margin-bottom:16px}
+.wiz-result{background:var(--gr-bg);border-radius:16px;padding:16px;margin-bottom:14px;border:1.5px solid rgba(0,201,110,.2)}
+
+/* ── Chat ───────────────────────────────────── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px - var(--sat) - var(--sab));min-height:300px}
+.chat-msgs{flex:1;overflow-y:auto;padding:4px 0 12px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
+.chat-bubble{max-width:82%;padding:12px 16px;border-radius:20px;font-size:14px;line-height:1.55;animation:slideUp .2s ease;letter-spacing:-.01em}
+.chat-bubble.ai{background:var(--bg2);border:1px solid var(--sep);border-radius:4px 20px 20px 20px;align-self:flex-start;color:var(--t1);box-shadow:var(--sh)}
+.chat-bubble.user{background:var(--t1);color:#fff;border-radius:20px 20px 4px 20px;align-self:flex-end}
+.chat-bubble.thinking{background:var(--bg);color:var(--t3);font-style:italic;align-self:flex-start;border-radius:20px}
+.chat-input-row{display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--sep)}
+.chat-input{flex:1;background:var(--bg);border:1.5px solid var(--sep);border-radius:20px;padding:12px 16px;font-family:var(--fb);font-size:15px;color:var(--t1);outline:none;resize:none;max-height:100px;overflow-y:auto;line-height:1.4;font-weight:500}
+.chat-input:focus{border-color:var(--t1)}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--t1);border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .1s}
+.chat-send:active{transform:scale(.9)}
+.chat-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 2px}
+.chat-sug{background:var(--bg);border:1.5px solid var(--sep);border-radius:100px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fb);color:var(--t2);transition:all .15s;white-space:nowrap;letter-spacing:-.01em}
+.chat-sug:active{background:var(--t1);color:#fff;border-color:var(--t1)}
+
+/* ── Photo upload ───────────────────────────── */
+.photo-preview{width:100%;height:160px;object-fit:cover;border-radius:16px;display:block;margin-bottom:10px}
+.photo-placeholder{width:100%;height:120px;background:var(--bg);border-radius:16px;border:2px dashed var(--t4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:10px;transition:all .15s}
+.photo-placeholder:active{background:var(--gr-bg);border-color:var(--gr)}
+
+/* ── AI box ─────────────────────────────────── */
+.ai-box{background:var(--pu-bg);border:1.5px solid rgba(139,92,246,.15);border-radius:20px;padding:16px;margin-bottom:20px}
+.ai-r{background:var(--bg2);border-radius:12px;padding:14px;margin-bottom:10px}
+.spark{width:100%;height:44px;overflow:visible}
+
+/* ── Empty state ────────────────────────────── */
+.empty{text-align:center;padding:48px 20px}
+.empty-em{margin-bottom:16px;opacity:.4}
+.empty-t{font-weight:800;font-size:20px;letter-spacing:-.04em;margin-bottom:8px}
+.empty-s{font-size:14px;color:var(--t3);margin-bottom:20px}
+
+select option{background:var(--bg2);color:var(--t1)}
 input[type=date]::-webkit-calendar-picker-indicator{opacity:.4}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.tl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:12px}
-.tl-thumb{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
+::-webkit-scrollbar{width:0}
+
+/* ── Timelapse ──────────────────────────────── */
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin-top:12px}
+.tl-thumb{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
 .tl-thumb img{width:100%;height:100%;object-fit:cover}
-.tl-thumb .tl-date{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;font-size:9px;font-family:var(--fm);padding:12px 4px 4px;text-align:center}
-.tl-thumb.selected{border-color:var(--gr)}
-.tl-viewer{position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:var(--cr);margin-bottom:12px}
+.tl-thumb .tl-date{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.55));color:#fff;font-size:9px;font-family:var(--fm);padding:12px 4px 4px;text-align:center}
+.tl-thumb.selected{border-color:var(--t1)}
+.tl-viewer{position:relative;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;background:var(--bg);margin-bottom:12px}
 .tl-viewer img{width:100%;height:100%;object-fit:contain}
-.tl-viewer .tl-nav{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.85);border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.tl-viewer .tl-nav{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
 .tl-viewer .tl-nav.prev{left:8px}
 .tl-viewer .tl-nav.next{right:8px}
-.tl-badge{position:absolute;top:4px;right:4px;width:10px;height:10px;border-radius:50%;background:var(--pu);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.ai-progress{background:var(--cr);border-radius:100px;height:6px;overflow:hidden;margin:14px 0 8px;position:relative}
-.ai-progress-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gl),var(--gr));transition:width 0.8s ease;position:relative;overflow:hidden}
+.tl-badge{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:var(--pu);border:2px solid white}
+
+/* ── Plant picker ───────────────────────────── */
+.pp-wrap{position:relative}
+.pp-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:1.5px solid var(--sep);border-radius:18px;box-shadow:var(--sh2);max-height:220px;overflow-y:auto;z-index:100}
+.pp-item{padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--sep);display:flex;align-items:center;gap:10px}
+.pp-item:last-child{border-bottom:none}
+.pp-item:active{background:var(--bg)}
+.pp-item-em{width:32px;height:32px;border-radius:10px;background:var(--gr-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pp-item-info{flex:1;min-width:0}
+.pp-item-name{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:-.02em}
+.pp-item-sp{font-size:11px;color:var(--t3);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── AI progress ────────────────────────────── */
+.ai-progress{background:var(--sep);border-radius:100px;height:4px;overflow:hidden;margin:14px 0 8px;position:relative}
+.ai-progress-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--t1),var(--t2));transition:width .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
 .ai-progress-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:shimmer 1.5s infinite}
-.ai-status{font-family:var(--fm);font-size:11px;color:var(--i3);text-align:center;letter-spacing:.04em}
-.ai-timer{font-family:var(--fm);font-size:12px;color:var(--i3);text-align:center;margin-top:4px}
+.ai-status{font-family:var(--fm);font-size:11px;color:var(--t3);text-align:center;letter-spacing:.04em}
+.ai-timer{font-family:var(--fm);font-size:11px;color:var(--t4);text-align:center;margin-top:4px}
+
+/* ── Animations ─────────────────────────────── */
+/* ── Action cards (regar/analizar en detail) ── */
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.action-card{
+  border-radius:20px;padding:16px 14px;
+  display:flex;flex-direction:column;gap:10px;
+  cursor:pointer;transition:transform .12s;
+  border:none;text-align:left;font-family:var(--fb);
+  position:relative;overflow:hidden;min-height:100px;
+}
+.action-card:active{transform:scale(.97)}
+.action-card-water{background:linear-gradient(145deg,#0ea5e9,#38bdf8);box-shadow:0 6px 24px rgba(14,165,233,.32)}
+.action-card-check{background:linear-gradient(145deg,#8b5cf6,#a78bfa);box-shadow:0 6px 24px rgba(139,92,246,.32)}
+.action-card-done{opacity:.72}
+.action-card-icon{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;color:#fff}
+.action-card-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.07em;text-transform:uppercase;margin-top:auto}
+.action-card-value{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.1}
+.action-card-sub{font-size:10px;color:rgba(255,255,255,.6);font-weight:500}
+/* ── Stat cells — big numbers ── */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat-cell{background:var(--bg2);border-radius:20px;border:1px solid var(--sep);padding:16px 12px 14px;text-align:center;box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;gap:2px}
+.stat-icon-wrap{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.stat-num{font-size:26px;font-weight:800;letter-spacing:-.05em;line-height:1}
+.stat-lbl{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+/* ── Alert cards — premium ── */
+.notif-card{background:var(--bg2);border-radius:22px;border:1px solid var(--sep);box-shadow:var(--sh);margin-bottom:8px;overflow:hidden}
+.notif-header{padding:14px 16px 10px;display:flex;align-items:center;gap:10px}
+.notif-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-title{font-size:13px;font-weight:700;letter-spacing:-.02em;flex:1;color:var(--t1)}
+.notif-count{font-size:11px;font-weight:700;color:var(--t3)}
+.notif-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--sep)}
+.notif-item-btn{border:none;border-radius:100px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fb);display:flex;align-items:center;gap:5px;flex-shrink:0;transition:transform .1s}
+.notif-item-btn:active{transform:scale(.95)}
+/* ── Weather card ── */
+.wx-big{background:var(--bg2);border-radius:24px;border:1px solid var(--sep);padding:20px;margin-bottom:10px;box-shadow:var(--sh)}
+.wx-temp{font-size:48px;font-weight:800;letter-spacing:-.05em;line-height:1}
+.wx-desc{font-size:14px;font-weight:600;color:var(--t2);margin-top:2px}
+.wx-meta{font-size:12px;color:var(--t3);margin-top:6px}
+/* ── Stats page ── */
+.stats-big-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stats-big-cell{background:var(--bg2);border-radius:20px;border:1px solid var(--sep);padding:18px 16px;box-shadow:var(--sh)}
+.stats-big-num{font-size:36px;font-weight:800;letter-spacing:-.06em;line-height:1}
+.stats-big-lbl{font-size:11px;font-weight:600;color:var(--t3);margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+/* ── List search/sort ── */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{padding-left:40px!important}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.sort-pill{border:1.5px solid var(--sep);border-radius:100px;padding:7px 14px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t2);cursor:pointer;font-family:var(--fb);transition:all .12s;flex-shrink:0}
+.sort-pill.on{background:var(--t1);color:#fff;border-color:var(--t1)}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
+// Base de datos de plantas — ordenada alfabéticamente por nombre común en español
+const PLANT_DB=[
+{n:'Abedul',s:'Betula pendula',i:'🌳',w:3,sun:'sol parcial',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida drenada'},
+{n:'Acanto',s:'Acanthus mollis',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Acebo',s:'Ilex aquifolium',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Ácida'},
+{n:'Acederilla',s:'Oxalis acetosella',i:'🌸',w:5,sun:'sombra',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Achicoria',s:'Cichorium intybus',i:'🌸',w:5,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Acónito',s:'Aconitum napellus',i:'💜',w:4,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Adelfa',s:'Nerium oleander',i:'🌸',w:10,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Agapanto',s:'Agapanthus africanus',i:'💜',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Agave',s:'Agave americana',i:'🌵',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Agerato',s:'Ageratum houstonianum',i:'🌸',w:3,sun:'sol parcial',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Aglaonema',s:'Aglaonema commutatum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Aguja de pastor',s:'Pelargonium odoratissimum',i:'🌸',w:4,sun:'sol parcial',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Ailanto',s:'Ailanthus altissima',i:'🌳',w:7,sun:'pleno sol',fert:'No necesita',diff:'fácil',loc:'exterior',soil:'Cualquiera'},
+{n:'Ajuga',s:'Ajuga reptans',i:'💜',w:7,sun:'sombra',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Álamo',s:'Populus alba',i:'🌳',w:5,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Albahaca',s:'Ocimum basilicum',i:'🌿',w:2,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'interior',soil:'Universal fértil'},
+{n:'Albizia',s:'Albizia julibrissin',i:'🌸',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Drenada'},
+{n:'Alcachofa ornamental',s:'Cynara cardunculus',i:'💜',w:5,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Alelo',s:'Matthiola incana',i:'🌸',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Aloe vera',s:'Aloe barbadensis',i:'🌵',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Aloe arborescente',s:'Aloe arborescens',i:'🌵',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Alstonville',s:'Alocasia amazonica',i:'🌿',w:5,sun:'indirecta',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Turba + perlita'},
+{n:'Amaranto',s:'Amaranthus cruentus',i:'🌸',w:4,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Amarilis',s:'Hippeastrum hybridum',i:'🌺',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + arena'},
+{n:'Ampelopsi',s:'Ampelopsis brevipedunculata',i:'🌿',w:5,sun:'sol parcial',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Anémona',s:'Anemone coronaria',i:'🌸',w:5,sun:'sol parcial',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Drenada fértil'},
+{n:'Anturio',s:'Anthurium andraeanum',i:'🌺',w:5,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Orchidea + turba'},
+{n:'Árbol de Júpiter',s:'Lagerstroemia indica',i:'🌸',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Árbol del amor',s:'Cercis siliquastrum',i:'🌸',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Árbol del paraíso',s:'Elaeagnus angustifolia',i:'🌳',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Cualquiera'},
+{n:'Aralia',s:'Fatsia japonica',i:'🌿',w:7,sun:'sombra',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Araucaria',s:'Araucaria heterophylla',i:'🌲',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal ácida'},
+{n:'Árbusto mariposa',s:'Buddleja davidii',i:'💜',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Aristoloquia',s:'Aristolochia macrophylla',i:'🌿',w:5,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Aspidistra',s:'Aspidistra elatior',i:'🌿',w:14,sun:'sombra',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Asplenio',s:'Asplenium nidus',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Turba + perlita'},
+{n:'Aster',s:'Aster novi-belgii',i:'🌸',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Astilbe',s:'Astilbe arendsii',i:'🌸',w:4,sun:'sombra',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Azalea',s:'Rhododendron simsii',i:'🌸',w:4,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Ácida'},
+{n:'Azucena',s:'Lilium candidum',i:'🌸',w:5,sun:'sol parcial',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Bambú',s:'Phyllostachys aurea',i:'🎋',w:5,sun:'sol parcial',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Bambú de interior',s:'Dracaena sanderiana',i:'🎋',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Begonia',s:'Begonia semperflorens',i:'🌸',w:4,sun:'indirecta',fert:'Quincenal',diff:'fácil',loc:'interior',soil:'Universal + turba'},
+{n:'Begonia tuberosa',s:'Begonia tuberhybrida',i:'🌺',w:4,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Universal + turba'},
+{n:'Belladona',s:'Amaryllis belladonna',i:'🌸',w:14,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Drenada'},
+{n:'Bellis',s:'Bellis perennis',i:'🌼',w:4,sun:'sol parcial',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Berberis',s:'Berberis thunbergii',i:'🌿',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Bignonia',s:'Campsis radicans',i:'🌺',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Bonsai ficus',s:'Ficus microcarpa',i:'🌳',w:4,sun:'indirecta',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Bonsai'},
+{n:'Bonsai olmo',s:'Ulmus parvifolia',i:'🌳',w:3,sun:'sol parcial',fert:'Mensual',diff:'difícil',loc:'exterior',soil:'Bonsai'},
+{n:'Bouganvilla',s:'Bougainvillea glabra',i:'🌺',w:10,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Universal drenada'},
+{n:'Bromelia',s:'Guzmania lingulata',i:'🌺',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Bromelias'},
+{n:'Cactus bola',s:'Echinocactus grusonii',i:'🌵',w:30,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Cactus candelabro',s:'Euphorbia ingens',i:'🌵',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Cactus navideño',s:'Schlumbergera bridgesii',i:'🌸',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Cactus + turba'},
+{n:'Cactus órgano',s:'Stenocereus thurberi',i:'🌵',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Cactus saguaro',s:'Carnegiea gigantea',i:'🌵',w:30,sun:'pleno sol',fert:'Estacional',diff:'moderado',loc:'exterior',soil:'Suculentas'},
+{n:'Caladio',s:'Caladium bicolor',i:'🌿',w:4,sun:'indirecta',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Turba + perlita'},
+{n:'Calatea',s:'Calathea orbifolia',i:'🌿',w:4,sun:'indirecta',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Universal + turba'},
+{n:'Calatea leopardo',s:'Calathea lancifolia',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Universal + turba'},
+{n:'Calatea medallón',s:'Calathea roseopicta',i:'🌿',w:4,sun:'indirecta',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Universal + turba'},
+{n:'Calatea zebrina',s:'Calathea zebrina',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Universal + turba'},
+{n:'Caléndula',s:'Calendula officinalis',i:'🌼',w:3,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Camelia',s:'Camellia japonica',i:'🌸',w:5,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Ácida'},
+{n:'Canelo de Chile',s:'Drimys winteri',i:'🌳',w:7,sun:'sol parcial',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida húmeda'},
+{n:'Capuchina',s:'Tropaeolum majus',i:'🌺',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Pobre drenada'},
+{n:'Carex',s:'Carex morrowii',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal húmeda'},
+{n:'Cariota',s:'Caryota mitis',i:'🌴',w:5,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Palmeras'},
+{n:'Catleya',s:'Cattleya labiata',i:'🌺',w:7,sun:'indirecta',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Orquídeas'},
+{n:'Cedro del Líbano',s:'Cedrus libani',i:'🌲',w:14,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Drenada'},
+{n:'Celosía',s:'Celosia argentea',i:'🌺',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Ceropegia',s:'Ceropegia woodii',i:'🌿',w:14,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Chamaedorea',s:'Chamaedorea elegans',i:'🌴',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Chumbera',s:'Opuntia ficus-indica',i:'🌵',w:30,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Ciclamino',s:'Cyclamen persicum',i:'🌸',w:4,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Universal + turba'},
+{n:'Cipré',s:'Cupressus sempervirens',i:'🌲',w:10,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Cissus',s:'Cissus rhombifolia',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Clemátide',s:'Clematis vitalba',i:'🌸',w:5,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Clerodendrón',s:'Clerodendrum thomsoniae',i:'🌸',w:5,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Universal fértil'},
+{n:'Clivia',s:'Clivia miniata',i:'🌺',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal drenada'},
+{n:'Clusia',s:'Clusia rosea',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Cola de gato',s:'Acalypha hispida',i:'🌺',w:4,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Universal fértil'},
+{n:'Columnea',s:'Columnea gloriosa',i:'🌺',w:5,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Turba + perlita'},
+{n:'Coprosma',s:'Coprosma repens',i:'🌿',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Coral',s:'Russelia equisetiformis',i:'🌺',w:5,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Cordilina',s:'Cordyline australis',i:'🌴',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Cornejo',s:'Cornus alba',i:'🌳',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal húmeda'},
+{n:'Corona de espinas',s:'Euphorbia milii',i:'🌸',w:14,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Costilla de Adán',s:'Monstera deliciosa',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Cotoneaster',s:'Cotoneaster horizontalis',i:'🌿',w:10,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Crassula',s:'Crassula ovata',i:'🌿',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Crisantemo',s:'Chrysanthemum morifolium',i:'🌼',w:4,sun:'sol parcial',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Croton',s:'Codiaeum variegatum',i:'🌿',w:5,sun:'indirecta brillante',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal fértil'},
+{n:'Cucarda',s:'Hibiscus rosa-sinensis',i:'🌺',w:5,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Cupido',s:'Jasminum polyanthum',i:'🌸',w:5,sun:'sol parcial',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Dafne',s:'Daphne odora',i:'🌸',w:7,sun:'sol parcial',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida drenada'},
+{n:'Dalía',s:'Dahlia pinnata',i:'🌺',w:4,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Delosperma',s:'Delosperma cooperi',i:'🌸',w:21,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Dendrobio',s:'Dendrobium nobile',i:'🌸',w:7,sun:'indirecta',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Orquídeas'},
+{n:'Dicentra',s:'Lamprocapnos spectabilis',i:'🌸',w:5,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Dieffenbachia',s:'Dieffenbachia seguine',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Dracena',s:'Dracaena marginata',i:'🌿',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Dracena compacta',s:'Dracaena fragrans compacta',i:'🌿',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Dracena tricolor',s:'Dracaena reflexa',i:'🌿',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Echeveria',s:'Echeveria elegans',i:'🪴',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Eléboro',s:'Helleborus niger',i:'🌸',w:7,sun:'sombra',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Enredadera de Virginia',s:'Parthenocissus quinquefolia',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Epipremnum',s:'Epipremnum aureum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Erica',s:'Erica carnea',i:'🌸',w:5,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Ácida drenada'},
+{n:'Espatifilo',s:'Spathiphyllum wallisii',i:'🌸',w:5,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + turba'},
+{n:'Estefanote',s:'Stephanotis floribunda',i:'🌸',w:5,sun:'indirecta brillante',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Universal fértil'},
+{n:'Estrelitzia',s:'Strelitzia reginae',i:'🌺',w:7,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Euphorbia',s:'Euphorbia tirucalli',i:'🌵',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Euonymus',s:'Euonymus japonicus',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Falsa aralia',s:'Schefflera elegantissima',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal'},
+{n:'Ficus benjamina',s:'Ficus benjamina',i:'🌳',w:7,sun:'indirecta brillante',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal'},
+{n:'Ficus elástico',s:'Ficus elastica',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Ficus lira',s:'Ficus lyrata',i:'🌿',w:7,sun:'indirecta brillante',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal fértil'},
+{n:'Ficus triangularis',s:'Ficus triangularis',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Forsitia',s:'Forsythia intermedia',i:'🌼',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Fotinia',s:'Photinia fraseri',i:'🌿',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Freesia',s:'Freesia refracta',i:'🌸',w:5,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Arenosa drenada'},
+{n:'Fucsia',s:'Fuchsia hybrida',i:'🌸',w:4,sun:'sol parcial',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Galaxia',s:'Platycodon grandiflorus',i:'💜',w:5,sun:'sol parcial',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Drenada'},
+{n:'Gardenia',s:'Gardenia jasminoides',i:'🌸',w:4,sun:'indirecta brillante',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Ácida'},
+{n:'Gazania',s:'Gazania rigens',i:'🌼',w:7,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Arenosa drenada'},
+{n:'Geranio',s:'Pelargonium hortorum',i:'🌸',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Geranio de hiedra',s:'Pelargonium peltatum',i:'🌸',w:5,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Gerbera',s:'Gerbera jamesonii',i:'🌸',w:5,sun:'sol parcial',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Universal drenada'},
+{n:'Glicinia',s:'Wisteria sinensis',i:'💜',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Fértil'},
+{n:'Gloxinia',s:'Sinningia speciosa',i:'🌺',w:5,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Turba + perlita'},
+{n:'Gordolobo',s:'Verbascum thapsus',i:'🌼',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Drenada'},
+{n:'Grevilea',s:'Grevillea robusta',i:'🌳',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida drenada'},
+{n:'Gypsophila',s:'Gypsophila paniculata',i:'🌸',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Calcárea drenada'},
+{n:'Hamamelis',s:'Hamamelis mollis',i:'🌼',w:7,sun:'sol parcial',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida húmeda'},
+{n:'Haworthia',s:'Haworthia attenuata',i:'🌵',w:14,sun:'indirecta',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Helecho boston',s:'Nephrolepis exaltata',i:'🌿',w:4,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Turba + perlita'},
+{n:'Helecho cuerno de alce',s:'Platycerium bifurcatum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Orquídeas'},
+{n:'Helecho nido',s:'Asplenium nidus',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Turba + perlita'},
+{n:'Heliconia',s:'Heliconia psittacorum',i:'🌺',w:5,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Heliotropo',s:'Heliotropium arborescens',i:'💜',w:4,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Hemerocallis',s:'Hemerocallis fulva',i:'🌺',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Hibisco',s:'Hibiscus syriacus',i:'🌸',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Hiedra',s:'Hedera helix',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Hiedra exterior',s:'Hedera hibernica',i:'🌿',w:7,sun:'sombra',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Hipérico',s:'Hypericum calycinum',i:'🌼',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Hortensia',s:'Hydrangea macrophylla',i:'🌸',w:4,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Ácida'},
+{n:'Hortensia trepadora',s:'Hydrangea anomala petiolaris',i:'🌸',w:5,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Hostas',s:'Hosta sieboldiana',i:'🌿',w:5,sun:'sombra',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Howea',s:'Howea forsteriana',i:'🌴',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Palmeras'},
+{n:'Impatiens',s:'Impatiens walleriana',i:'🌸',w:3,sun:'sombra',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Iris',s:'Iris germanica',i:'💜',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Drenada'},
+{n:'Jazmín',s:'Jasminum officinale',i:'🌸',w:5,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Jazmín de Madagascar',s:'Stephanotis floribunda',i:'🌸',w:5,sun:'indirecta brillante',fert:'Mensual',diff:'difícil',loc:'interior',soil:'Universal fértil'},
+{n:'Judas',s:'Cercis siliquastrum',i:'🌸',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Junco',s:'Juncus effusus',i:'🌿',w:3,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Muy húmeda'},
+{n:'Kalanchoe',s:'Kalanchoe blossfeldiana',i:'🌸',w:10,sun:'sol parcial',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Kenzia',s:'Howea forsteriana',i:'🌴',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Palmeras'},
+{n:'Lantana',s:'Lantana camara',i:'🌼',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Laurel',s:'Laurus nobilis',i:'🌿',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Lavanda',s:'Lavandula angustifolia',i:'💜',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Calcárea drenada'},
+{n:'Lentisco',s:'Pistacia lentiscus',i:'🌿',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Drenada'},
+{n:'Leucadendro',s:'Leucadendron argenteum',i:'🌿',w:10,sun:'pleno sol',fert:'Escaso',diff:'moderado',loc:'exterior',soil:'Ácida pobre'},
+{n:'Lila',s:'Syringa vulgaris',i:'💜',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Limonero',s:'Citrus limon',i:'🍋',w:7,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Cítricos'},
+{n:'Lirio de agua',s:'Zantedeschia aethiopica',i:'🌸',w:4,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Húmeda fértil'},
+{n:'Lirio de paz',s:'Spathiphyllum wallisii',i:'🌸',w:5,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + turba'},
+{n:'Lithodora',s:'Lithodora diffusa',i:'💜',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida drenada'},
+{n:'Lúpulo',s:'Humulus lupulus',i:'🌿',w:5,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Magnolia',s:'Magnolia grandiflora',i:'🌸',w:7,sun:'sol parcial',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida fértil'},
+{n:'Malva',s:'Malva sylvestris',i:'🌸',w:5,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Mandevila',s:'Mandevilla sanderi',i:'🌸',w:5,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Maracuyá',s:'Passiflora edulis',i:'🌸',w:5,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Universal fértil'},
+{n:'Maranta',s:'Maranta leuconeura',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Turba + perlita'},
+{n:'Margarita',s:'Argyranthemum frutescens',i:'🌼',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Melocotonero',s:'Prunus persica',i:'🌸',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Menta',s:'Mentha spicata',i:'🌿',w:3,sun:'sol parcial',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal húmeda'},
+{n:'Mimosa',s:'Acacia dealbata',i:'🌼',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Ácida drenada'},
+{n:'Mimosa pudica',s:'Mimosa pudica',i:'🌿',w:4,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal fértil'},
+{n:'Monstera adansonii',s:'Monstera adansonii',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Monstera deliciosa',s:'Monstera deliciosa',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Monstera thai constellation',s:'Monstera deliciosa var.',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal + perlita'},
+{n:'Morera',s:'Morus alba',i:'🌳',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Fértil'},
+{n:'Muérdago',s:'Viscum album',i:'🌿',w:0,sun:'sol parcial',fert:'No necesita',diff:'difícil',loc:'exterior',soil:'Parásita'},
+{n:'Naranjo',s:'Citrus sinensis',i:'🍊',w:7,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Cítricos'},
+{n:'Naranjo enano',s:'Citrus myrtifolia',i:'🍊',w:7,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Cítricos'},
+{n:'Neoregelia',s:'Neoregelia carolinae',i:'🌺',w:7,sun:'indirecta brillante',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Bromelias'},
+{n:'Nertera',s:'Nertera granadensis',i:'🌿',w:5,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Universal'},
+{n:'Nolina',s:'Beaucarnea recurvata',i:'🌴',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Nomeolvides',s:'Myosotis sylvatica',i:'💜',w:4,sun:'sol parcial',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Nopal',s:'Opuntia microdasys',i:'🌵',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Olivo',s:'Olea europaea',i:'🌳',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Calcárea drenada'},
+{n:'Orégano',s:'Origanum vulgare',i:'🌿',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Pobre drenada'},
+{n:'Orquídea cattleya',s:'Cattleya labiata',i:'🌸',w:7,sun:'indirecta',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Orquídeas'},
+{n:'Orquídea cymbidium',s:'Cymbidium hybrid',i:'🌸',w:7,sun:'indirecta brillante',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Orquídeas'},
+{n:'Orquídea dendrobio',s:'Dendrobium nobile',i:'🌸',w:7,sun:'indirecta',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Orquídeas'},
+{n:'Orquídea mariposa',s:'Phalaenopsis amabilis',i:'🌸',w:7,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Orquídeas'},
+{n:'Orquídea oncidium',s:'Oncidium hybridum',i:'🌼',w:7,sun:'indirecta brillante',fert:'Quincenal',diff:'difícil',loc:'interior',soil:'Orquídeas'},
+{n:'Pachira',s:'Pachira aquatica',i:'🌳',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal fértil'},
+{n:'Pachyphytum',s:'Pachyphytum oviferum',i:'🪴',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Palma areca',s:'Dypsis lutescens',i:'🌴',w:5,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Palmeras'},
+{n:'Palma bambú',s:'Chamaedorea seifrizii',i:'🌴',w:5,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Palmeras'},
+{n:'Palma canaria',s:'Phoenix canariensis',i:'🌴',w:7,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Palmeras'},
+{n:'Palma china',s:'Livistona chinensis',i:'🌴',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Palmeras'},
+{n:'Palma europea',s:'Chamaerops humilis',i:'🌴',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Palmeras'},
+{n:'Palma kentia',s:'Howea forsteriana',i:'🌴',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Palmeras'},
+{n:'Palmera datilera',s:'Phoenix dactylifera',i:'🌴',w:10,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Palmeras'},
+{n:'Pandano',s:'Pandanus veitchii',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal'},
+{n:'Parra virgen',s:'Parthenocissus tricuspidata',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Paulonia',s:'Paulownia tomentosa',i:'🌳',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Fértil'},
+{n:'Pelargonium',s:'Pelargonium graveolens',i:'🌸',w:5,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Pensamiento',s:'Viola tricolor',i:'🌸',w:4,sun:'sol parcial',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Peperomia',s:'Peperomia obtusifolia',i:'🌿',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Peperomia sandía',s:'Peperomia argyreia',i:'🌿',w:10,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Peral',s:'Pyrus communis',i:'🌸',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Fértil'},
+{n:'Petunia',s:'Petunia hybrida',i:'🌸',w:3,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Philodendron corazón',s:'Philodendron hederaceum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Philodendron bipinnatifidum',s:'Thaumatophyllum bipinnatifidum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Philodendron gloriosum',s:'Philodendron gloriosum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal + perlita'},
+{n:'Philodendron imperial red',s:'Philodendron erubescens',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Philodendron micans',s:'Philodendron hederaceum micans',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Philodendron prince of orange',s:'Philodendron hybrid',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Pino',s:'Pinus sylvestris',i:'🌲',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Ácida drenada'},
+{n:'Pino enano',s:'Pinus mugo',i:'🌲',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Ácida drenada'},
+{n:'Piscidia',s:'Piscidia erythrina',i:'🌳',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Universal'},
+{n:'Pita',s:'Agave americana',i:'🌵',w:30,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Pittosporum',s:'Pittosporum tobira',i:'🌿',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Planta araña',s:'Chlorophytum comosum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Planta china',s:'Aglaonema commutatum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Planta del dólar',s:'Pilea peperomioides',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Planta del dinero',s:'Crassula ovata',i:'🌿',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Planta serpiente',s:'Sansevieria trifasciata',i:'🌿',w:21,sun:'indirecta',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Universal + arena'},
+{n:'Plátano de sombra',s:'Platanus hispanica',i:'🌳',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Fértil'},
+{n:'Plumbago',s:'Plumbago auriculata',i:'💜',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Políscias',s:'Polyscias fruticosa',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'moderado',loc:'interior',soil:'Universal'},
+{n:'Pothos',s:'Epipremnum aureum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Primavera',s:'Primula vulgaris',i:'🌸',w:4,sun:'sol parcial',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal fértil'},
+{n:'Protea',s:'Protea cynaroides',i:'🌸',w:10,sun:'pleno sol',fert:'Escaso',diff:'difícil',loc:'exterior',soil:'Ácida pobre'},
+{n:'Rododendro',s:'Rhododendron ponticum',i:'🌸',w:5,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Ácida'},
+{n:'Romero',s:'Salvia rosmarinus',i:'🌿',w:14,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Pobre drenada'},
+{n:'Rosa',s:'Rosa hybrida',i:'🌹',w:4,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Rosa de porcelana',s:'Etlingera elatior',i:'🌺',w:4,sun:'sol parcial',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Ruellia',s:'Ruellia simplex',i:'💜',w:4,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Salvia',s:'Salvia officinalis',i:'🌿',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Drenada'},
+{n:'San Pedro',s:'Echinopsis pachanoi',i:'🌵',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Sanseviera',s:'Sansevieria trifasciata',i:'🌿',w:21,sun:'indirecta',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Universal + arena'},
+{n:'Sanseviera cilíndrica',s:'Sansevieria cylindrica',i:'🌿',w:21,sun:'indirecta',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Universal + arena'},
+{n:'Saxifraga',s:'Saxifraga stolonifera',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Schefflera',s:'Schefflera arboricola',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Sedum',s:'Sedum morganianum',i:'🪴',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Senecio',s:'Senecio rowleyanus',i:'🌿',w:14,sun:'indirecta brillante',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Siempreviva',s:'Sempervivum tectorum',i:'🪴',w:21,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'exterior',soil:'Suculentas'},
+{n:'Sinsapo',s:'Syngonium podophyllum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Soleirolia',s:'Soleirolia soleirolii',i:'🌿',w:4,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal húmeda'},
+{n:'Spathiphyllum',s:'Spathiphyllum wallisii',i:'🌸',w:5,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + turba'},
+{n:'Suculenta echeveria',s:'Echeveria subsessilis',i:'🪴',w:14,sun:'pleno sol',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Suculenta haworthia',s:'Haworthia fasciata',i:'🪴',w:14,sun:'indirecta',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Suculentas'},
+{n:'Syngonium',s:'Syngonium podophyllum',i:'🌿',w:7,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + perlita'},
+{n:'Tecoma',s:'Tecoma stans',i:'🌼',w:7,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+{n:'Thymus',s:'Thymus vulgaris',i:'🌿',w:10,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Pobre drenada'},
+{n:'Tillandsia',s:'Tillandsia ionantha',i:'🌿',w:4,sun:'indirecta brillante',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Sin sustrato'},
+{n:'Tilo',s:'Tilia cordata',i:'🌳',w:7,sun:'pleno sol',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Fértil húmeda'},
+{n:'Tomatera',s:'Solanum lycopersicum',i:'🍅',w:3,sun:'pleno sol',fert:'Quincenal',diff:'moderado',loc:'exterior',soil:'Fértil fértil'},
+{n:'Tradescantia',s:'Tradescantia zebrina',i:'🌿',w:5,sun:'indirecta',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal'},
+{n:'Tulipán',s:'Tulipa gesneriana',i:'🌷',w:5,sun:'pleno sol',fert:'Mensual',diff:'moderado',loc:'exterior',soil:'Drenada fértil'},
+{n:'Verbena',s:'Verbena bonariensis',i:'💜',w:5,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Viburno',s:'Viburnum opulus',i:'🌸',w:7,sun:'sol parcial',fert:'Primaveral',diff:'fácil',loc:'exterior',soil:'Universal húmeda'},
+{n:'Vid',s:'Vitis vinifera',i:'🍇',w:7,sun:'pleno sol',fert:'Primaveral',diff:'moderado',loc:'exterior',soil:'Fértil drenada'},
+{n:'Violeta africana',s:'Saintpaulia ionantha',i:'💜',w:5,sun:'indirecta',fert:'Quincenal',diff:'moderado',loc:'interior',soil:'Universal + turba'},
+{n:'Yuca',s:'Yucca elephantipes',i:'🌿',w:14,sun:'pleno sol',fert:'Mensual',diff:'fácil',loc:'interior',soil:'Universal + arena'},
+{n:'Zamioculca',s:'Zamioculcas zamiifolia',i:'🌿',w:21,sun:'indirecta',fert:'Estacional',diff:'fácil',loc:'interior',soil:'Universal + arena'},
+{n:'Zinnia',s:'Zinnia elegans',i:'🌸',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal'},
+{n:'Zonal',s:'Pelargonium zonale',i:'🌸',w:4,sun:'pleno sol',fert:'Quincenal',diff:'fácil',loc:'exterior',soil:'Universal drenada'},
+];
+// Index for fast search
+const PLANT_DB_LOWER=PLANT_DB.map(p=>({...p,_nl:p.n.toLowerCase(),_sl:(p.s||'').toLowerCase()}));
+function searchPlantDB(q){
+  if(!q||q.length<2)return PLANT_DB_LOWER.slice(0,50);
+  const lq=q.toLowerCase();
+  return PLANT_DB_LOWER.filter(p=>p._nl.includes(lq)||p._sl.includes(lq)).slice(0,60);
+}
+
 'use strict';
+
+// ── SVG Icon System — Filled/Bold ──────────────────────────────────
+const ICONS={
+  // Navigation
+  home:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.707 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 18 11h-1v9a1 1 0 0 1-1 1h-4v-5H12v5H8a1 1 0 0 1-1-1v-9H6a1 1 0 0 1-.707-1.707l7-7z"/></svg>`,
+  leaf:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 5.5-8 5.5S20 8 17 8z"/></svg>`,
+  stats:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15C2.7 3 2 3.7 2 4.5v15C2 20.3 2.7 21 3.5 21h15c.8 0 1.5-.7 1.5-1.5v-15C20 3.7 19.3 3 18.5 3z"/></svg>`,
+  chat:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>`,
+  // Actions  
+  water:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>`,
+  check:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`,
+  sparkle:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L9.5 8.5 2 11l7.5 2.5L12 21l2.5-7.5L22 11l-7.5-2.5L12 1z"/></svg>`,
+  plus:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`,
+  edit:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`,
+  camera:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>`,
+  brain:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3a4 4 0 0 1 3.91 3.14A3.5 3.5 0 0 1 19.5 10a3.5 3.5 0 0 1-.5 1.78A3 3 0 0 1 18 17.9V19a2 2 0 0 1-2 2h-1v-6H9v6H8a2 2 0 0 1-2-2v-1.1A3 3 0 0 1 5 11.78 3.5 3.5 0 0 1 5 10a3.5 3.5 0 0 1 2.09-3.14A4 4 0 0 1 11 3h2z"/></svg>`,
+  trash:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
+  send:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
+  search:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`,
+  settings:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>`,
+  map:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>`,
+  // Info
+  location:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
+  calendar:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>`,
+  sun:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>`,
+  cloud:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>`,
+  flame:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>`,
+  alert:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  refresh:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>`,
+  back:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>`,
+  close:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`,
+  eye:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`,
+  key:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>`,
+  save:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>`,
+  zap:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>`,
+  // Wizard icons (filled)
+  seedling:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22V12m0 0C12 7 7 4 2 4c0 6 4 10 10 8zm0 0c0-5 5-8 10-8 0 6-4 10-10 8z"/></svg>`,
+  tree:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12l-5-8-5 8h3l-3 5h4v5h2v-5h4l-3-5z"/></svg>`,
+  window:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-9 17H4v-7h7v7zm0-9H4V4h7v6zm9 9h-7v-7h7v7zm0-9h-7V4h7v6z"/></svg>`,
+  balcony:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 18V8h16v10H4zM2 6h20v2H2V6zm4 4h2v6H6v-6zm4 0h2v6h-2v-6zm4 0h2v6h-2v-6z"/></svg>`,
+  garden:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12l-5-8-5 8h3l-3 5h4v3h2v-3h4l-3-5h3zm-9 8H6v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`,
+  fullsun:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM11 2v2h2V2h-2zm0 18v2h2v-2h-2zM5.64 6.36 4.22 4.94 2.81 6.36l1.41 1.41 1.42-1.41zM18.36 19.64l1.41-1.41-1.41-1.41-1.41 1.41 1.41 1.41zM2.81 17.64l1.41 1.41 1.42-1.41-1.42-1.41-1.41 1.41zM18.36 4.36l-1.41 1.41 1.41 1.41 1.41-1.41-1.41-1.41z"/></svg>`,
+  partsun:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84 5.36 3.43 3.94 4.84l1.42 1.42 1.4-1.42zM4 11H1v2h3v-2zm9-9h-2v2.99h2V2zm7.45 3.91-1.41-1.41-1.42 1.41 1.42 1.42 1.41-1.42zM20 11v2h3v-2h-3zm-8-2c-1.66 0-3 1.34-3 3a5 5 0 0 0 6 4.9V19h2v-1.9A5 5 0 0 0 17 12c0-2.76-2.24-5-5-5zm-1 16.95h2V23h-2v-7.05zm-7.45-3.91 1.41 1.41 1.42-1.41-1.42-1.4-1.41 1.4z"/></svg>`,
+  indirectlight:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 17.93V18h-2v1.93C7.05 19.44 4.56 16.95 4.07 14H6v-2H4.07C4.56 9.05 7.05 6.56 10 6.07V8h2V6.07c2.95.49 5.44 2.98 5.93 5.93H16v2h1.93c-.49 2.95-2.98 5.44-5.93 5.93z"/></svg>`,
+  moonlight:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>`,
+  thermometer:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-2V5c0-.55.45-1 1-1s1 .45 1 1v6h-2z"/></svg>`,
+  rain:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.92 7.02A7.003 7.003 0 0 0 11 2C8.1 2 5.54 3.56 4.15 5.9A5.003 5.003 0 0 0 1 10.5C1 13 3 15 5.5 15H17c2.21 0 4-1.79 4-4 0-2.09-1.6-3.8-3.68-3.98zm-5.42 7.98l-2 4h-2l2-4h2zm-4 0l-2 4H4.5l2-4h2zm8 0l-2 4h-2l2-4h2z"/></svg>`,
+  snow:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.79 13.95 18 13.17l1.5-2.6-2-.98-1.5 2.6-2.49-.68.68-2.49 2.6-1.5-.98-2-2.6 1.5L12.83 4h-2.17l-.68 2.51-2.6-1.5-.98 2 2.6 1.5.68 2.49-2.49.68-1.5-2.6-2 .98 1.5 2.6-2.79.78.55 2.12 2.79-.78 1.5 2.6 1.5-2.6 2.49-.68-.68 2.49-2.6 1.5.98 2 2.6-1.5.68 2.79h2.17l.68-2.79 2.6 1.5.98-2-2.6-1.5-.68-2.49 2.49.68 1.5 2.6 2-2L18.5 16l2.79.78.5-2.83z"/></svg>`,
+  drops:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>`,
+  plant_pot:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c0 0-4 4-4 8 0 2.21 1.79 4 4 4s4-1.79 4-4c0-4-4-8-4-8zM7 17l1 4h8l1-4H7zm1-2h8c.55 0 1-.45 1-1H7c0 .55.45 1 1 1z"/></svg>`,
+  chevron_r:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>`,
+  chevron_l:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>`,
+  sunrise:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 6.76 5.34 5.34 4 6.69l1.41 1.41 1.35-1.34zM4 11H2v2h2v-2zm9-9h-2v3h2V2zm7.24 4.76-1.34 1.34 1.41 1.41L21.7 8.1l-1.46-1.34zM20 11v2h2v-2h-2zm-8-2a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5zM3 20h18v-2H3v2zm2-4h14a7 7 0 0 0-14 0z"/></svg>`,
+  plug:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 7V3h-2v4h-4V3H8v4h-.001C5.791 7.001 4 8.791 4 11v5l3 3v2h10v-2l3-3v-5c0-2.209-1.791-4-4-4H16zm-2 7h-4v-2h4v2z"/></svg>`,
+  plant_empty:`<svg viewBox="0 0 24 24" fill="currentColor" opacity=".35"><path d="M12 22V12m0 0C12 7 7 4 2 4c0 6 4 10 10 8zm0 0c0-5 5-8 10-8 0 6-4 10-10 8z"/><path d="M9 20h6"/></svg>`,
+};
+function icon(name,cls='',size=18){
+  const svg=ICONS[name]||ICONS.leaf;
+  const wrapper=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  const tmp=document.createElement('div');tmp.innerHTML=svg;
+  const src=tmp.querySelector('svg');
+  wrapper.setAttribute('viewBox',src.getAttribute('viewBox')||'0 0 24 24');
+  wrapper.setAttribute('width',size);wrapper.setAttribute('height',size);
+  wrapper.setAttribute('fill','currentColor');
+  if(cls)wrapper.setAttribute('class',cls);
+  wrapper.style.flexShrink='0';
+  Array.from(src.children).forEach(c=>wrapper.appendChild(c.cloneNode(true)));
+  return wrapper;
+}
+
 
 
 // ═══════════════════════════════════
@@ -289,8 +851,8 @@ if(!S.chatHistory)S.chatHistory=[];
 let page='home',selId=null,activeTab='ficha',activeSheet=null;
 let weather=null,wxState='idle';
 let aiState='idle',aiIdent=null;
-let checkState='idle',checkResult=null,tlIdx=0,tlPlaying=false,tlTimer=null;
-let search='',leafMap=null,homeMarker=null,wxMarker=null;
+let checkState='idle',checkResult=null,tlIdx=0,tlPlaying=false,tlTimer=null,ppQuery='',ppOpen=false;
+let search='',listSort='next-water',leafMap=null,homeMarker=null,wxMarker=null;
 let chatInput='',chatLoading=false;
 
 // Wizard state
@@ -298,6 +860,8 @@ let wizStep=0,wizAnswers={},wizLoading=false,wizResult=null,wizPhoto=null,wizPho
 let aiProgress=0,aiStatusMsg='',aiStartTime=0,aiProgressTimer=null;
 
 let _fp={},_fe={};
+const GRAD_LIST=['var(--g1)','var(--g2)','var(--g3)','var(--g4)','var(--g5)','var(--g6)'];
+function plantGrad(p){const idx=(p.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)%GRAD_LIST.length;return GRAD_LIST[idx];}
 const BP=()=>({name:'',icon:'🌿',photo:null,species:'',location:'',outdoor:false,pot:'',soil:'',acquired:td(),watering:'1× semana',sunlight:'Indirecta brillante',fertilizer:'Mensual',vitality:'bueno',notes:'',tags:'',aiCareGuide:null,checkIntervalDays:7});
 const BE=()=>({date:td(),height:'',leaves:'',note:'',vitality:'bueno'});
 _fp=BP();_fe=BE();
@@ -497,14 +1061,38 @@ function waterPlant(id){
     if(p.lastWatered===td()){toast('Ya fue regada hoy','w');return p;}
     const days=WDAYS[p.watering]||7;
     const nxt=new Date();nxt.setDate(nxt.getDate()+days);
-    return{...p,lastWatered:td(),nextWatering:nxt.toISOString().split('T')[0]};
+    // Streak: consecutive on-time waterings (within 1 day grace)
+    const prevDue=p.nextWatering;
+    const onTime=!prevDue||daysUntil(prevDue)>=-1;
+    const streak=(p.waterStreak||0);
+    const newStreak=onTime?streak+1:1;
+    if(newStreak>=3)toast('💧 Riego registrado · 🔥 '+newStreak+' días seguidos!');
+    else toast('💧 Riego registrado');
+    return{...p,lastWatered:td(),nextWatering:nxt.toISOString().split('T')[0],waterStreak:newStreak,waterStreakUpdated:td()};
   });
-  saveS();toast('💧 Riego registrado');render();
+  saveS();render();
 }
 function deletePlant(id){S.plants=S.plants.filter(p=>p.id!==id);saveS();selId=null;page='list';toast('Planta eliminada','w');render();}
 
 function addPlant(){
   if(!_fp.name.trim()){toast('El nombre es obligatorio','w');return;}
+  // EDIT MODE: if _fp has an id, update existing plant
+  if(_fp.id){
+    S.plants=S.plants.map(p=>{
+      if(p.id!==_fp.id)return p;
+      return{...p,
+        name:_fp.name,icon:_fp.icon,photo:_fp.photo,species:_fp.species,
+        location:_fp.location,outdoor:_fp.outdoor,pot:_fp.pot,soil:_fp.soil,
+        watering:_fp.watering,sunlight:_fp.sunlight,fertilizer:_fp.fertilizer,
+        vitality:_fp.vitality,notes:_fp.notes,
+        tags:(_fp.tags||'').split(',').map(t=>t.trim()).filter(Boolean),
+        aiCareGuide:_fp.aiCareGuide||p.aiCareGuide,
+        checkIntervalDays:_fp.checkIntervalDays||p.checkIntervalDays,
+      };
+    });
+    saveS();activeSheet=null;_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;wizPhoto=null;wizPhotoB64=null;
+    toast('✅ Planta actualizada');render();return;
+  }
   const ci=_fp.checkIntervalDays||7;
   const nc=new Date();nc.setDate(nc.getDate()+ci);
   const watering=_fp.watering||'1× semana';
@@ -550,6 +1138,13 @@ async function identifyPlant(file){
 // ═══════════════════════════════════
 // AI — WIZARD CARE GUIDE
 // ═══════════════════════════════════
+const WIZ_ICON_MAP={
+  principiante:'seedling',intermedio:'leaf',experto:'tree',
+  interior:'home',ventana:'window',balcon:'balcony',jardin:'garden',
+  'pleno sol':'fullsun','sol parcial':'partsun',indirecta:'indirectlight','poca luz':'moonlight',
+  'calido seco':'thermometer',templado:'rain',frio:'snow',humedo:'drops',
+  minimo:'clock',semanal:'calendar',diario:'sparkle',
+};
 const WIZ_QUESTIONS=[
   {key:'experience',q:'¿Cuánta experiencia tienes con plantas?',sub:'Sé honesto, ¡no pasa nada!',opts:[{em:'🌱',label:'Soy principiante',val:'principiante'},{em:'🌿',label:'Tengo algo de experiencia',val:'intermedio'},{em:'🌳',label:'Soy bastante experto',val:'experto'}]},
   {key:'location',q:'¿Dónde va a estar la planta?',sub:'Esto afecta mucho al riego y la luz',opts:[{em:'🏠',label:'Interior (salón, habitación...)',val:'interior'},{em:'🪟',label:'Junto a una ventana',val:'ventana'},{em:'🌿',label:'Balcón o terraza',val:'balcon'},{em:'🌳',label:'Jardín exterior',val:'jardin'}]},
@@ -610,7 +1205,7 @@ Genera una guía de cuidados personalizada y adaptada a su situación. Responde 
     if(result.potSize)_fp.pot=result.potSize;
     if(result.checkIntervalDays)_fp.checkIntervalDays=result.checkIntervalDays;
     _fp.aiCareGuide=result;
-  }catch(e){toast(e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'Error generando guía','w');}
+  }catch(e){toast(e.message==='NO_KEY'?'Configura API key en Ajustes':'Error generando guía','w');}
   wizLoading=false;render();
 }
 
@@ -657,7 +1252,7 @@ Responde SOLO JSON sin markdown:
     saveS();
   }catch(e){
     stopAIProgress();checkState='error';
-    const msg=e.message==='NO_KEY'?'⚠️ Configura API key en Ajustes':'❌ '+e.message;
+    const msg=e.message==='NO_KEY'?'Configura API key en Ajustes':'❌ '+e.message;
     toast(msg,'w');
   }
   render();
@@ -700,7 +1295,7 @@ function initMap(container){
   leafMap=L.map(container,{zoomControl:true,attributionControl:false}).setView(center,13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(leafMap);
   if(loc){
-    const hi=L.divIcon({html:'<div style="background:#2d6a4f;color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 10px rgba(45,106,79,.4);border:2px solid #fff">🏠</div>',iconSize:[36,36],iconAnchor:[18,18],className:''});
+    const hi=L.divIcon({html:'<div style="background:var(--t1);color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25);border:2.5px solid #fff"><svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\'/><polyline points=\'9 22 9 12 15 12 15 22\'/></svg></div>',iconSize:[36,36],iconAnchor:[18,18],className:''});
     homeMarker=L.marker([loc.lat,loc.lon],{icon:hi}).addTo(leafMap);
     homeMarker.bindPopup(`<b>${loc.city||'Mi casa'}</b>`);
   }
@@ -782,7 +1377,7 @@ function buildHeader(){
   const subtitles={home:'smart garden',list:'mis plantas',detail:p?p.name:'',stats:'estadísticas',map:'mapa & clima',chat:'asistente IA',settings:'ajustes'};
   const left=el('div',{cls:'flex ac gap8'},
     (page==='detail'||page==='settings'||page==='chat')
-      ?el('button',{cls:'btn btn-g',style:{padding:'4px 8px',fontSize:'18px'},$click:()=>{page=page==='settings'||page==='chat'?'home':'list';render();}},'←')
+      ?el('button',{cls:'btn btn-g',style:{padding:'4px 8px'},$click:()=>{page=page==='settings'||page==='chat'?'home':'list';render();}},icon('back','',18))
       :null,
     el('div',{},el('div',{cls:'logo'},'plant.ai'),el('div',{cls:'logo-sub'},subtitles[page]||''))
   );
@@ -793,8 +1388,8 @@ function buildHeader(){
       )
     :el('button',{cls:'btn btn-g',style:{padding:'4px 8px',fontSize:'20px'},$click:()=>{page='map';render();}},'🗺️');
   const nav=el('div',{cls:'nav'},
-    ...[{id:'home',icon:'⌂',label:'Inicio'},{id:'list',icon:'◈',label:'Plantas'},{id:'stats',icon:'◎',label:'Stats'},{id:'chat',icon:'💬',label:'Chat IA'}].map(n=>
-      el('button',{cls:'nb'+(page===n.id||(n.id==='list'&&isPlants)?' on':''),$click:()=>{page=n.id;if(n.id!=='list')selId=null;render();}},el('span',{style:{fontSize:'14px'}},n.icon),n.label)
+    ...[{id:'home',icon:'home',label:'Inicio'},{id:'list',icon:'leaf',label:'Plantas'},{id:'stats',icon:'stats',label:'Stats'},{id:'chat',icon:'chat',label:'Chat IA'}].map(n=>
+      el('button',{cls:'nb'+(page===n.id||(n.id==='list'&&isPlants)?' on':''),$click:()=>{page=n.id;if(n.id!=='list')selId=null;render();}},icon(n.icon,'',18),n.label)
     )
   );
   return el('div',{cls:'hdr'},el('div',{cls:'hdr-top'},left,right),nav);
@@ -818,59 +1413,303 @@ function buildHome(){
   const thresh=S.settings.rainMm||8;
   const rainedOut=weather&&weather.rain>=thresh;
   const frag=document.createDocumentFragment();
+
+  // ── Weather card ────────────────────────────────────────────
   frag.appendChild(buildWeatherCard());
-  frag.appendChild(el('div',{cls:'sg3'},
-    statBox(plants.length,'Plantas 🌿','var(--i1)'),
-    statBox(needsW.length,'Regar 💧',needsW.length>0?'var(--am)':'var(--i1)'),
-    statBox(needsC.length,'Revisar 🔬',needsC.length>0?'var(--bl)':'var(--i1)')
-  ));
-  if(rainedOut){const op=plants.filter(p=>p.outdoor);if(op.length>0)frag.appendChild(el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🌧️ Ha llovido '+weather.rain+'mm hoy'),el('div',{cls:'fs12 ci2 mb8'},'Plantas exteriores regadas automáticamente.'),el('div',{},...op.map(p=>el('span',{cls:'pill'},p.icon+' '+p.name)))));}
+
+  // ── Stats row ──────────────────────────────────────────────
+  const statGrid=el('div',{cls:'stat-grid'});
+  function makeStatCell(num,label,iconName,bg,color){
+    const cell=el('div',{cls:'stat-cell'});
+    const iconWrap=el('div',{cls:'stat-icon-wrap',style:{background:bg}});
+    iconWrap.style.color=color;
+    iconWrap.appendChild(icon(iconName,'',16));
+    cell.appendChild(iconWrap);
+    cell.appendChild(el('div',{cls:'stat-num',style:{color:num>0&&color!=='var(--t1)'?color:'var(--t1)'}},String(num)));
+    cell.appendChild(el('div',{cls:'stat-lbl'},label));
+    return cell;
+  }
+  statGrid.appendChild(makeStatCell(plants.length,'Plantas','leaf','rgba(0,201,110,.12)','var(--gr-d)'));
+  statGrid.appendChild(makeStatCell(needsW.length,'Regar','water',needsW.length>0?'rgba(14,165,233,.12)':'rgba(0,0,0,.04)',needsW.length>0?'#0ea5e9':'var(--t3)'));
+  statGrid.appendChild(makeStatCell(needsC.length,'Revisar','sparkle',needsC.length>0?'rgba(139,92,246,.12)':'rgba(0,0,0,.04)',needsC.length>0?'var(--pu)':'var(--t3)'));
+  frag.appendChild(statGrid);
+
+  // ── Rain alert ─────────────────────────────────────────────
+  if(rainedOut){
+    const op=plants.filter(p=>p.outdoor);
+    if(op.length>0){
+      const rc=el('div',{cls:'notif-card mb10'});
+      const rh=el('div',{cls:'notif-header'});
+      const ri=el('div',{cls:'notif-icon',style:{background:'rgba(14,165,233,.12)',color:'#0ea5e9'}});
+      ri.appendChild(icon('rain','',16));
+      rh.appendChild(ri);
+      rh.appendChild(el('div',{cls:'notif-title'},'Ha llovido '+weather.rain+'mm hoy'));
+      rh.appendChild(el('div',{cls:'notif-count'},op.length+' plantas'));
+      rc.appendChild(rh);
+      op.forEach(p=>{
+        const item=el('div',{cls:'notif-item'});
+        item.appendChild(plantPhoto(p,34,10));
+        item.appendChild(el('span',{cls:'f1 fw7 fs13'},p.name));
+        item.appendChild(el('span',{cls:'fs11 ci3'},'Regada'));
+        rc.appendChild(item);
+      });
+      frag.appendChild(rc);
+    }
+  }
+
+  // ── Water alerts ───────────────────────────────────────────
   const toW=needsW.filter(p=>!(rainedOut&&p.outdoor));
-  if(toW.length>0){const box=el('div',{cls:'alert alert-y'},el('div',{cls:'sl sl-am mb8'},'💧 Necesitan agua hoy'));toW.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Regar','btn-p btn-sm',e=>{e.stopPropagation();waterPlant(p.id);}))));frag.appendChild(box);}
-  if(needsC.length>0&&getKey()){const box=el('div',{cls:'alert alert-b'},el('div',{cls:'sl sl-bl mb8'},'🔬 Check de salud pendiente'));needsC.forEach(p=>box.appendChild(el('div',{cls:'ar'},plantPhoto(p,36,10),el('span',{cls:'f1 fw7 fs13'},p.name),btn('Analizar','btn-bl btn-sm',e=>{e.stopPropagation();selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();}))));frag.appendChild(box);}
-  if(!getKey())frag.appendChild(el('div',{cls:'card alert-pu',style:{cursor:'pointer'},$click:()=>{page='settings';render();}},el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'28px'}},'🤖'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs13'},'Activa la IA — es gratis'),el('div',{cls:'fs12 ci3'},'API key de Google Gemini → Ajustes')),el('span',{cls:'ci3',style:{fontSize:'18px'}},'›'))));
-  frag.appendChild(el('div',{cls:'flex jb ac mb8',style:{marginTop:'4px'}},el('span',{cls:'sl',style:{marginBottom:0}},'Mis plantas'),btn('Ver todas →','btn-g fs13 cgr',()=>{page='list';render();},{style:{padding:'4px 0'}})));
-  if(plants.length===0){frag.appendChild(el('div',{cls:'card empty'},el('div',{cls:'empty-em'},'🌱'),el('div',{cls:'empty-t'},'Sin plantas aún'),el('div',{cls:'empty-s'},'Empieza añadiendo tu primera planta'),btn('+ Añadir planta','btn-p',()=>{_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;activeSheet='plant';render();})));}
-  else{plants.slice(0,3).forEach(p=>frag.appendChild(buildPlantCard(p)));if(plants.length>3)frag.appendChild(btn('Ver las '+plants.length+' plantas →','btn-s btn-full',()=>{page='list';render();},{style:{marginTop:'4px'}}));}
+  if(toW.length>0){
+    const wc=el('div',{cls:'notif-card'});
+    const wh=el('div',{cls:'notif-header'});
+    const wi=el('div',{cls:'notif-icon',style:{background:'rgba(14,165,233,.12)',color:'#0ea5e9'}});
+    wi.appendChild(icon('water','',16));
+    wh.appendChild(wi);
+    wh.appendChild(el('div',{cls:'notif-title'},'Necesitan agua hoy'));
+    wh.appendChild(el('div',{cls:'notif-count'},toW.length+' plantas'));
+    wc.appendChild(wh);
+    toW.forEach(p=>{
+      const item=el('div',{cls:'notif-item'});
+      item.appendChild(plantPhoto(p,34,10));
+      item.appendChild(el('span',{cls:'f1 fw7 fs13'},p.name));
+      const wb=el('button',{cls:'notif-item-btn',style:{background:'#0ea5e9',color:'#fff'},$click:e=>{e.stopPropagation();waterPlant(p.id);}});
+      wb.appendChild(icon('water','',13));wb.append(' Regar');
+      item.appendChild(wb);
+      wc.appendChild(item);
+    });
+    frag.appendChild(wc);
+  }
+
+  // ── Health alerts ──────────────────────────────────────────
+  if(needsC.length>0&&getKey()){
+    const cc=el('div',{cls:'notif-card'});
+    const ch=el('div',{cls:'notif-header'});
+    const ci2=el('div',{cls:'notif-icon',style:{background:'rgba(139,92,246,.12)',color:'var(--pu)'}});
+    ci2.appendChild(icon('sparkle','',16));
+    ch.appendChild(ci2);
+    ch.appendChild(el('div',{cls:'notif-title'},'Revisión de salud'));
+    ch.appendChild(el('div',{cls:'notif-count'},needsC.length+' plantas'));
+    cc.appendChild(ch);
+    needsC.forEach(p=>{
+      const item=el('div',{cls:'notif-item'});
+      item.appendChild(plantPhoto(p,34,10));
+      item.appendChild(el('span',{cls:'f1 fw7 fs13'},p.name));
+      const ab=el('button',{cls:'notif-item-btn',style:{background:'var(--pu)',color:'#fff'},$click:e=>{e.stopPropagation();selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();}});
+      ab.appendChild(icon('sparkle','',13));ab.append(' Analizar');
+      item.appendChild(ab);
+      cc.appendChild(item);
+    });
+    frag.appendChild(cc);
+  }
+
+  // ── AI activation prompt ───────────────────────────────────
+  if(!getKey()){
+    const aiCard=el('div',{cls:'notif-card',style:{cursor:'pointer'},$click:()=>{page='settings';render();}});
+    const aih=el('div',{cls:'notif-header'});
+    const aii=el('div',{cls:'notif-icon',style:{background:'rgba(139,92,246,.12)',color:'var(--pu)'}});
+    aii.appendChild(icon('brain','',16));
+    aih.appendChild(aii);
+    aih.appendChild(el('div',{cls:'f1'},
+      el('div',{cls:'fw7 fs13'},'Activa la IA — es gratis'),
+      el('div',{cls:'fs12 ci3'},'Configura tu API key de Groq')
+    ));
+    const arr=el('div',{style:{color:'var(--t3)'}});arr.appendChild(icon('chevron_r','',18));
+    aih.appendChild(arr);
+    aiCard.appendChild(aih);
+    frag.appendChild(aiCard);
+  }
+
+  // ── Tomorrow reminder ──────────────────────────────────────
+  const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowStr=tomorrow.toISOString().split('T')[0];
+  const tmrW=plants.filter(p=>p.nextWatering===tomorrowStr&&p.lastWatered!==td());
+  if(tmrW.length>0){
+    const tc=el('div',{cls:'notif-card'});
+    const th=el('div',{cls:'notif-header'});
+    const ti=el('div',{cls:'notif-icon',style:{background:'rgba(0,201,110,.1)',color:'var(--gr-d)'}});
+    ti.appendChild(icon('sunrise','',16));
+    th.appendChild(ti);
+    th.appendChild(el('div',{cls:'notif-title'},'Mañana toca regar'));
+    th.appendChild(el('div',{cls:'notif-count'},tmrW.length));
+    tc.appendChild(th);
+    tmrW.forEach(p=>{
+      const item=el('div',{cls:'notif-item'});
+      item.appendChild(plantPhoto(p,34,10));
+      item.appendChild(el('span',{cls:'f1 fw7 fs13'},p.name));
+      item.appendChild(el('span',{cls:'fs11 fw7',style:{color:'var(--gr-d)'}},'Mañana'));
+      tc.appendChild(item);
+    });
+    frag.appendChild(tc);
+  }
+
+  // ── Plant list header ──────────────────────────────────────
+  frag.appendChild(el('div',{cls:'flex jb ac',style:{marginTop:'8px',marginBottom:'14px'}},
+    el('div',{style:{fontSize:'20px',fontWeight:800,letterSpacing:'-.04em',color:'var(--t1)'}},'Mis plantas'),
+    el('button',{cls:'sort-pill on',$click:()=>{page='list';render();}},'Ver todas')
+  ));
+  if(plants.length===0){
+    const empty=el('div',{cls:'notif-card',style:{padding:'32px 20px',textAlign:'center'}});
+    const ei=el('div',{style:{color:'var(--t4)',margin:'0 auto 16px',width:'fit-content'}});
+    ei.appendChild(icon('plant_empty','',56));
+    empty.appendChild(ei);
+    empty.appendChild(el('div',{style:{fontWeight:800,fontSize:'18px',letterSpacing:'-.03em',marginBottom:'6px'}},'Sin plantas aún'));
+    empty.appendChild(el('div',{cls:'fs13 ci3',style:{marginBottom:'20px'}},'Empieza añadiendo tu primera'));
+    const addBtn=el('button',{cls:'btn btn-p',style:{gap:'7px'},$click:()=>{_fp=BP();aiState='idle';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;activeSheet='plant';render();}});
+    addBtn.appendChild(icon('plus','',16));addBtn.append('Añadir planta');
+    empty.appendChild(addBtn);
+    frag.appendChild(empty);
+  } else {
+    plants.slice(0,3).forEach(p=>frag.appendChild(buildPlantCard(p,true)));
+    if(plants.length>3){
+      const moreBtn=el('button',{cls:'btn btn-s btn-full',style:{marginTop:'8px',gap:'6px'},$click:()=>{page='list';render();}});
+      moreBtn.append('Ver las '+plants.length+' plantas');
+      moreBtn.appendChild(icon('chevron_r','',14));
+      frag.appendChild(moreBtn);
+    }
+  }
   return frag;
 }
 
-function statBox(n,label,color){return el('div',{cls:'sb2'},el('div',{cls:'sn',style:{color}},String(n)),el('div',{cls:'sl',style:{marginBottom:0,marginTop:'3px'}},label));}
+function statBox(n,label,color){return el('div',{cls:'stat-cell'},el('div',{cls:'stat-num',style:{color}},String(n)),el('div',{cls:'stat-lbl'},label));}
 
 function buildWeatherCard(){
-  if(wxState==='loading')return el('div',{cls:'card flex ac gap10',style:{padding:'14px 18px'}},el('div',{style:{width:'8px',height:'8px',borderRadius:'50%',background:'#52b788',animation:'pulse 1s infinite'}}),el('span',{cls:'fs13 ci3'},'Obteniendo clima…'));
-  if(!weather)return el('div',{cls:'wx-card'},el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'28px'}},'🌍'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs14'},'Sin datos de clima'),el('div',{cls:'fs12 ci3'},'Necesitas permitir la ubicación')),btn('↻ Obtener','btn-p btn-sm',fetchWeather)));
+  if(wxState==='loading'){
+    const c=el('div',{cls:'notif-card',style:{marginBottom:'10px',padding:'16px'}});
+    const h=el('div',{cls:'flex ac gap10'});
+    const dot=el('div',{style:{width:'8px',height:'8px',borderRadius:'50%',background:'var(--gr-d)',animation:'pulse 1s infinite',flexShrink:0}});
+    h.appendChild(dot);h.appendChild(el('span',{cls:'fs13 ci3'},'Obteniendo clima…'));
+    c.appendChild(h);return c;
+  }
+  if(!weather){
+    const c=el('div',{cls:'notif-card',style:{marginBottom:'10px'}});
+    const h=el('div',{cls:'notif-header'});
+    const ic=el('div',{cls:'notif-icon',style:{background:'rgba(0,102,255,.1)',color:'var(--bl)'}});
+    ic.appendChild(icon('cloud','',16));h.appendChild(ic);
+    h.appendChild(el('div',{cls:'f1'},el('div',{cls:'fw7 fs13'},'Sin datos de clima'),el('div',{cls:'fs12 ci3'},'Necesitas permitir la ubicación')));
+    const ob=el('button',{cls:'btn btn-p btn-sm',style:{gap:'5px'},$click:fetchWeather});ob.appendChild(icon('location','',13));ob.append('Obtener');
+    h.appendChild(ob);c.appendChild(h);return c;
+  }
   const rain=weather.rain||0,thresh=S.settings.rainMm||8;
-  return el('div',{cls:'wx-card'},
-    el('div',{cls:'flex ac gap12'},
-      el('div',{style:{fontSize:'36px'}},(WEMOJI[weather.code]||'🌡️')),
-      el('div',{cls:'f1'},
-        el('div',{style:{fontSize:'21px',fontWeight:'700',fontFamily:'var(--fd)'}},weather.temp+'°C ',el('span',{cls:'fs13 ci3',style:{fontFamily:'var(--fb)',fontWeight:'400'}},(WTXT[weather.code]||''))),
-        el('div',{cls:'fs12 ci3 mt4'},'📍 '+weather.city+' · 💧'+weather.humidity+'% · 💨'+weather.wind+'km/h'+(rain>0?' · 🌧️ '+rain+'mm':''))
-      ),
-      el('button',{style:{background:'none',border:'none',cursor:'pointer',color:'var(--i3)',fontSize:'16px',padding:'4px'},$click:fetchWeather},'↻')
-    ),
-    rain>=thresh?el('div',{style:{marginTop:'10px',background:'rgba(29,78,216,.07)',borderRadius:'10px',padding:'8px 12px',fontSize:'12px',color:'var(--bl)',fontWeight:'600'}},'🌧️ '+rain+'mm — riego exterior postponido automáticamente'):null
-  );
+  const c=el('div',{cls:'notif-card',style:{marginBottom:'10px'}});
+  const main=el('div',{style:{padding:'16px 16px 14px',display:'flex',alignItems:'center',gap:'14px'}});
+  // Weather icon (emoji in a styled box)
+  const emojiBox=el('div',{style:{width:'52px',height:'52px',borderRadius:'16px',background:'rgba(0,0,0,.04)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'28px',flexShrink:0}});
+  emojiBox.textContent=WEMOJI[weather.code]||'🌤';
+  main.appendChild(emojiBox);
+  const info=el('div',{cls:'f1'});
+  info.appendChild(el('div',{style:{fontSize:'32px',fontWeight:800,letterSpacing:'-.05em',lineHeight:1,color:'var(--t1)'}},weather.temp+'°C'));
+  info.appendChild(el('div',{style:{fontSize:'13px',fontWeight:600,color:'var(--t2)',marginTop:'2px'}},(WTXT[weather.code]||'')));
+  const locLine=el('div',{cls:'flex ac gap4',style:{marginTop:'5px'}});
+  locLine.appendChild(icon('location','ci3',11));
+  locLine.appendChild(el('span',{cls:'fs11 ci3'},weather.city));
+  info.appendChild(locLine);
+  main.appendChild(info);
+  // Meta
+  const meta=el('div',{style:{textAlign:'right',flexShrink:0}});
+  meta.appendChild(el('div',{cls:'fs12 fw7',style:{color:'var(--t2)'}},weather.humidity+'%'));
+  meta.appendChild(el('div',{cls:'fs10 ci3'},'Humedad'));
+  meta.appendChild(el('div',{cls:'fs12 fw7 mt8',style:{color:'var(--t2)'}},weather.wind+' km/h'));
+  meta.appendChild(el('div',{cls:'fs10 ci3'},'Viento'));
+  main.appendChild(meta);
+  // Refresh btn
+  const rfBtn=el('button',{style:{background:'none',border:'none',cursor:'pointer',color:'var(--t3)',padding:'4px',marginLeft:'2px',flexShrink:0},$click:fetchWeather});
+  rfBtn.appendChild(icon('refresh','',16));
+  main.appendChild(rfBtn);
+  c.appendChild(main);
+  if(rain>=thresh){
+    const rainBar=el('div',{style:{margin:'0 16px 12px',background:'rgba(14,165,233,.08)',borderRadius:'12px',padding:'9px 14px',fontSize:'12px',fontWeight:700,color:'#0ea5e9',display:'flex',alignItems:'center',gap:'8px'}});
+    rainBar.appendChild(icon('rain','',14));
+    rainBar.append(' '+rain+'mm — riego exterior pospuesto');
+    c.appendChild(rainBar);
+  }
+  return c;
 }
 
 // ═══════════════════════════════════
 // PLANT CARD
 // ═══════════════════════════════════
-function buildPlantCard(p){
+function buildPlantCard(p,gradient=false){
   const du=daysUntil(p.nextWatering),overdue=du!==null&&du<=0;
   const checkDue=daysUntil(p.nextCheck)!==null&&daysUntil(p.nextCheck)<=0;
   const vi=VIT[p.vitality]||VIT['bueno'];
   const tlDue=p.nextTimelapseDate&&td()>=p.nextTimelapseDate;
+  const streak=p.waterStreak||0;
+  const wateredToday=p.lastWatered===td();
+
+  // ── Gradient card style (home) ──
+  if(gradient){
+    const grad=plantGrad(p);
+    const card=el('div',{
+      cls:'gcard',
+      style:{background:grad,cursor:'pointer'},
+      $click:()=>{selId=p.id;activeTab='ficha';page='detail';render();}
+    });
+    card.appendChild(el('div',{cls:'gcard-orb'}));
+    card.appendChild(el('div',{cls:'gcard-orb2'}));
+    const top=el('div',{cls:'flex jb ac'});
+    const titleBlock=el('div',{});
+    titleBlock.appendChild(el('div',{cls:'gcard-title'},p.name));
+    if(p.species)titleBlock.appendChild(el('div',{cls:'gcard-sub'},p.species));
+    top.appendChild(titleBlock);
+    // Plant photo if exists
+    if(p.photo){
+      const img=el('img',{cls:'',style:{width:'64px',height:'64px',borderRadius:'16px',objectFit:'cover',border:'2.5px solid rgba(255,255,255,.35)',flexShrink:0}});
+      img.src=p.photo;top.appendChild(img);
+    } else {
+      const em=el('div',{style:{width:'56px',height:'56px',borderRadius:'14px',background:'rgba(255,255,255,.2)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}});
+      em.appendChild(icon('leaf','',24));em.style.color='rgba(255,255,255,.8)';
+      top.appendChild(em);
+    }
+    card.appendChild(top);
+    // Bottom row
+    const bot=el('div',{cls:'flex jb ac',style:{marginTop:'12px'}});
+    const badges=el('div',{cls:'flex gap6'});
+    // Water status badge
+    const wLabel=overdue?'Regar ya':du===0?'Regar hoy':du===1?'Mañana':'en '+du+'d';
+    const wb=el('div',{cls:'gcard-badge'});
+    wb.appendChild(icon('water','',12));wb.append(' '+wLabel);
+    badges.appendChild(wb);
+    if(streak>=3){const sb=el('div',{cls:'gcard-badge'});sb.appendChild(icon('flame','',12));sb.append(' '+streak);badges.appendChild(sb);}
+    bot.appendChild(badges);
+    // Water button
+    const wBtn=el('button',{
+      style:{width:'36px',height:'36px',borderRadius:'50%',background:'rgba(255,255,255,.25)',border:'1.5px solid rgba(255,255,255,.35)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',flexShrink:0,transition:'background .12s'},
+      $click:e=>{e.stopPropagation();waterPlant(p.id);}
+    });
+    wBtn.appendChild(wateredToday?icon('check','',15):icon('water','',15));
+    bot.appendChild(wBtn);
+    card.appendChild(bot);
+    return card;
+  }
+
+  // ── Standard list card ──
+  // Quick action circular buttons
+  const qStyle={width:'34px',height:'34px',borderRadius:'50%',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'transform .1s'};
+  const quickWater=el('button',{style:{...qStyle,background:wateredToday?'rgba(0,0,0,.07)':'#0ea5e9',color:wateredToday?'var(--t3)':'#fff',opacity:wateredToday?.8:1},$click:e=>{e.stopPropagation();waterPlant(p.id);}});
+  quickWater.appendChild(wateredToday?icon('check','',15):icon('water','',15));
+
+  let quickCheck=null;
+  if(checkDue&&getKey()){
+    quickCheck=el('button',{style:{...qStyle,background:'rgba(139,92,246,.15)',color:'var(--pu)'},$click:e=>{e.stopPropagation();selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();}});
+    quickCheck.appendChild(icon('sparkle','',15));
+  }
+
   return el('div',{cls:'pc',$click:()=>{selId=p.id;activeTab='ficha';page='detail';render();}},
     el('div',{cls:'pc-line',style:{background:vi.dot}}),
     el('div',{style:{position:'relative',flexShrink:0}},plantPhoto(p),tlDue?el('div',{cls:'tl-badge'}):null),
     el('div',{cls:'pc-info'},
-      el('div',{cls:'flex ac gap8 mb4'},el('span',{cls:'pc-name'},p.name),vbadge(p.vitality)),
+      el('div',{cls:'flex ac gap8 mb4'},
+        el('span',{cls:'pc-name'},p.name),
+        vbadge(p.vitality),
+        streak>=3?el('span',{cls:'flex ac gap4',style:{color:'#f97316',fontSize:'11px',fontWeight:700,fontFamily:'var(--fm)'}},icon('flame','',13),' '+streak):null
+      ),
       el('div',{cls:'pc-sp'},p.species||'Especie sin especificar'),
-      el('div',{cls:'pc-meta'},el('span',{cls:'fs12 ci3'},'📍 '+(p.location||'—')),overdue?el('span',{cls:'fs12 fw7 cam'},'💧 Regar ya'):null,checkDue&&getKey()?el('span',{cls:'fs12 fw7 cbl'},'🔬 Revisar'):null)
+      el('div',{cls:'pc-meta'},
+        el('span',{cls:'flex ac gap4 fs12 ci3'},icon('location','ci3',11),' '+(p.location||'Sin ubicar')),
+        overdue?el('span',{cls:'fs12 fw7 cam'},'Regar ya'):du===1?el('span',{cls:'fs12 ci3'},'mañana'):du!==null&&du<=3?el('span',{cls:'fs12 ci3'},'en '+du+'d'):null
+      )
     ),
-    el('div',{cls:'ci3',style:{fontSize:'18px',flexShrink:0}},'›')
+    el('div',{cls:'flex gap6 ac',style:{flexShrink:0}},quickCheck,quickWater)
   );
 }
 
@@ -879,10 +1718,45 @@ function buildPlantCard(p){
 // ═══════════════════════════════════
 function buildList(){
   const frag=document.createDocumentFragment();
-  const inp=el('input',{type:'text',placeholder:'Buscar plantas…',style:{marginBottom:'12px',display:'block'},val:search});
+
+  // Search
+  const searchWrap=el('div',{cls:'search-wrap'});
+  const si=el('div',{cls:'search-icon'});si.appendChild(icon('search','',15));
+  searchWrap.appendChild(si);
+  const inp=el('input',{type:'text',placeholder:'Buscar por nombre o especie…',val:search});
   inp.addEventListener('input',e=>{search=e.target.value;render();});
-  frag.appendChild(inp);
-  const filtered=S.plants.filter(p=>p.name.toLowerCase().includes(search.toLowerCase())||(p.species||'').toLowerCase().includes(search.toLowerCase()));
+  searchWrap.appendChild(inp);
+  frag.appendChild(searchWrap);
+
+  // Sort pills
+  const sorts=[
+    {id:'next-water',label:'Riego',iconName:'water'},
+    {id:'name',label:'A–Z',iconName:'leaf'},
+    {id:'vitality',label:'Salud',iconName:'sparkle'},
+    {id:'acquired',label:'Nuevas',iconName:'calendar'},
+  ];
+  const sortRow=el('div',{cls:'flex gap6',style:{marginBottom:'14px',overflowX:'auto',paddingBottom:'2px'}});
+  sorts.forEach(s=>{
+    const active=listSort===s.id;
+    const pill=el('button',{
+      cls:'sort-pill'+(active?' on':''),
+      $click:()=>{listSort=s.id;render();}
+    },s.label);
+    sortRow.appendChild(pill);
+  });
+  frag.appendChild(sortRow);
+
+  let filtered=S.plants.filter(p=>p.name.toLowerCase().includes(search.toLowerCase())||(p.species||'').toLowerCase().includes(search.toLowerCase()));
+
+  // Sort
+  const vitOrder={óptimo:0,bueno:1,atención:2,crítico:3};
+  if(listSort==='next-water')filtered=[...filtered].sort((a,b)=>{
+    const da=daysUntil(a.nextWatering)??99,db=daysUntil(b.nextWatering)??99;return da-db;
+  });
+  else if(listSort==='name')filtered=[...filtered].sort((a,b)=>a.name.localeCompare(b.name,'es'));
+  else if(listSort==='vitality')filtered=[...filtered].sort((a,b)=>(vitOrder[a.vitality]??1)-(vitOrder[b.vitality]??1));
+  else if(listSort==='acquired')filtered=[...filtered].sort((a,b)=>new Date(b.acquired)-new Date(a.acquired));
+
   frag.appendChild(el('div',{cls:'sl'},filtered.length+' PLANTAS'));
   if(filtered.length===0)frag.appendChild(el('div',{cls:'empty ci3'},'Sin resultados 🌿'));
   filtered.forEach(p=>frag.appendChild(buildPlantCard(p)));
@@ -909,7 +1783,7 @@ function buildDetail(){
   // Photo with edit button
   const photoWrap=el('div',{style:{position:'relative',flexShrink:0}});
   photoWrap.appendChild(plantPhoto(p,80,18));
-  const editPhotoLbl=el('label',{style:{position:'absolute',bottom:'-4px',right:'-4px',width:'26px',height:'26px',borderRadius:'50%',background:'var(--gr)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:'12px',border:'2px solid white',boxShadow:'0 2px 6px rgba(0,0,0,.2)'}},'📷');
+  const editPhotoLbl=el('label',{style:{position:'absolute',bottom:'-4px',right:'-4px',width:'26px',height:'26px',borderRadius:'50%',background:'var(--t1)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',border:'2px solid white',boxShadow:'0 2px 8px rgba(0,0,0,.22)',color:'white'}});editPhotoLbl.appendChild(icon('camera','',12));
   const editPhotoInput=el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'}});
   editPhotoInput.addEventListener('change',async e=>{
     const file=e.target.files?.[0];if(!file)return;
@@ -921,7 +1795,14 @@ function buildDetail(){
   photoWrap.appendChild(editPhotoLbl);
   heroTop.appendChild(photoWrap);
   const heroInfo=el('div',{cls:'f1'});
-  heroInfo.appendChild(el('div',{style:{fontFamily:'var(--fd)',fontSize:'22px',fontWeight:'800',letterSpacing:'-.02em',marginBottom:'4px'}},p.name));
+  heroInfo.appendChild(el('div',{cls:'flex ac gap8 mb4'},
+    el('div',{style:{fontSize:'22px',fontWeight:'800',letterSpacing:'-.04em',lineHeight:'1.1'}},p.name),
+    el('button',{cls:'btn btn-sm',style:{padding:'4px 10px',flexShrink:0,gap:'5px'},$click:()=>{
+      _fp={...p,tags:(p.tags||[]).join(',')};
+      aiState='done';aiIdent=null;wizStep=0;wizAnswers={};wizResult=null;wizPhoto=p.photo||null;wizPhotoB64=null;
+      activeSheet='plant';render();
+    }},icon('edit','',14),'Editar')
+  ));
   heroInfo.appendChild(el('div',{cls:'fs13 ci3 italic mb8'},p.species||'—'));
   heroInfo.appendChild(vbadge(p.vitality,true));
   heroTop.appendChild(heroInfo);
@@ -933,14 +1814,27 @@ function buildDetail(){
     '🔬 Próximo check: '+(nextCheckDays===null?'—':nextCheckDays<=0?'¡Pendiente ahora!':nextCheckDays===1?'Mañana':'en '+nextCheckDays+' días')+
     (p.checkIntervalDays?' · cada '+p.checkIntervalDays+' días':'')
   ));
-  const actions=el('div',{cls:'flex gap8 mt14'});
-  const wbtn=btn('💧 Regar'+(p.lastWatered===td()?' (hoy ✓)':''),'btn-p f1 fs13',()=>{if(p.lastWatered===td()){toast('Ya fue regada hoy','w');return;}waterPlant(p.id);});
-  actions.appendChild(wbtn);
-  const cbtn=btn('🔬 '+(checkDue?'¡Revisar ya!':'Analizar'),'btn-s f1 fs13',()=>{selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();});
-  if(checkDue){cbtn.style.background='#eff6ff';cbtn.style.color='var(--bl)';cbtn.style.borderColor='#bfdbfe';}
-  if(!getKey()){cbtn.style.opacity='0.5';}
-  actions.appendChild(cbtn);
-  hero.appendChild(actions);
+  // ── Action cards ────────────────────────────────────────────
+  const actRow=el('div',{cls:'action-row mt14'});
+  // Water card
+  const wDone=p.lastWatered===td();
+  const du2=daysUntil(p.nextWatering);
+  const wCard=el('button',{cls:'action-card action-card-water'+(wDone?' action-card-done':''),$click:()=>{if(wDone){toast('Ya fue regada hoy','i');return;}waterPlant(p.id);}});
+  const wIcon=el('div',{cls:'action-card-icon'});wIcon.appendChild(icon(wDone?'check':'water','',18));
+  wCard.appendChild(wIcon);
+  wCard.appendChild(el('div',{cls:'action-card-value'},wDone?'Regada':'Regar'));
+  wCard.appendChild(el('div',{cls:'action-card-label'},wDone?'Hoy':'hoy'));
+  if(du2!==null)wCard.appendChild(el('div',{cls:'action-card-sub'},du2<=0?'Toca hoy':du2===1?'Mañana':'+'+du2+' días'));
+  actRow.appendChild(wCard);
+  // Check card
+  const cCard=el('button',{cls:'action-card action-card-check',style:{opacity:getKey()?1:.5},$click:()=>{if(!getKey())return;selId=p.id;checkState='idle';checkResult=null;activeSheet='check';render();}});
+  const cIcon=el('div',{cls:'action-card-icon'});cIcon.appendChild(icon(checkDue?'sparkle':'eye','',18));
+  cCard.appendChild(cIcon);
+  cCard.appendChild(el('div',{cls:'action-card-value'},checkDue?'Revisar':'Analizar'));
+  cCard.appendChild(el('div',{cls:'action-card-label'},checkDue?'¡Pendiente!':'salud IA'));
+  if(p.lastCheck)cCard.appendChild(el('div',{cls:'action-card-sub'},'Último: '+fmtS(p.lastCheck)));
+  actRow.appendChild(cCard);
+  hero.appendChild(actRow);
   frag.appendChild(hero);
   const tabs=['ficha','historial','crecimiento','cuidados'];
   if(p.lastCheckFull)tabs.splice(1,0,'análisis');
@@ -963,8 +1857,8 @@ function buildTabAnalisis(p){
 
   // Score card
   const scoreCard=el('div',{cls:'card',style:{textAlign:'center',padding:'20px'}});
-  scoreCard.appendChild(el('div',{style:{fontSize:'13px',fontFamily:'var(--fm)',letterSpacing:'.06em',color:'var(--i3)',marginBottom:'8px'}},'ÚLTIMO ANÁLISIS · '+fmtL(r.date)));
-  scoreCard.appendChild(el('div',{style:{fontSize:'52px',fontWeight:'900',fontFamily:'var(--fd)',color:vi.dot,lineHeight:'1'}},r.score,el('span',{style:{fontSize:'18px',fontWeight:'400',color:vi.color}},'/100')));
+  scoreCard.appendChild(el('div',{style:{fontSize:'13px',fontFamily:'var(--fm)',letterSpacing:'.06em',color:'var(--t3)',marginBottom:'8px'}},'ÚLTIMO ANÁLISIS · '+fmtL(r.date)));
+  scoreCard.appendChild(el('div',{style:{fontSize:'52px',fontWeight:'800',letterSpacing:'-.06em',color:vi.dot,lineHeight:'1'}},r.score,el('span',{style:{fontSize:'18px',fontWeight:'600',color:vi.color}},'/100')));
   scoreCard.appendChild(el('div',{style:{marginTop:'10px'}},vbadge(r.vitality,true)));
   scoreCard.appendChild(el('div',{cls:'sbt mt12'},el('div',{cls:'sbf',style:{width:r.score+'%',background:vi.dot}})));
   scoreCard.appendChild(el('div',{style:{marginTop:'10px',fontSize:'18px',fontWeight:'800',fontFamily:'var(--fd)',color:vi.color}},r.headline));
@@ -983,7 +1877,7 @@ function buildTabAnalisis(p){
     r.actions.forEach(a=>{
       const pcolor=a.priority==='alta'?'var(--rd)':a.priority==='media'?'var(--am)':'var(--gr)';
       const pbg=a.priority==='alta'?'#fef2f2':a.priority==='media'?'#fffbeb':'#f0faf4';
-      ac.appendChild(el('div',{cls:'ri ac',style:{padding:'10px 0',borderBottom:'1px solid var(--bd)'}},
+      ac.appendChild(el('div',{cls:'ri ac',style:{padding:'10px 0',borderBottom:'1px solid var(--sep)'}},
         el('span',{cls:'fs10 fw8 fm upper',style:{padding:'3px 8px',borderRadius:'100px',background:pbg,color:pcolor,flexShrink:0}},a.priority),
         el('span',{cls:'f1 fs13 ci2',style:{lineHeight:'1.6'}},a.action)
       ));
@@ -996,7 +1890,7 @@ function buildTabAnalisis(p){
     const pc=el('div',{cls:'card alert-g'});
     pc.appendChild(el('div',{cls:'sl sl-gr'},'✅ Puntos positivos'));
     r.positives.forEach(pos=>pc.appendChild(el('div',{cls:'ri',style:{padding:'6px 0'}},
-      el('span',{style:{color:'var(--gr)',fontWeight:'700',marginRight:'8px'}},'✓'),
+      el('span',{style:{color:'var(--gr-d)',fontWeight:'700',marginRight:'8px'}},'✓'),
       el('span',{cls:'f1 fs13 ci2'},pos)
     )));
     frag.appendChild(pc);
@@ -1056,7 +1950,7 @@ function buildTabTimelapse(p){
   }
   // Add photo button
   const addLabel=el('label',{cls:'btn btn-p btn-full',style:{cursor:'pointer',display:'block',textAlign:'center'}},
-    photos.length>=MAX?'Límite alcanzado ('+MAX+')':'📷 '+(photos.length===0?'Primera foto del timelapse':'Añadir foto de hoy')
+    photos.length>=MAX?'Límite alcanzado ('+MAX+')':photos.length===0?'Primera foto':'Añadir foto de hoy'
   );
   if(photos.length<MAX){
     const fi=el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'}});
@@ -1165,7 +2059,7 @@ function buildTabTimelapse(p){
 function buildTabFicha(p,last,du,vi){
   const frag=document.createDocumentFragment();
   frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Datos de cuidado'),el('div',{cls:'ig'},...[['💧','Riego',p.watering],['☀️','Luz',p.sunlight],['🪴','Maceta',p.pot],['🌍','Sustrato',p.soil],['🧪','Fertilizante',p.fertilizer],['📅','Adquirida',fmtL(p.acquired)]].map(([e,l,v])=>el('div',{cls:'ic'},el('div',{cls:'ic-l'},e+' '+l),el('div',{cls:'ic-v'},v||'—'))))));
-  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Riego'),el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fs13 ci3'},'Último: ',el('b',{style:{color:'var(--i1)'}},fmt(p.lastWatered))),el('div',{cls:'fs13 fw7 mt4',style:{color:du!==null&&du<=0?'var(--am)':'var(--gr)'}},'Próximo: '+(p.nextWatering?fmt(p.nextWatering)+' '+(du!==null?(du<=0?'(¡ya!)':`(${du}d)`):''):'No programado'))),p.outdoor&&weather?el('div',{cls:'tr'},el('div',{cls:'sl',style:{marginBottom:'2px'}},'UMBRAL'),el('div',{cls:'fs14 fw7',style:{color:weather.rain>=(S.settings.rainMm||8)?'var(--bl)':'var(--i3)'}},(S.settings.rainMm||8)+'mm')):null)));
+  frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Riego'),el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fs13 ci3'},'Último: ',el('b',{style:{color:'var(--t1)'}},fmt(p.lastWatered))),el('div',{cls:'fs13 fw7 mt4',style:{color:du!==null&&du<=0?'var(--am)':'var(--gr)'}},'Próximo: '+(p.nextWatering?fmt(p.nextWatering)+' '+(du!==null?(du<=0?'(¡ya!)':`(${du}d)`):''):'No programado'))),p.outdoor&&weather?el('div',{cls:'tr'},el('div',{cls:'sl',style:{marginBottom:'2px'}},'UMBRAL'),el('div',{cls:'fs14 fw7',style:{color:weather.rain>=(S.settings.rainMm||8)?'var(--bl)':'var(--t3)'}},(S.settings.rainMm||8)+'mm')):null)));
   if(last)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Último registro · '+fmt(last.date)),el('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'8px',textAlign:'center'}},el('div',{cls:'ic tc'},el('div',{cls:'sn cgr',style:{fontSize:'22px'}},last.height,el('span',{cls:'fs11'},'cm')),el('div',{cls:'sl',style:{marginBottom:0}},'ALTURA')),el('div',{cls:'ic tc'},el('div',{cls:'sn cgr',style:{fontSize:'22px'}},last.leaves),el('div',{cls:'sl',style:{marginBottom:0}},'HOJAS')),el('div',{cls:'ic',style:{display:'flex',alignItems:'center',justifyContent:'center'}},vbadge(last.vitality))),last.note?el('div',{cls:'quote'},'"'+last.note+'"'):null));
   if(p.notes)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Notas'),el('p',{cls:'fs13 ci2',style:{lineHeight:'1.7'}},p.notes)));
   if((p.tags||[]).length>0)frag.appendChild(el('div',{style:{marginBottom:'10px'}},...p.tags.map(t=>el('span',{cls:'pill'},'#'+t))));
@@ -1189,7 +2083,7 @@ function buildTabCrecimiento(p){
   if(sp)chartCard.appendChild(sp);else chartCard.appendChild(el('div',{cls:'tc ci3 fs13',style:{padding:'20px'}},'Agrega 2+ registros para ver la gráfica'));
   frag.appendChild(chartCard);
   const hs=(p.entries||[]).map(e=>e.height).filter(h=>h>0);
-  if(hs.length>=2){const mx=Math.max(...hs),mn=Math.min(...hs),gr=mx-mn,days=Math.max(1,(new Date(p.entries[p.entries.length-1].date)-new Date(p.entries[0].date))/864e5);frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Estadísticas'),el('div',{cls:'ig'},...[[mx+'cm','Altura máx'],['+'+gr+'cm','Crecimiento total'],[(gr/days*30).toFixed(1)+'cm','Por mes'],[p.entries.length+'','Registros']].map(([v,l])=>el('div',{cls:'ic tc'},el('div',{style:{fontSize:'20px',fontWeight:'800',fontFamily:'var(--fd)',color:'var(--gr)'}},v),el('div',{cls:'sl',style:{marginBottom:0}},l))))));}
+  if(hs.length>=2){const mx=Math.max(...hs),mn=Math.min(...hs),gr=mx-mn,days=Math.max(1,(new Date(p.entries[p.entries.length-1].date)-new Date(p.entries[0].date))/864e5);frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl'},'Estadísticas'),el('div',{cls:'ig'},...[[mx+'cm','Altura máx'],['+'+gr+'cm','Crecimiento total'],[(gr/days*30).toFixed(1)+'cm','Por mes'],[p.entries.length+'','Registros']].map(([v,l])=>el('div',{cls:'ic tc'},el('div',{style:{fontSize:'20px',fontWeight:'800',fontFamily:'var(--fd)',color:'var(--gr-d)'}},v),el('div',{cls:'sl',style:{marginBottom:0}},l))))));}
   return frag;
 }
 
@@ -1245,10 +2139,10 @@ function buildTabCuidados(p){
         saveS();toast('✅ Guía IA generada');render();
       }catch(e){toast('Error generando guía','w');}
     }},
-      el('div',{cls:'flex ac gap10'},el('span',{style:{fontSize:'24px'}},'🤖'),el('div',{cls:'f1'},el('div',{cls:'fw7 fs13 cpu'},'Generar guía personalizada con IA'),el('div',{cls:'fs12 ci3'},'Análisis de cuidados adaptado a tu planta y clima')),el('span',{cls:'ci3',style:{fontSize:'18px'}},'›'))
+      el('div',{cls:'flex ac gap10'},icon('brain','',22),el('div',{cls:'f1'},el('div',{cls:'fw7 fs13 cpu'},'Generar guía personalizada con IA'),el('div',{cls:'fs12 ci3'},'Análisis de cuidados adaptado a tu planta y clima')),el('span',{cls:'ci3',style:{fontSize:'18px'}},'›'))
     ));
   }
-  if(p.outdoor)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl sl-bl'},'🌧️ Umbral lluvia'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}}),el('div',{cls:'fs12 ci3 mt4'},'mm para riego automático exterior')));
+  if(p.outdoor)frag.appendChild(el('div',{cls:'card'},el('div',{cls:'sl sl-bl'},'Umbral de lluvia'),el('input',{type:'number',min:'1',max:'50',val:String(S.settings.rainMm||8),$input:e=>{S.settings.rainMm=Number(e.target.value);saveS();}}),el('div',{cls:'fs12 ci3 mt4'},'mm para riego automático exterior')));
   return frag;
 }
 
@@ -1260,17 +2154,94 @@ function buildStats(){
   const tg=plants.reduce((a,p)=>{const h=(p.entries||[]).map(e=>e.height||0);return a+(h.length>=2?Math.max(...h)-Math.min(...h):0);},0);
   const byV=Object.entries(plants.reduce((a,p)=>({...a,[p.vitality]:(a[p.vitality]||0)+1}),{}));
   const byL=Object.entries(plants.reduce((a,p)=>({...a,[p.location||'Sin ubicar']:(a[p.location||'Sin ubicar']||0)+1}),{}));
+  const optimo=plants.filter(p=>p.vitality==='óptimo').length;
+  const exterior=plants.filter(p=>p.outdoor).length;
   const frag=document.createDocumentFragment();
-  frag.appendChild(el('div',{cls:'sg2'},...[[plants.length,'Total plantas 🌿'],[tg+'cm','Crecimiento total 📈'],[plants.filter(p=>p.outdoor).length,'Exterior 🌳'],[plants.filter(p=>p.vitality==='óptimo').length,'Estado óptimo ✨']].map(([n,l])=>el('div',{cls:'sb2'},el('div',{cls:'sn cgr'},String(n)),el('div',{cls:'sl',style:{marginBottom:0,marginTop:'3px'}},l)))));
-  const vitCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Estado de vitalidad'));
-  byV.forEach(([v,c])=>{const vi=VIT[v]||VIT['bueno'];vitCard.appendChild(el('div',{cls:'pr'},vbadge(v),el('div',{cls:'pt'},el('div',{cls:'pf',style:{width:(c/plants.length*100)+'%',background:vi.dot}})),el('span',{cls:'fs12 fw7',style:{color:vi.color,minWidth:'16px',textAlign:'right'}},c)));});
-  frag.appendChild(vitCard);
-  const locCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Por ubicación'));
-  byL.forEach(([l,c])=>locCard.appendChild(el('div',{cls:'ri'},el('span',{cls:'f1 fs13 ci2'},l),el('span',{cls:'fw7 cgr'},String(c)))));
-  frag.appendChild(locCard);
-  const wCard=el('div',{cls:'card'},el('div',{cls:'sl'},'Próximos riegos'));
-  plants.filter(p=>p.nextWatering).sort((a,b)=>new Date(a.nextWatering)-new Date(b.nextWatering)).slice(0,6).forEach(p=>{const d=daysUntil(p.nextWatering);wCard.appendChild(el('div',{cls:'ri'},plantPhoto(p,32,8),el('span',{cls:'f1 fs13'},p.name),el('span',{cls:'fs12 fw7 fm',style:{color:d<=0?'var(--am)':'var(--gr)'}},d<=0?'¡Hoy!':d===1?'Mañana':d+'d')));});
-  frag.appendChild(wCard);
+
+  // ── Big number grid ──────────────────────────────────────
+  const bigGrid=el('div',{cls:'stats-big-grid'});
+  function bigCell(num,label,iconName,color,bg){
+    const cell=el('div',{cls:'stats-big-cell'});
+    const top=el('div',{cls:'flex jb ac',style:{marginBottom:'10px'}});
+    const iw=el('div',{style:{width:'38px',height:'38px',borderRadius:'12px',background:bg,color:color,display:'flex',alignItems:'center',justifyContent:'center'}});
+    iw.appendChild(icon(iconName,'',18));
+    top.appendChild(iw);
+    cell.appendChild(top);
+    cell.appendChild(el('div',{cls:'stats-big-num',style:{color:color}},String(num)));
+    cell.appendChild(el('div',{cls:'stats-big-lbl'},label));
+    return cell;
+  }
+  bigGrid.appendChild(bigCell(plants.length,'Total plantas','leaf','var(--gr-d)','rgba(0,201,110,.1)'));
+  bigGrid.appendChild(bigCell(tg>0?tg+'cm':'—','Crecimiento','zap','var(--am)','rgba(255,149,0,.1)'));
+  bigGrid.appendChild(bigCell(exterior,'Exterior','garden','var(--bl)','rgba(0,102,255,.1)'));
+  bigGrid.appendChild(bigCell(optimo,'Estado óptimo','sparkle','var(--pu)','rgba(139,92,246,.1)'));
+  frag.appendChild(bigGrid);
+
+  // ── Vitality breakdown ────────────────────────────────────
+  if(plants.length>0){
+    const vitCard=el('div',{cls:'notif-card',style:{marginBottom:'8px'}});
+    const vh=el('div',{cls:'notif-header'});
+    const vi2=el('div',{cls:'notif-icon',style:{background:'rgba(0,201,110,.1)',color:'var(--gr-d)'}});
+    vi2.appendChild(icon('leaf','',16));
+    vh.appendChild(vi2);
+    vh.appendChild(el('div',{cls:'notif-title'},'Estado de vitalidad'));
+    vitCard.appendChild(vh);
+    byV.forEach(([v,c])=>{
+      const vi=VIT[v]||VIT['bueno'];
+      const pct=Math.round(c/plants.length*100);
+      const row=el('div',{style:{padding:'10px 16px',borderTop:'1px solid var(--sep)'}});
+      row.appendChild(el('div',{cls:'flex jb ac mb4'},vbadge(v),el('span',{style:{fontSize:'13px',fontWeight:800,color:'var(--t1)'}},c)));
+      const bar=el('div',{style:{height:'4px',background:'var(--sep)',borderRadius:'4px',overflow:'hidden'}});
+      const fill=el('div',{style:{height:'100%',borderRadius:'4px',background:vi.dot,width:pct+'%',transition:'width .6s'}});
+      bar.appendChild(fill);row.appendChild(bar);
+      vitCard.appendChild(row);
+    });
+    frag.appendChild(vitCard);
+  }
+
+  // ── Watering schedule ─────────────────────────────────────
+  const sorted=plants.filter(p=>p.nextWatering).sort((a,b)=>new Date(a.nextWatering)-new Date(b.nextWatering));
+  if(sorted.length>0){
+    const wc=el('div',{cls:'notif-card',style:{marginBottom:'8px'}});
+    const wh=el('div',{cls:'notif-header'});
+    const wi=el('div',{cls:'notif-icon',style:{background:'rgba(14,165,233,.1)',color:'#0ea5e9'}});
+    wi.appendChild(icon('water','',16));
+    wh.appendChild(wi);
+    wh.appendChild(el('div',{cls:'notif-title'},'Calendario de riego'));
+    wc.appendChild(wh);
+    sorted.slice(0,6).forEach(p=>{
+      const d=daysUntil(p.nextWatering);
+      const overdue=d<=0;
+      const item=el('div',{cls:'notif-item'});
+      item.appendChild(plantPhoto(p,34,10));
+      item.appendChild(el('div',{cls:'f1'},
+        el('div',{cls:'fw7 fs13'},p.name),
+        el('div',{cls:'fs11 ci3',style:{marginTop:'2px'}},p.watering||'—')
+      ));
+      item.appendChild(el('span',{style:{fontSize:'12px',fontWeight:800,color:overdue?'var(--rd)':d===1?'var(--am)':'var(--gr-d)',background:overdue?'var(--rd-bg)':d===1?'var(--am-bg)':'var(--gr-bg)',padding:'4px 10px',borderRadius:'100px'}},
+        overdue?'Hoy':d===1?'Mañana':'+'+d+'d'));
+      wc.appendChild(item);
+    });
+    frag.appendChild(wc);
+  }
+
+  // ── Location breakdown ────────────────────────────────────
+  if(byL.length>0){
+    const lc=el('div',{cls:'notif-card'});
+    const lh=el('div',{cls:'notif-header'});
+    const li=el('div',{cls:'notif-icon',style:{background:'rgba(0,102,255,.1)',color:'var(--bl)'}});
+    li.appendChild(icon('location','',16));
+    lh.appendChild(li);
+    lh.appendChild(el('div',{cls:'notif-title'},'Por ubicación'));
+    lc.appendChild(lh);
+    byL.forEach(([l,c])=>{
+      const item=el('div',{cls:'notif-item'});
+      item.appendChild(el('span',{cls:'f1 fw7 fs13',style:{textTransform:'capitalize'}},l));
+      item.appendChild(el('span',{style:{fontSize:'20px',fontWeight:800,letterSpacing:'-.04em',color:'var(--t1)'}},c));
+      lc.appendChild(item);
+    });
+    frag.appendChild(lc);
+  }
   return frag;
 }
 
@@ -1280,10 +2251,14 @@ function buildStats(){
 function buildMapPage(){
   const loc=S.settings.homeLocation;
   const frag=document.createDocumentFragment();
-  frag.appendChild(el('div',{cls:'card mb10'},el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},loc?'📍 '+loc.city:'📍 Sin ubicación guardada'),el('div',{cls:'fs12 ci3 mt4'},loc?'Toca en el mapa para cambiar tu casa':'Toca en el mapa para guardar tu casa')),btn(loc?'↻ Clima':'📡 Obtener clima','btn-p btn-sm',fetchWeather))));
+  frag.appendChild(el('div',{cls:'card mb10'},el('div',{cls:'flex jb ac'},el('div',{},el('div',{cls:'fw7 fs14'},loc?'📍 '+loc.city:'Sin ubicación guardada'),el('div',{cls:'fs12 ci3 mt4'},loc?'Toca en el mapa para cambiar tu casa':'Toca en el mapa para guardar tu casa')),btn(loc?'Actualizar clima':'Obtener clima','btn-p btn-sm',fetchWeather))));
   if(weather)frag.appendChild(el('div',{cls:'wx-card'},el('div',{cls:'flex ac gap12'},el('div',{style:{fontSize:'44px'}},(WEMOJI[weather.code]||'🌡️')),el('div',{cls:'f1'},el('div',{style:{fontFamily:'var(--fd)',fontSize:'24px',fontWeight:'800'}},weather.temp+'°C'),el('div',{cls:'fs14 ci2'},(WTXT[weather.code]||'')),el('div',{cls:'fs12 ci3 mt4'},'💧 '+weather.humidity+'% · 💨 '+weather.wind+' km/h'))),weather.rain>0?el('div',{style:{marginTop:'12px',background:'rgba(29,78,216,.08)',borderRadius:'12px',padding:'10px 14px',fontSize:'14px',color:'var(--bl)',fontWeight:'700'}},'🌧️ '+weather.rain+' mm de lluvia hoy'):null));
   frag.appendChild(el('div',{cls:'card map-card',style:{padding:'0',overflow:'hidden'}},el('div',{id:'leaflet-map'})));
-  frag.appendChild(el('div',{cls:'card mt4'},el('div',{cls:'sl'},'Leyenda'),el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'🏠'),el('span',{cls:'f1 fs13'},'Tu casa — toca para cambiar')),el('div',{cls:'ri'},el('span',{style:{fontSize:'18px'}},'📊'),el('span',{cls:'f1 fs13'},'Temperatura actual'))));
+  frag.appendChild(el('div',{cls:'card mt4'},
+  el('div',{cls:'sl'},'Leyenda'),
+  el('div',{cls:'ri'},el('div',{style:{width:'28px',height:'28px',borderRadius:'8px',background:'rgba(0,0,0,.06)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--t2)'}},icon('home','',14)),el('span',{cls:'f1 fs13'},'Tu casa — toca para cambiar')),
+  el('div',{cls:'ri'},el('div',{style:{width:'28px',height:'28px',borderRadius:'8px',background:'rgba(255,149,0,.1)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--am)'}},icon('thermometer','',14)),el('span',{cls:'f1 fs13'},'Temperatura actual'))
+));
   return frag;
 }
 
@@ -1325,7 +2300,7 @@ function buildChatPage(){
 
   // Context chips - quick plant references
   if(S.plants.length>0&&getKey()){
-    const chips=el('div',{style:{display:'flex',gap:'6px',flexWrap:'wrap',paddingBottom:'8px',borderTop:'1px solid var(--bd)',paddingTop:'8px'}});
+    const chips=el('div',{style:{display:'flex',gap:'6px',flexWrap:'wrap',paddingBottom:'8px',borderTop:'1px solid var(--sep)',paddingTop:'8px'}});
     chips.appendChild(el('span',{cls:'fs11 ci3 fm ac',style:{display:'flex',alignItems:'center',marginRight:'4px'}},'Preguntar sobre:'));
     S.plants.slice(0,4).forEach(p=>{
       chips.appendChild(el('button',{cls:'chat-sug',$click:()=>{chatInput='¿Cómo está mi '+p.name+'? ¿Qué necesita ahora?';sendChat(chatInput);}},plantPhoto(p,20,6),p.name));
@@ -1335,7 +2310,7 @@ function buildChatPage(){
   wrap.appendChild(inputRow);
 
   // Clear chat button
-  if(S.chatHistory.length>0)wrap.appendChild(el('button',{cls:'btn btn-g fs12',style:{marginTop:'4px',width:'100%',color:'var(--i3)'},$click:()=>{if(confirm('¿Borrar el historial del chat?')){S.chatHistory=[];saveS();render();}}},'Limpiar chat'));
+  if(S.chatHistory.length>0)wrap.appendChild(el('button',{cls:'btn btn-g fs12',style:{marginTop:'4px',width:'100%',color:'var(--t3)'},$click:()=>{if(confirm('¿Borrar el historial del chat?')){S.chatHistory=[];saveS();render();}}},'Limpiar chat'));
 
   return wrap;
 }
@@ -1379,7 +2354,7 @@ function buildSettings(){
 // FAB
 // ═══════════════════════════════════
 function buildFAB(){
-  const gear=el('button',{style:{position:'fixed',bottom:'calc(76px + var(--sab))',left:'20px',width:'44px',height:'44px',borderRadius:'50%',background:'var(--wh)',border:'1px solid var(--bd)',cursor:'pointer',fontSize:'18px',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px var(--sh)',zIndex:25},$click:()=>{page='settings';render();}},'⚙️');
+  const gear=el('button',{style:{position:'fixed',bottom:'calc(76px + var(--sab))',left:'20px',width:'44px',height:'44px',borderRadius:'50%',background:'var(--bg2)',border:'1px solid var(--sep)',cursor:'pointer',fontSize:'18px',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px var(--sh)',zIndex:25},$click:()=>{page='settings';render();}},'⚙️');
   if(page==='settings'||page==='map'||page==='chat'){const wrap=document.createDocumentFragment();wrap.appendChild(gear);return wrap;}
   if(page==='detail'){const wrap=document.createDocumentFragment();wrap.appendChild(gear);wrap.appendChild(el('button',{cls:'fab',style:{fontSize:'22px'},$click:()=>{_fe=BE();activeSheet='entry';render();}},'📊'));return wrap;}
   const wrap=document.createDocumentFragment();
@@ -1391,6 +2366,67 @@ function buildFAB(){
 // ═══════════════════════════════════
 // SHEET: ADD PLANT (WIZARD)
 // ═══════════════════════════════════
+// Plant picker component — shared by wizard form and AI result correction
+function buildPlantPicker(value, onSelect, placeholder='Buscar planta…'){
+  const wrap=el('div',{cls:'pp-wrap'});
+  const inp=el('input',{
+    type:'text',
+    placeholder:placeholder,
+    val:value,
+    style:{width:'100%'},
+    $input:e=>{ppQuery=e.target.value;_fp.name=e.target.value;ppOpen=true;
+      // Update list without full render for speed
+      const list=wrap.querySelector('.pp-list');
+      if(list)renderPickerList(list,onSelect);
+      else{const l=el('div',{cls:'pp-list'});renderPickerList(l,onSelect);wrap.appendChild(l);}
+    },
+    $focus:e=>{ppOpen=true;ppQuery=e.target.value;
+      if(!wrap.querySelector('.pp-list')){const l=el('div',{cls:'pp-list'});renderPickerList(l,onSelect);wrap.appendChild(l);}
+    },
+    $blur:e=>{setTimeout(()=>{const l=wrap.querySelector('.pp-list');if(l)l.remove();ppOpen=false;},200)}
+  });
+  wrap.appendChild(inp);
+  return wrap;
+}
+
+function renderPickerList(list, onSelect){
+  list.innerHTML='';
+  const results=searchPlantDB(ppQuery);
+  if(results.length===0){
+    list.appendChild(el('div',{cls:'pp-item',style:{color:'var(--t3)',fontSize:'13px'}},'Sin resultados para "'+ppQuery+'"'));
+    return;
+  }
+  results.forEach(p=>{
+    const item=el('div',{cls:'pp-item'});
+    item.appendChild(el('span',{cls:'pp-item-em'},p.i));
+    const info=el('div',{cls:'pp-item-info'});
+    info.appendChild(el('div',{cls:'pp-item-name'},p.n));
+    info.appendChild(el('div',{cls:'pp-item-sp'},p.s));
+    item.appendChild(info);
+    item.addEventListener('mousedown',e=>{e.preventDefault();onSelect(p);});
+    list.appendChild(item);
+  });
+}
+
+function applyPlantFromDB(p){
+  // Apply plant DB entry to current plant form
+  _fp.name=p.n;
+  _fp.species=p.s;
+  _fp.icon=p.i;
+  ppQuery=p.n;// keep search field showing selected name
+  // Map watering days to closest WDAYS option
+  const closest=WATERS.reduce((a,w)=>Math.abs(WDAYS[w]-p.w)<Math.abs(WDAYS[a]-p.w)?w:a,WATERS[0]);
+  _fp.watering=closest;
+  // Map sunlight
+  const sunMap={'pleno sol':'Pleno sol','sol parcial':'Sol parcial','indirecta brillante':'Indirecta brillante','indirecta':'Indirecta','sombra':'Sombra/Umbría','poca luz':'Sombra/Umbría'};
+  _fp.sunlight=sunMap[p.sun]||_fp.sunlight;
+  _fp.fertilizer=p.fert||_fp.fertilizer;
+  _fp.soil=p.soil||_fp.soil;
+  ppQuery='';ppOpen=false;
+  render();
+  toast('✅ '+p.n+' seleccionada');
+}
+
 function buildSheetPlant(){
   const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov&&!wizLoading)closeSheet();}});
   const sb=el('div',{cls:'sb'});
@@ -1403,7 +2439,7 @@ function buildSheetPlant(){
   if(wizLoading){
     sb.appendChild(el('span',{cls:'sh'}));
     sb.appendChild(el('div',{cls:'wiz-loading'},
-      el('div',{cls:'wiz-loading-em'},'🌿'),
+      el('div',{cls:'wiz-loading-em',style:{color:'var(--gr-d)'}},icon('leaf','',48)),
       el('div',{cls:'empty-t'},'Analizando tu situación…'),
       el('div',{cls:'empty-s'},'La IA está creando una guía de cuidados personalizada para ti'),
       buildProgressBar()
@@ -1415,7 +2451,7 @@ function buildSheetPlant(){
     el('span',{cls:'sh'}),
     el('div',{cls:'flex jb ac'},
       el('div',{cls:'st'},wizResult?'Guía lista ✅':inWizard?'Nueva planta':'Nueva planta'),
-      btn('×','btn-g',closeSheet,{style:{fontSize:'22px',padding:'4px 8px',color:'var(--i3)'}})
+      btn('×','btn-g',closeSheet,{style:{fontSize:'22px',padding:'4px 8px',color:'var(--t3)'}})
     )
   ));
 
@@ -1437,7 +2473,7 @@ function buildSheetPlant(){
             // Last question — ask for plant name then run wizard
             wizStep=totalSteps;render();
           }
-        }},el('span',{cls:'wiz-opt-em'},o.em),o.label)
+        }},el('div',{cls:'wiz-opt-em'},icon(WIZ_ICON_MAP[o.val]||'seedling','',18)),o.label)
       ))
     ));
 
@@ -1459,7 +2495,7 @@ function buildSheetPlant(){
       photoArea.appendChild(btn('Cambiar foto','btn-s btn-full mb10',()=>{_fp.photo=null;wizPhotoB64=null;render();}));
     } else {
       const ph=el('div',{cls:'photo-placeholder'});
-      ph.appendChild(el('span',{style:{fontSize:'36px'}},'📷'));
+      ph.appendChild(icon('camera','ci3',32));
       ph.appendChild(el('span',{cls:'fs13 ci3'},'Toca para hacer una foto'));
       const fi=el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'}});
       fi.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){handlePlantPhoto(f);identifyPlant(f);}});
@@ -1470,9 +2506,26 @@ function buildSheetPlant(){
     sb.appendChild(photoArea);
 
     if(aiState==='loading')sb.appendChild(el('div',{style:{marginBottom:'14px'}},el('div',{cls:'fs13 tc',style:{color:'var(--pu)',marginBottom:'8px'}},'🔍 Identificando planta…'),buildProgressBar()));
-    if(aiState==='done'&&aiIdent)sb.appendChild(el('div',{cls:'card alert-g mb12'},el('div',{cls:'fw7 fs14 mb4'},aiIdent.icon+' '+aiIdent.commonName),el('div',{cls:'fs12 ci3'},aiIdent.scientificName),el('div',{cls:'fs11 fw7 cgr mt8 fm'},'✓ DATOS RELLENADOS')));
+    if(aiState==='done'&&aiIdent){
+      sb.appendChild(el('div',{cls:'card alert-g mb12'},
+        el('div',{cls:'flex jb ac'},
+          el('div',{},el('div',{cls:'fw7 fs14 mb4'},aiIdent.icon+' '+aiIdent.commonName),el('div',{cls:'fs12 ci3'},aiIdent.scientificName),el('div',{cls:'fs11 fw7 cgr mt8 fm'},'✓ DATOS RELLENADOS')),
+          el('button',{cls:'btn btn-s btn-sm',style:{flexShrink:0},$click:()=>{
+            // Open plant picker to correct
+            ppQuery=aiIdent.commonName||'';ppOpen=true;render();
+            setTimeout(()=>{const inp=document.querySelector('.pp-wrap input');if(inp){inp.focus();inp.select();}},50);
+          }},'✏️ Corregir')
+        )
+      ));
+    }
 
-    sb.appendChild(el('div',{cls:'fg'},el('label',{},'Nombre *'),el('input',{type:'text',placeholder:'Ej: Mi Monstera',val:_fp.name,$input:e=>_fp.name=e.target.value})));
+    // Plant search picker
+    sb.appendChild(el('div',{cls:'fg'},
+      el('label',{},'Buscar planta (o escribe el nombre) *'),
+      buildPlantPicker(_fp.name, p=>{
+        applyPlantFromDB(p);
+      }, 'Buscar: Monstera, Ficus, Rosa…')
+    ));
 
     const locEl=el('input',{type:'text',placeholder:'Salón, habitación, balcón…',val:_fp.location||'',$input:e=>_fp.location=e.target.value});
     sb.appendChild(el('div',{cls:'fg'},el('label',{},'¿Dónde va a estar?'),locEl));
@@ -1486,7 +2539,7 @@ function buildSheetPlant(){
         runWizard();
       }));
     }
-    sb.appendChild(btn('Añadir sin guía IA','btn-s btn-full',()=>{if(!_fp.name.trim()){toast('El nombre es obligatorio','w');return;}if(wizAnswers.location){const loc={interior:'Interior',ventana:'Junto a ventana',balcon:'Balcón',jardin:'Jardín'}[wizAnswers.location];if(loc&&!_fp.location)_fp.location=loc;}_fp.outdoor=wizAnswers.location==='balcon'||wizAnswers.location==='jardin';addPlant();}));
+    sb.appendChild(btn(_fp.id?'💾 Guardar cambios':'Añadir sin guía IA','btn-s btn-full',()=>{if(!_fp.name.trim()){toast('El nombre es obligatorio','w');return;}if(wizAnswers.location){const loc={interior:'Interior',ventana:'Junto a ventana',balcon:'Balcón',jardin:'Jardín'}[wizAnswers.location];if(loc&&!_fp.location)_fp.location=loc;}_fp.outdoor=wizAnswers.location==='balcon'||wizAnswers.location==='jardin';addPlant();}));
   }
 
   if(wizResult){
@@ -1537,7 +2590,7 @@ function buildSheetEntry(){
   sb.appendChild(el('div',{cls:'fg'},el('label',{},'Observaciones'),noteEl));
 
   // Foto del registro
-  const fotoLbl=el('label',{cls:'btn btn-s btn-full mb12',style:{cursor:'pointer'}},'📷 Añadir foto al registro',el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'},$change:async e=>{const f=e.target.files?.[0];if(!f)return;const url=await fileToDataURL(f);_fe.photoUrl=url;render();}}));
+  const fotoLbl=el('label',{cls:'btn btn-s btn-full mb12',style:{cursor:'pointer'}},'  Añadir foto al registro',el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'},$change:async e=>{const f=e.target.files?.[0];if(!f)return;const url=await fileToDataURL(f);_fe.photoUrl=url;render();}}));
   if(_fe.photoUrl)sb.appendChild(el('img',{src:_fe.photoUrl,style:{width:'100%',height:'140px',objectFit:'cover',borderRadius:'12px',marginBottom:'10px'}}));
   sb.appendChild(fotoLbl);
 
@@ -1552,7 +2605,7 @@ function buildSheetCheck(){
   const p=S.plants.find(x=>x.id===selId);
   const ov=el('div',{cls:'ov',$click:e=>{if(e.target===ov&&checkState!=='loading')closeSheet();}});
   const sb=el('div',{cls:'sb'});
-  sb.appendChild(el('div',{cls:'shdr'},el('span',{cls:'sh'}),el('div',{cls:'flex jb ac'},el('div',{cls:'st'},'Análisis IA'),checkState!=='loading'?el('button',{cls:'btn btn-g',style:{fontSize:'20px',padding:'4px 8px',color:'var(--i3)'},$click:closeSheet},'×'):null),p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null));
+  sb.appendChild(el('div',{cls:'shdr'},el('span',{cls:'sh'}),el('div',{cls:'flex jb ac'},el('div',{cls:'st'},'Análisis IA'),checkState!=='loading'?el('button',{cls:'btn btn-g',style:{fontSize:'20px',padding:'4px 8px',color:'var(--t3)'},$click:closeSheet},'×'):null),p?el('div',{cls:'fs13 ci3',style:{marginTop:'4px'}},p.icon+' '+p.name):null));
   if(checkState==='idle'){
     // Show photo option first
     sb.appendChild(el('div',{cls:'tc',style:{padding:'10px 0 20px'}},
@@ -1560,7 +2613,7 @@ function buildSheetCheck(){
       el('div',{cls:'fw7 fs16 mb8'},'¿Quieres hacer una foto?'),
       el('div',{cls:'fs13 ci3 mb20',style:{lineHeight:'1.6'}},'La IA puede ver el estado visual de la planta para un análisis más preciso.'),
       el('label',{cls:'btn btn-p btn-full mb10',style:{cursor:'pointer',justifyContent:'center'}},
-        '📷 Hacer foto y analizar',
+        'Hacer foto y analizar',
         el('input',{type:'file',accept:'image/*',capture:'environment',style:{display:'none'},
           $change:async e=>{
             const f=e.target.files?.[0];
